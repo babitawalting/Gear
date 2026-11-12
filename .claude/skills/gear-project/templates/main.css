@@ -1,0 +1,20 @@
+/* app/assets/css/main.css */
+@import "tailwindcss";
+
+/* Project colors: use them as bg-blue, text-navy, border-grey, ... */
+@theme {
+  --color-blue: #01689b;
+  --color-navy: #0a0d41;
+  --color-grey: #697782;
+  --color-sand: #e3ded9;
+  --color-white: #fcfcfc;
+
+  --font-sans: "Public Sans", sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  color: var(--color-navy);
+  background-color: var(--color-white);
+}
