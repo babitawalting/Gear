@@ -150,14 +150,29 @@ Always keep accessibility in mind. The project has `@nuxt/a11y` installed, so ch
 - Set the page language to Dutch (`<html lang="nl">`) and give each page a clear `<title>` with `useHead` or `useSeoMeta`.
 
 ## Git branches
-Every branch you create must be named `type/branchname`: a type, a slash, then a short lowercase name with hyphens.
+Every branch you create must be named `type/name/branchname`: a type, the short name of the person prompting, then a short lowercase name with hyphens.
 
-- `feature/` new functionality (`feature/login-page`)
-- `fix/` bug fixes (`fix/navbar-overflow`)
-- `chore/` setup, config, dependencies, cleanup (`chore/add-eslint-rules`)
-- `docs/` documentation (`docs/update-readme`)
-- `refactor/` restructuring code without changing behavior (`refactor/split-card-component`)
-- `test/` adding or changing tests (`test/e2e-login`)
+- `feature/babita/login-page`
+- `fix/deshae/navbar-overflow`
+- `chore/marie-lou/add-eslint-rules`
+
+**Types**
+- `feature/` new functionality
+- `fix/` bug fixes
+- `chore/` setup, config, dependencies, cleanup
+- `docs/` documentation
+- `refactor/` restructuring code without changing behavior
+- `test/` adding or changing tests
+
+**Finding the name:** the team works on separate devices, so run `git config user.name` and look it up (case-insensitive):
+
+| Git username | Short name in branches |
+|---|---|
+| `babitawalting` | `babita` |
+| `DeshaeD` | `deshae` |
+| `loujunior` | `marie-lou` |
+
+If the git username is missing or isn't in the table, ask who is prompting. Never guess.
 
 Never use other formats (`my_branch`, `Feature-Login`, `login`). Never work directly on `main`.
 
@@ -167,7 +182,7 @@ Never use other formats (`my_branch`, `Feature-Login`, `login`). Never work dire
 ## Before you finish
 - All visible text is Dutch.
 - Code is accessible (semantic HTML, alt text, labels, aria-labels, keyboard, touch targets).
-- Branch name follows the `type/branchname` format.
+- Branch name follows the `type/name/branchname` format.
 - Nothing is committed, pushed or opened as a pull request without asking first.
 - Colors only used for their role (navy text, grey inactive/cancel buttons, sand borders, white background, blue accent), only the 5 colors, only Public Sans (400 / 600), only the icons listed.
 - Code is something a second-year student can read and explain.
