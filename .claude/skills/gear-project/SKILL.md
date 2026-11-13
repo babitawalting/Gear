@@ -35,6 +35,16 @@ Nuxt 4 (`app/` directory), Vue 3, Tailwind CSS v4 (via `@tailwindcss/vite`, no `
 - Helpers: `app/utils/` (auto-imported)
 - Global CSS: `app/assets/css/main.css`
 
+## Components
+We work component based and every person builds their own screens.
+
+- **Ask first.** When someone starts a new component, ask: "Will this be used on other screens, or only on yours?" Then place it by the answer. If they don't know, treat it as screen-specific. Tell them in your reply which folder you used and why.
+- **Shared components** (buttons, page header, icon, cards used on more than one screen) go directly in `app/components/`, for example `AppIcon.vue`, `PageHeader.vue`, `ActionButton.vue`.
+- **Screen-specific components** (used by one screen only) go in a folder named after that feature, in **singular**: `app/components/plan/PlanCard.vue`. If a second screen needs it later, move it up to `app/components/`.
+- **Don't change another person's component** inside your own screen's work. If you need a change, ask them or make a small separate PR for it.
+- **Naming:** `PascalCase`, always two or more words, starting with the subject and ending with what it is: `PlanCard.vue`, `PlanFilterBar.vue`, `PlanList.vue`. Repeat the folder name at the start of the file name, so Nuxt gives it the short name `<PlanCard />` and not `<PlanPlanCard />`.
+- One component, one job. Keep components small.
+
 ## Colors (only these, unless the user says otherwise)
 
 | Name (Tailwind) | Hex | Typical use |
@@ -312,4 +322,5 @@ Never use other formats (`my_branch`, `Feature-Login`, `login`). Never work dire
 - Colors only used for their role (navy text, grey disabled backgrounds and cancel text, sand borders, white background, blue accent), only the 5 colors, only Public Sans (400 / 600), only the icons listed.
 - Components use the Options API (`export default defineComponent`), no `<script setup>` or Composition API.
 - Code is something a second-year student can read and explain.
+- New components are in the right folder and follow the naming rule.
 - Run `npm run dev` or lint when you changed config files, and report anything not verified.
