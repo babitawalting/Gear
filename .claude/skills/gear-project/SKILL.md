@@ -13,6 +13,7 @@ Second-year university of applied sciences students. They know HTML, CSS and Jav
 - Nuxt helpers like `useFetch`, `useHead` and `useSeoMeta` are composables. Call them inside `setup()` only when there is no Options API alternative, keep that part tiny and explain it in a comment.
 - Add a **short comment** where Nuxt-specific magic happens (auto-imports, file-based routing, `useFetch`, etc.), because it is new to them.
 - Use clear names (`isMenuOpen`, not `flag`). Prefer small components with one job.
+- **Corner radius is 12px everywhere** (`rounded-xl` in Tailwind), as in the Figma design. Use it for buttons, cards, inputs and every other rounded element. Never use another radius (`rounded-lg`, `rounded-2xl`, ...) on your own, except `rounded-full` for circles when the design asks for it. If the user asks for a different radius, use that one.
 - Prefer Tailwind classes over custom CSS. Only write CSS when Tailwind can't do it.
 - When you introduce a new Nuxt concept, explain it in one sentence in your reply.
 
@@ -40,7 +41,7 @@ Nuxt 4 (`app/` directory), Vue 3, Tailwind CSS v4 (via `@tailwindcss/vite`, no `
 |---|---|---|
 | `blue` | `#01689B` | Normal and active buttons, active selections, subheaders, accent color |
 | `navy` | `#0A0D41` | **Text only** (headers and body text) |
-| `grey` | `#697782` | Buttons like cancel, and buttons that can't be used (yet) or are inactive |
+| `grey` | `#697782` | Background of disabled buttons, text of cancel buttons, and the subtext in page headers |
 | `sand` | `#E3DED9` | **Border color only** |
 | `white` | `#FCFCFC` | Main background color, and text on blue backgrounds |
 
@@ -49,8 +50,8 @@ Define them once in `@theme` (see `templates/main.css`), then use `bg-blue`, `te
 ## Font
 **Public Sans is the only font.**
 
-- **Regular (400)**: small text, paragraphs, labels, buttons → `font-normal`
-- **Semibold (600)**: headers and subheaders (`h1`–`h6`) → `font-semibold`
+- **Regular (400)**: small text, paragraphs, labels → `font-normal`
+- **Semibold (600)**: headers and subheaders (`h1`–`h6`) and all buttons → `font-semibold`
 - Never use bold (700), light, italic styles or another family.
 
 Load it with `@nuxt/fonts` in `nuxt.config.ts`:
@@ -114,9 +115,96 @@ To use a new icon the user adds later, add its path to `app/utils/icons.ts` and 
 - Use semantic HTML (`<nav>`, `<main>`, `<section>`, `<button>`, `<a>` / `<NuxtLink>` for navigation).
 - Use `<NuxtImg>` for images and `<NuxtLink>` for internal links.
 - Keep contrast accessible: `text-navy` on `bg-white`, `text-white` on `bg-blue` and `bg-grey`.
-- Button states: normal/active = `bg-blue text-white`, cancel/inactive/disabled = `bg-grey text-white`.
+- Buttons always use one of the four button states below. Never invent a new look.
 - Every interactive element needs a visible focus state, e.g. `focus-visible:outline-2 focus-visible:outline-blue`.
 - 2-space indentation, double quotes, ESLint rules from the project must pass.
+
+## Page header
+Every page starts with the same header: a navy title with a grey subtext underneath. Build it **once** as a component (`app/components/PageHeader.vue`) and use it on every page, never rewrite it per page.
+
+- Title: `<h1>`, `text-4xl font-semibold text-navy`
+- Subtext: `<p>`, `text-lg font-semibold text-grey`
+- Title and subtext are left aligned, close together (for example `gap-1`).
+- The **styling is always the same, the text is different per page** (it is passed in as `title` and `subtitle`, always in Dutch).
+- Example for the plans page: title "Plannen", subtext "Een overzicht van uw plannen". This is only an example, other pages get their own text.
+- Each page has exactly one `PageHeader`, and it holds the page's `<h1>`.
+
+```vue
+<!-- app/components/PageHeader.vue -->
+<script lang="ts">
+export default defineComponent({
+  props: {
+    title: { type: String, required: true },
+    subtitle: { type: String, required: true },
+  },
+});
+</script>
+
+<template>
+  <header class="flex flex-col gap-1">
+    <h1 class="text-4xl font-semibold text-navy">{{ title }}</h1>
+    <p class="text-lg font-semibold text-grey">{{ subtitle }}</p>
+  </header>
+</template>
+```
+
+Usage: `<PageHeader title="Plannen" subtitle="Een overzicht van uw plannen" />`
+
+## Button states
+Every button in the app is one of these four states, and they look the same on every page. When you prompt, **use these names** so Claude picks the right one.
+
+| State name | Look | Use for | Example |
+|---|---|---|---|
+| **Primary** | `bg-blue text-white` | The main action the user should take, and the active state of a button that was disabled before | "Volgende", "Plan starten" (after a category is chosen) |
+| **Disabled** | `bg-grey text-white` + the `disabled` attribute | A button that can't be used yet because something is still missing. It becomes Primary once the condition is met | "Plan starten" before a category is selected |
+| **Secondary** | `bg-white text-blue border border-sand` | A choice that should **not** be the user's first option: an alternative route or a less common action. May have an icon in front | "Voeg details handmatig toe" (instead of pasting a link), "Plan archiveren" |
+| **Cancel** | `bg-white text-grey border border-sand` | Cancelling or leaving a flow | "Annuleren" |
+
+Rules:
+- Primary and Disabled are the **same button** in two moments: use one button and switch the classes with `:disabled` / a computed class, don't build two buttons.
+- Only one Primary button per screen section, so it is clear what the main action is.
+- Colors and borders may not change per page. If a page needs a different look, ask first.
+- All four share the same shape and text: `rounded-xl px-4 py-2 text-sm font-semibold min-h-11`, plus the focus outline from the code style section.
+- No hover styles on any state (see code style).
+- Any state can have an **icon** in front of the text. The icon always has the same color as the text of that state: white for Primary and Disabled, blue for Secondary, grey for Cancel. `AppIcon` uses `currentColor`, so don't set a color on the icon, it follows the button's `text-*` class.
+
+Class example (Options API):
+
+```vue
+<script lang="ts">
+export default defineComponent({
+  props: {
+    label: { type: String, required: true },
+    // "primary", "secondary" or "cancel". Disabled is set with the disabled prop
+    variant: { type: String, default: "primary" },
+    disabled: { type: Boolean, default: false },
+    // Optional icon name from the icon list, shown in front of the label
+    icon: { type: String, default: "" },
+  },
+  computed: {
+    // Picks the Tailwind classes that belong to the button state
+    stateClasses(): string {
+      if (this.disabled) return "bg-grey text-white";
+      if (this.variant === "secondary") return "border border-sand bg-white text-blue";
+      if (this.variant === "cancel") return "border border-sand bg-white text-grey";
+      return "bg-blue text-white";
+    },
+  },
+});
+</script>
+
+<template>
+  <button
+    :disabled="disabled"
+    :class="stateClasses"
+    class="flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-blue"
+  >
+    <!-- The icon uses currentColor, so it gets the same color as the text -->
+    <AppIcon v-if="icon" :name="icon" class="size-4" />
+    {{ label }}
+  </button>
+</template>
+```
 
 ## Example component
 
@@ -146,7 +234,7 @@ export default defineComponent({
 <template>
   <button
     @click="handleClick"
-    class="flex items-center gap-2 rounded-lg bg-blue px-4 py-2 text-sm font-normal text-white disabled:bg-grey focus-visible:outline-2 focus-visible:outline-blue"
+    class="flex items-center gap-2 rounded-xl bg-blue px-4 py-2 text-sm font-semibold text-white disabled:bg-grey focus-visible:outline-2 focus-visible:outline-blue"
   >
     <AppIcon v-if="icon" :name="icon" class="size-4" />
     {{ label }}
@@ -202,7 +290,9 @@ Never use other formats (`my_branch`, `Feature-Login`, `login`). Never work dire
 - Code is accessible (semantic HTML, alt text, labels, aria-labels, keyboard, touch targets).
 - Branch name follows the `type/name/branchname` format.
 - Nothing is committed, pushed or opened as a pull request without asking first.
-- Colors only used for their role (navy text, grey inactive/cancel buttons, sand borders, white background, blue accent), only the 5 colors, only Public Sans (400 / 600), only the icons listed.
+- Every page starts with the `PageHeader` component (navy title, grey subtext).
+- Every button uses one of the four button states (Primary, Disabled, Secondary, Cancel), exactly as described.
+- Colors only used for their role (navy text, grey disabled backgrounds and cancel text, sand borders, white background, blue accent), only the 5 colors, only Public Sans (400 / 600), only the icons listed.
 - Components use the Options API (`export default defineComponent`), no `<script setup>` or Composition API.
 - Code is something a second-year student can read and explain.
 - Run `npm run dev` or lint when you changed config files, and report anything not verified.
