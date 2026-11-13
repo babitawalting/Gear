@@ -9,7 +9,8 @@ description: Write Nuxt 4 + Tailwind code for the Gear project in the team's own
 Second-year university of applied sciences students. They know HTML, CSS and JavaScript and are **still learning Nuxt/Next**. So:
 
 - Keep code **simple and readable**. No clever tricks, no heavy abstractions.
-- Use `<script setup lang="ts">` with plain `ref`, `computed` and `defineProps`. Avoid advanced generics, render functions and custom composable chains unless asked.
+- **Always use the Options API, never the Composition API.** Write `<script lang="ts">` with `export default defineComponent({ ... })` and the options `props`, `data()`, `computed`, `methods`, `watch` and lifecycle hooks like `mounted()`. Do **not** use `<script setup>`, `ref`, `reactive`, `computed()` as a function, `watch()` as a function, `defineProps`, `defineEmits` or `onMounted`. It is easier for the team to read. Avoid advanced generics, render functions and custom composables unless asked.
+- Nuxt helpers like `useFetch`, `useHead` and `useSeoMeta` are composables. Call them inside `setup()` only when there is no Options API alternative, keep that part tiny and explain it in a comment.
 - Add a **short comment** where Nuxt-specific magic happens (auto-imports, file-based routing, `useFetch`, etc.), because it is new to them.
 - Use clear names (`isMenuOpen`, not `flag`). Prefer small components with one job.
 - Prefer Tailwind classes over custom CSS. Only write CSS when Tailwind can't do it.
@@ -121,13 +122,30 @@ To use a new icon the user adds later, add its path to `app/utils/icons.ts` and 
 
 ```vue
 <!-- app/components/ActionButton.vue -->
-<script setup lang="ts">
-// Props are the values a parent component passes in
-defineProps<{ label: string; icon?: string }>();
+<script lang="ts">
+// Options API: everything a component needs is listed in one object
+export default defineComponent({
+  // Props are the values a parent component passes in
+  props: {
+    label: { type: String, required: true },
+    icon: { type: String, default: "" },
+  },
+  // data() holds the values that can change
+  data() {
+    return { isPressed: false };
+  },
+  // methods are the functions the template can call
+  methods: {
+    handleClick() {
+      this.isPressed = !this.isPressed;
+    },
+  },
+});
 </script>
 
 <template>
   <button
+    @click="handleClick"
     class="flex items-center gap-2 rounded-lg bg-blue px-4 py-2 text-sm font-normal text-white disabled:bg-grey focus-visible:outline-2 focus-visible:outline-blue"
   >
     <AppIcon v-if="icon" :name="icon" class="size-4" />
@@ -185,5 +203,6 @@ Never use other formats (`my_branch`, `Feature-Login`, `login`). Never work dire
 - Branch name follows the `type/name/branchname` format.
 - Nothing is committed, pushed or opened as a pull request without asking first.
 - Colors only used for their role (navy text, grey inactive/cancel buttons, sand borders, white background, blue accent), only the 5 colors, only Public Sans (400 / 600), only the icons listed.
+- Components use the Options API (`export default defineComponent`), no `<script setup>` or Composition API.
 - Code is something a second-year student can read and explain.
 - Run `npm run dev` or lint when you changed config files, and report anything not verified.
