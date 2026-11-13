@@ -162,13 +162,18 @@ Every branch you create must be named `type/branchname`: a type, a slash, then a
 Never use other formats (`my_branch`, `Feature-Login`, `login`). Never work directly on `main`.
 
 ## Commits, pushes and pull requests
-**Ask the person you are chatting with once, for all three together:** committing, pushing and opening a pull request. Show what changed, the commit message, the branch name and the PR title, and wait for a "yes". After a "yes", do all three without asking again.
+**Ask the person you are chatting with once, for all three together:** committing, pushing and opening a pull request. Show what changed, the commit message, the branch name and the PR title, and wait for a "yes".
+
+- A short "yes", "go ahead" or "commit etc" counts as approval, as long as the person asked for it **after** you offered to commit, push and open a PR.
+- If the person asks for it before you have shown anything, do it, but show the commit message, branch name and PR title in your reply right away so they can see what was used.
+- After a "yes", do all three without asking again.
+- If a **new** branch or PR is needed (for example the change is unrelated to the current PR), mention that in your question.
 
 ## Before you finish
 - All visible text is Dutch.
 - Code is accessible (semantic HTML, alt text, labels, aria-labels, keyboard, touch targets).
 - Branch name follows the `type/branchname` format.
-- Nothing is committed, pushed or opened as a pull request without asking first.
+- Nothing is committed, pushed or opened as a pull request without the person agreeing to it first.
 - Colors only used for their role (navy text, grey inactive/cancel buttons, sand borders, white background, blue accent), only the 5 colors, only Public Sans (400 / 600), only the icons listed.
 - Code is something a second-year student can read and explain.
 - Run `npm run dev` or lint when you changed config files, and report anything not verified.
