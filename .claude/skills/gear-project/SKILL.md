@@ -119,6 +119,17 @@ To use a new icon the user adds later, add its path to `app/utils/icons.ts` and 
 - Every interactive element needs a visible focus state, e.g. `focus-visible:outline-2 focus-visible:outline-blue`.
 - 2-space indentation, double quotes, ESLint rules from the project must pass.
 
+## Layout and screen size
+Every page has the same screen size and margins. This is set **once** in `app/layouts/default.vue`, so pages never set their own width or outer margins.
+
+- The design frame is **402 x 874 px** (iPhone Pro in Figma). The app is a single phone-width column: `max-w-[402px]`, centered with `mx-auto`.
+- Side margin is **24px** (`px-6`) on every page, and the page content starts inside that margin.
+- On a big screen (laptop or projector) the column stays phone-width in the middle. Nothing is stretched.
+- Pages only contain content. Do **not** add `max-w-*`, `mx-auto` or outer `px-*` on a page. Use `py-*` and `gap-*` for spacing inside the page.
+- Elements that should be full width (cards, buttons, search fields) use `w-full` and fill the column.
+- Never add other layouts or other widths unless the user asks. If a page really needs a different layout, ask first.
+- Test every page at 402px wide (browser mobile view, iPhone Pro) before you finish.
+
 ## Page header
 Every page starts with the same header: a navy title with a grey subtext underneath. Build it **once** as a component (`app/components/PageHeader.vue`) and use it on every page, never rewrite it per page.
 
@@ -295,6 +306,7 @@ Never use other formats (`my_branch`, `Feature-Login`, `login`). Never work dire
 - Code is accessible (semantic HTML, alt text, labels, aria-labels, keyboard, touch targets).
 - Branch name follows the `type/name/branchname` format.
 - Nothing is committed, pushed or opened as a pull request without the person agreeing to it first.
+- Pages use the default layout and don't set their own width or outer margins.
 - Every page starts with the `PageHeader` component (navy title, grey subtext).
 - Every button uses one of the four button states (Primary, Disabled, Secondary, Cancel), exactly as described.
 - Colors only used for their role (navy text, grey disabled backgrounds and cancel text, sand borders, white background, blue accent), only the 5 colors, only Public Sans (400 / 600), only the icons listed.
