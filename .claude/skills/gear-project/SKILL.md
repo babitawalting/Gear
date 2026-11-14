@@ -160,9 +160,9 @@ Every page has the same screen size and margins. This is set **once** in `app/la
 ## Page header
 Every page starts with the same header: a navy title with a grey subtext underneath. Build it **once** as a component (`app/components/shared/PageHeader.vue`) and use it on every page, never rewrite it per page.
 
-- Title: `<h1>`, `text-4xl font-semibold text-navy`
-- Subtext: `<p>`, `text-lg font-semibold text-grey`
-- Title and subtext are left aligned, close together (for example `gap-1`).
+- Title: `<h1>`, 32px: `text-[32px] leading-9 font-semibold text-navy` (Tailwind has no class for exactly 32px)
+- Subtext: `<p>`, 14px regular (not semibold): `text-sm leading-5 font-normal text-grey`
+- Title and subtext are left aligned and close together: no gap between them, the line heights (`leading-9` and `leading-5`) set the distance, as in the Figma design.
 - The **styling is always the same, the text is different per page** (it is passed in as `title` and `subtitle`, always in Dutch).
 - Example for the plans page: title "Plannen", subtext "Een overzicht van uw plannen". This is only an example, other pages get their own text.
 - Each page has exactly one `PageHeader`, and it holds the page's `<h1>`.
@@ -179,9 +179,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <header class="flex flex-col gap-1">
-    <h1 class="text-4xl font-semibold text-navy">{{ title }}</h1>
-    <p class="text-lg font-semibold text-grey">{{ subtitle }}</p>
+  <header class="flex flex-col">
+    <h1 class="text-[32px] leading-9 font-semibold text-navy">{{ title }}</h1>
+    <p class="text-sm leading-5 font-normal text-grey">{{ subtitle }}</p>
   </header>
 </template>
 ```
