@@ -22,13 +22,17 @@ export default defineComponent({
     isSelected(): boolean {
       return this.modelValue === this.value;
     },
+    // True when another card of the group is chosen: this card turns grey
+    isOtherSelected(): boolean {
+      return this.modelValue !== "" && !this.isSelected;
+    },
   },
 });
 </script>
 
 <template>
   <!-- The <label> wraps everything, so tapping anywhere in the card chooses it.
-       Chosen: blue card with white text. Not chosen: white card with a sand border -->
+       Chosen: blue card with white text. Another card chosen: grey text and ring. Nothing chosen: navy text and blue ring -->
   <label
     class="flex w-full items-center min-h-16 gap-6 rounded-xl border px-6 py-2"
     :class="isSelected ? 'border-blue bg-blue' : 'border-sand bg-white'"
@@ -43,12 +47,17 @@ export default defineComponent({
       :class="
         isSelected
           ? 'border-white bg-white inset-ring-4 inset-ring-blue focus-visible:outline-white'
-          : 'border-blue bg-white focus-visible:outline-blue'
+          : isOtherSelected
+            ? 'border-grey bg-white focus-visible:outline-blue'
+            : 'border-blue bg-white focus-visible:outline-blue'
       "
       @change="$emit('update:modelValue', value)"
     >
     <span class="flex min-w-0 flex-1 flex-col">
-      <span class="text-sm leading-5 font-semibold" :class="isSelected ? 'text-white' : 'text-navy'">{{ title }}</span>
+      <span
+        class="text-sm leading-5 font-semibold"
+        :class="isSelected ? 'text-white' : isOtherSelected ? 'text-grey' : 'text-navy'"
+      >{{ title }}</span>
       <span class="text-xs leading-4 font-normal" :class="isSelected ? 'text-white' : 'text-grey'">{{ description }}</span>
     </span>
   </label>
