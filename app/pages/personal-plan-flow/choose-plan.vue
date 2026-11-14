@@ -15,6 +15,15 @@ export default defineComponent({
       selectedOption: "driving-licence",
     };
   },
+  methods: {
+    // Called when the user presses "Volgende". Only the driving licence flow exists for now
+    goToNextStep() {
+      if (this.selectedOption === "driving-licence") {
+        // navigateTo is a Nuxt function (auto-imported) that goes to another page
+        navigateTo("/personal-plan-flow/get-driving-licence/choose-license-type");
+      }
+    },
+  },
 });
 </script>
 
@@ -35,9 +44,9 @@ export default defineComponent({
       />
     </div>
 
-    <!-- It does nothing yet: the next screen does not exist. mt-auto pushes it to the bottom -->
+    <!-- mt-auto pushes the button to the bottom of the screen -->
     <div class="mt-auto">
-      <PersonalPlanFlowNextButton :disabled="selectedOption === ''" />
+      <PersonalPlanFlowNextButton :disabled="selectedOption === ''" @click="goToNextStep" />
     </div>
   </div>
 </template>
