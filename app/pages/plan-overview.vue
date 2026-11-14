@@ -11,6 +11,8 @@ export default defineComponent({
       // "overview" shows the active plans, "archive" shows the archived plans
       view: "overview",
       search: "",
+      // True while the category sheet (the pop-up to start a new plan) is shown
+      isCategorySheetOpen: false,
       // Sample data for now, this will come from the database later
       plans: [
         { id: 1, title: "Titel", category: "personal", progress: 10, isShared: false, isArchived: false, archivedAt: "" },
@@ -28,6 +30,14 @@ export default defineComponent({
         const matchesSearch = plan.title.toLowerCase().includes(searchText);
         return matchesView && matchesSearch;
       });
+    },
+  },
+  methods: {
+    // Called when the user chose a category and pressed "Plan starten".
+    // The next step of the new plan flow does not exist yet, so for now the sheet just closes
+    handleStartPlan(category: string) {
+      console.log("Nieuw plan starten met categorie:", category);
+      this.isCategorySheetOpen = false;
     },
   },
 });
@@ -62,9 +72,15 @@ export default defineComponent({
     <!-- role="status" makes screen readers announce this when the list becomes empty -->
     <p v-else role="status" class="text-sm font-normal text-grey">Geen plannen gevonden</p>
 
-    <!-- Sticks to the bottom right of the column. It does nothing yet: it will start the new plan flow -->
+    <!-- Sticks to the bottom right of the column. It opens the category sheet to start a new plan -->
     <div class="sticky bottom-6 mt-auto flex justify-end">
-      <AddButton label="Nieuw plan" />
+      <AddButton label="Nieuw plan" @click="isCategorySheetOpen = true" />
     </div>
+
+    <PlanOverviewCategorySheet
+      :open="isCategorySheetOpen"
+      @close="isCategorySheetOpen = false"
+      @start="handleStartPlan"
+    />
   </div>
 </template>
