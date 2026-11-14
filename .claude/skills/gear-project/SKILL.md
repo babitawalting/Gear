@@ -75,8 +75,8 @@ Define them once in `@theme` (see `templates/main.css`), then use `bg-blue`, `te
 ## Font
 **Public Sans is the only font.**
 
-- **Regular (400)**: small text, paragraphs, labels → `font-normal`
-- **Semibold (600)**: headers and subheaders (`h1`–`h6`) and all buttons → `font-semibold`
+- **Regular (400)**: small text, paragraphs, labels, **all buttons** (including the text in the switch and the options in the category sheet) → `font-normal`
+- **Semibold (600)**: headers and subheaders (`h1`–`h6`), card titles and the page title → `font-semibold`. **Never on buttons.** The Figma buttons are regular, and semibold looked too thick in every test.
 - Never use bold (700), light, italic styles or another family.
 
 Load it with `@nuxt/fonts` in `nuxt.config.ts`:
@@ -202,7 +202,7 @@ Rules:
 - Primary and Disabled are the **same button** in two moments: use one button and switch the classes with `:disabled` / a computed class, don't build two buttons.
 - Only one Primary button per screen section, so it is clear what the main action is.
 - Colors and borders may not change per page. If a page needs a different look, ask first.
-- All four share the same shape and text: `rounded-xl px-4 py-2 text-sm font-semibold min-h-11`, plus the focus outline from the code style section.
+- All four share the same shape and text: `rounded-xl px-4 py-2 text-sm font-normal min-h-11`, plus the focus outline from the code style section.
 - **There is no shared button component.** Every person writes the buttons directly where they are used (inside the page or component they are building), with the classes of the state. Do not create an `ActionButton` or other shared button component unless the user asks for it.
 - No hover styles on any state (see code style).
 - Any state can have an **icon** in front of the text. The icon always has the same color as the text of that state: white for Primary and Disabled, blue for Secondary, grey for Cancel. `IconDisplay` uses `currentColor`, so don't set a color on the icon, it follows the button's `text-*` class.
@@ -215,7 +215,7 @@ Examples (write the `<button>` directly in the template, with the classes of its
   type="button"
   :disabled="!hasCategory"
   :class="hasCategory ? 'bg-blue text-white' : 'bg-grey text-white'"
-  class="flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+  class="flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
 >
   Plan starten
 </button>
@@ -223,7 +223,7 @@ Examples (write the `<button>` directly in the template, with the classes of its
 <!-- Secondary, with an icon in front (the icon follows the text color) -->
 <button
   type="button"
-  class="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-sm font-semibold text-blue focus-visible:outline-2 focus-visible:outline-blue"
+  class="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-sm font-normal text-blue focus-visible:outline-2 focus-visible:outline-blue"
 >
   <IconDisplay name="archive" class="size-5" />
   Plan archiveren
@@ -232,7 +232,7 @@ Examples (write the `<button>` directly in the template, with the classes of its
 <!-- Cancel -->
 <button
   type="button"
-  class="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-sm font-semibold text-grey focus-visible:outline-2 focus-visible:outline-blue"
+  class="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-sm font-normal text-grey focus-visible:outline-2 focus-visible:outline-blue"
 >
   Annuleren
 </button>
@@ -268,7 +268,7 @@ export default defineComponent({
     <button
       type="button"
       :aria-expanded="isOpen"
-      class="flex min-h-11 items-center justify-center rounded-xl border border-sand bg-white px-4 py-2 text-sm font-semibold text-blue focus-visible:outline-2 focus-visible:outline-blue"
+      class="flex min-h-11 items-center justify-center rounded-xl border border-sand bg-white px-4 py-2 text-sm font-normal text-blue focus-visible:outline-2 focus-visible:outline-blue"
       @click="toggle"
     >
       {{ isOpen ? "Verberg notitie" : "Toon notitie" }}
