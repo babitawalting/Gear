@@ -33,7 +33,7 @@ export default defineComponent({
       :key="option.value"
       type="button"
       :aria-pressed="modelValue === option.value"
-      class="flex min-h-11 items-center justify-center gap-2 rounded-xl text-sm font-semibold focus-visible:outline-2 focus-visible:outline-blue"
+      class="flex min-h-11 items-center justify-center gap-2 rounded-xl text-sm font-normal focus-visible:outline-2 focus-visible:outline-blue"
       :class="modelValue === option.value ? 'bg-blue text-white' : 'text-grey'"
       @click="$emit('update:modelValue', option.value)"
     >
