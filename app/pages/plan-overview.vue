@@ -16,7 +16,7 @@ export default defineComponent({
       // Sample data for now, this will come from the database later
       plans: [
         { id: 1, title: "Titel", category: "personal", progress: 10, isShared: false, isArchived: false, archivedAt: "" },
-        { id: 2, title: "EHBO diploma", category: "career", progress: 100, isShared: false, isArchived: true, archivedAt: "2026-11-14" },
+        { id: 2, title: "Titel", category: "career", progress: 100, isShared: false, isArchived: true, archivedAt: "2026-01-01" },
       ],
     };
   },
