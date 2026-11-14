@@ -16,6 +16,9 @@ export default defineNuxtConfig({
   ],
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
+  fonts: {
+    families: [{ name: "Public Sans", weights: [400, 600] }],
+  },
   css: ['~/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss(),
