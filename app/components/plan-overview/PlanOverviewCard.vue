@@ -1,6 +1,6 @@
 <!-- app/components/plan-overview/PlanOverviewCard.vue
      One plan in the plan overview.
-     Usage: <PlanOverviewCard title="Rijbewijs B" category="personal" :progress="100" is-shared /> -->
+     Usage: <PlanOverviewCard title="Titel" category="personal" :progress="10" is-shared /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

@@ -1,7 +1,7 @@
 <!-- app/components/plan-overview/PlanOverviewArchiveCard.vue
      One archived plan in the plan overview (the "Archief" view).
      It looks like PlanOverviewCard, but shows the archive date instead of a progress bar.
-     Usage: <PlanOverviewArchiveCard title="EHBO diploma" category="career" archived-at="2026-11-14" /> -->
+     Usage: <PlanOverviewArchiveCard title="Titel" category="career" archived-at="2026-01-01" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {
