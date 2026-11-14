@@ -41,7 +41,7 @@ export default defineComponent({
 
     <!-- Plan name with progress -->
     <div class="flex min-w-0 flex-1 flex-col">
-      <h3 class="truncate text-sm leading-4 font-semibold text-navy">{{ title }}</h3>
+      <h2 class="truncate text-sm leading-4 font-semibold text-navy">{{ title }}</h2>
       <div class="flex items-center gap-2">
         <span class="w-10 shrink-0 text-sm leading-4 font-normal text-grey">{{ safeProgress }}%</span>
         <!-- role="progressbar" tells screen readers what this bar shows -->
