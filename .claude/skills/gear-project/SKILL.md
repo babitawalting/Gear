@@ -115,6 +115,7 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 | `industry` |
 | `magnifying-glass` |
 | `people-arrows` |
+| `plus` |
 | `school` |
 | `share` |
 | `stethoscope` |
