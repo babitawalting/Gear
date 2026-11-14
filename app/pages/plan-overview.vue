@@ -33,11 +33,16 @@ export default defineComponent({
     },
   },
   methods: {
-    // Called when the user chose a category and pressed "Plan starten".
-    // The next step of the new plan flow does not exist yet, so for now the sheet just closes
+    // Called when the user chose a category and pressed "Plan starten"
     handleStartPlan(category: string) {
-      console.log("Nieuw plan starten met categorie:", category);
       this.isCategorySheetOpen = false;
+      if (category === "personal") {
+        // navigateTo is a Nuxt function (auto-imported) that goes to another page
+        navigateTo("/personal-plan-flow/choose-plan");
+      } else {
+        // The flows for the other categories do not exist yet
+        console.log("Nieuw plan starten met categorie:", category);
+      }
     },
   },
 });
