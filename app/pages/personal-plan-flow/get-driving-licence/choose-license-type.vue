@@ -48,6 +48,17 @@ export default defineComponent({
       const bottomOfScreen = window.scrollY + window.innerHeight;
       this.isScrolledToBottom = bottomOfScreen >= document.documentElement.scrollHeight - 1;
     },
+    // Called when the user presses "Volgende": goes to the plan details with the chosen licence as the title
+    goToNextStep() {
+      const chosen = this.licenseTypes.find((license) => license.value === this.selectedLicense);
+      if (!chosen) return;
+      // navigateTo is a Nuxt function (auto-imported). The query becomes "?title=Rijbewijs BE" in the address,
+      // so the next page can read it
+      navigateTo({
+        path: "/personal-plan-flow/get-driving-licence/plan-details",
+        query: { title: chosen.title },
+      });
+    },
   },
 });
 </script>
@@ -78,10 +89,9 @@ export default defineComponent({
       :class="isScrolledToBottom ? 'opacity-0' : 'opacity-100'"
     />
 
-    <!-- Floats at the bottom of the screen, over the list. It is always there, grey until a type is chosen.
-         It does nothing yet: the next screen does not exist -->
+    <!-- Floats at the bottom of the screen, over the list. It is always there, grey until a type is chosen -->
     <div class="sticky bottom-7 mt-auto">
-      <PersonalPlanFlowNextButton :disabled="selectedLicense === ''" />
+      <PersonalPlanFlowNextButton :disabled="selectedLicense === ''" @click="goToNextStep" />
     </div>
   </div>
 </template>
