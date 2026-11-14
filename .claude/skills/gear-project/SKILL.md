@@ -100,6 +100,7 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 
 | Name |
 |---|
+| `archive` |
 | `arrow-down-short-wide` |
 | `arrow-up-from-bracket` |
 | `award` |
