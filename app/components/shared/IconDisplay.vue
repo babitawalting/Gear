@@ -1,5 +1,5 @@
-<!-- app/components/AppIcon.vue
-     Usage: <AppIcon name="house" class="size-6 text-blue" />
+<!-- app/components/shared/IconDisplay.vue
+     Usage: <IconDisplay name="house" class="size-6 text-blue" />
      The icon takes the current text color, so use Tailwind text-* classes. -->
 <script lang="ts">
 export default defineComponent({

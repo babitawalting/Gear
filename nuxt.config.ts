@@ -14,6 +14,11 @@ export default defineNuxtConfig({
     "@nuxt/scripts",
     "@nuxt/test-utils/module",
   ],
+  // Components in app/components/shared keep their short name: <SearchBar />, not <SharedSearchBar />
+  components: [
+    { path: "~/components/shared", pathPrefix: false },
+    "~/components",
+  ],
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   fonts: {

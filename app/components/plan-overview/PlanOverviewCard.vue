@@ -36,7 +36,7 @@ export default defineComponent({
   <article class="flex w-full items-center gap-3 rounded-xl border border-sand bg-white p-2">
     <!-- Category indicator -->
     <div class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-blue">
-      <AppIcon :name="categoryIcon" class="size-5 text-white" />
+      <IconDisplay :name="categoryIcon" class="size-5 text-white" />
     </div>
 
     <!-- Plan name with progress -->
@@ -61,7 +61,7 @@ export default defineComponent({
 
     <!-- Shared indicator: the icon is decorative, so the text is for screen readers -->
     <div v-if="isShared" class="shrink-0">
-      <AppIcon name="people-arrows" class="size-6 text-blue" />
+      <IconDisplay name="people-arrows" class="size-6 text-blue" />
       <span class="sr-only">Gedeeld met een andere gebruiker</span>
     </div>
 
@@ -72,7 +72,7 @@ export default defineComponent({
       class="-my-1 -mr-2 flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-xl text-grey focus-visible:outline-2 focus-visible:outline-blue"
       @click="$emit('open-menu')"
     >
-      <AppIcon name="ellipsis" class="size-5 rotate-90" />
+      <IconDisplay name="ellipsis" class="size-5 rotate-90" />
     </button>
   </article>
 </template>

@@ -37,7 +37,7 @@ export default defineComponent({
       :class="modelValue === option.value ? 'bg-blue text-white' : 'text-grey'"
       @click="$emit('update:modelValue', option.value)"
     >
-      <AppIcon :name="option.icon" class="size-5.5" />
+      <IconDisplay :name="option.icon" class="size-5.5" />
       {{ option.label }}
     </button>
   </div>
