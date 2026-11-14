@@ -30,7 +30,7 @@ Second-year university of applied sciences students. They know HTML, CSS and Jav
 Nuxt 4 (`app/` directory), Vue 3, Tailwind CSS v4 (via `@tailwindcss/vite`, no `tailwind.config.js`), `@nuxt/fonts`, `@nuxt/image`, `@nuxt/content`.
 
 - Pages: `app/pages/` (file name = route)
-- Components: `app/components/` (auto-imported, no `import` needed)
+- Components: `app/components/` (auto-imported, no `import` needed). Shared components live in `app/components/shared/`
 - Layouts: `app/layouts/`
 - Helpers: `app/utils/` (auto-imported)
 - Global CSS: `app/assets/css/main.css`
@@ -39,8 +39,8 @@ Nuxt 4 (`app/` directory), Vue 3, Tailwind CSS v4 (via `@tailwindcss/vite`, no `
 We work component based and every person builds their own screens.
 
 - **Ask first.** When someone starts a new component, ask: "Will this be used on other screens, or only on yours?" Then place it by the answer. If they don't know, treat it as screen-specific. Tell them in your reply which folder you used and why.
-- **Shared components** (buttons, page header, icon, cards used on more than one screen) go directly in `app/components/`, for example `AppIcon.vue`, `PageHeader.vue`, `ActionButton.vue`.
-- **Screen-specific components** (used by one screen only) go in a folder named after that screen or feature (see Naming): `app/components/plan-overview/PlanOverviewCard.vue`. If a second screen needs it later, move it up to `app/components/`.
+- **Shared components** (buttons, page header, icon, cards used on more than one screen) go in `app/components/shared/`, for example `shared/IconDisplay.vue`, `shared/PageHeader.vue`, `shared/ActionButton.vue`. The `shared` folder does not become part of the component name (it is set in `nuxt.config.ts`), so you still write `<IconDisplay />`, not `<SharedIconDisplay />`.
+- **Screen-specific components** (used by one screen only) go in a folder named after that screen or feature (see Naming): `app/components/plan-overview/PlanOverviewCard.vue`. If a second screen needs it later, move it up to `app/components/shared/`.
 - **Don't change another person's component** inside your own screen's work. If you need a change, ask them or make a small separate PR for it.
 - **Naming:** `PascalCase`, always two or more words, starting with the subject and ending with what it is: `PlanOverviewCard.vue`, `PlanOverviewFilterBar.vue`, `PlanOverviewList.vue`. Repeat the folder name at the start of the file name, so Nuxt gives it the short name `<PlanOverviewCard />` and not `<PlanOverviewPlanOverviewCard />`.
 - One component, one job. Keep components small.
@@ -125,12 +125,12 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 Copy these files if they don't exist yet:
 
 1. `templates/icons.ts` → `app/utils/icons.ts` (icon name → SVG path)
-2. `templates/AppIcon.vue` → `app/components/AppIcon.vue`
+2. `templates/IconDisplay.vue` → `app/components/shared/IconDisplay.vue`
 3. `templates/main.css` → merge into `app/assets/css/main.css`
 
 ### Usage
 ```vue
-<AppIcon name="house" class="size-6 text-blue" />
+<IconDisplay name="house" class="size-6 text-blue" />
 ```
 The icon uses `currentColor`, so color it with `text-*` and size it with `size-*`. Add `aria-label`/visible text next to icon-only buttons for accessibility.
 
@@ -158,7 +158,7 @@ Every page has the same screen size and margins. This is set **once** in `app/la
 - Test every page at 402px wide (browser mobile view, iPhone Pro) before you finish.
 
 ## Page header
-Every page starts with the same header: a navy title with a grey subtext underneath. Build it **once** as a component (`app/components/PageHeader.vue`) and use it on every page, never rewrite it per page.
+Every page starts with the same header: a navy title with a grey subtext underneath. Build it **once** as a component (`app/components/shared/PageHeader.vue`) and use it on every page, never rewrite it per page.
 
 - Title: `<h1>`, `text-4xl font-semibold text-navy`
 - Subtext: `<p>`, `text-lg font-semibold text-grey`
@@ -168,7 +168,7 @@ Every page starts with the same header: a navy title with a grey subtext underne
 - Each page has exactly one `PageHeader`, and it holds the page's `<h1>`.
 
 ```vue
-<!-- app/components/PageHeader.vue -->
+<!-- app/components/shared/PageHeader.vue -->
 <script lang="ts">
 export default defineComponent({
   props: {
@@ -204,7 +204,7 @@ Rules:
 - Colors and borders may not change per page. If a page needs a different look, ask first.
 - All four share the same shape and text: `rounded-xl px-4 py-2 text-sm font-semibold min-h-11`, plus the focus outline from the code style section.
 - No hover styles on any state (see code style).
-- Any state can have an **icon** in front of the text. The icon always has the same color as the text of that state: white for Primary and Disabled, blue for Secondary, grey for Cancel. `AppIcon` uses `currentColor`, so don't set a color on the icon, it follows the button's `text-*` class.
+- Any state can have an **icon** in front of the text. The icon always has the same color as the text of that state: white for Primary and Disabled, blue for Secondary, grey for Cancel. `IconDisplay` uses `currentColor`, so don't set a color on the icon, it follows the button's `text-*` class.
 
 Class example (Options API):
 
@@ -238,7 +238,7 @@ export default defineComponent({
     class="flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-blue"
   >
     <!-- The icon uses currentColor, so it gets the same color as the text -->
-    <AppIcon v-if="icon" :name="icon" class="size-4" />
+    <IconDisplay v-if="icon" :name="icon" class="size-4" />
     {{ label }}
   </button>
 </template>
@@ -247,7 +247,7 @@ export default defineComponent({
 ## Example component
 
 ```vue
-<!-- app/components/ActionButton.vue -->
+<!-- app/components/shared/ActionButton.vue -->
 <script lang="ts">
 // Options API: everything a component needs is listed in one object
 export default defineComponent({
@@ -274,7 +274,7 @@ export default defineComponent({
     @click="handleClick"
     class="flex items-center gap-2 rounded-xl bg-blue px-4 py-2 text-sm font-semibold text-white disabled:bg-grey focus-visible:outline-2 focus-visible:outline-blue"
   >
-    <AppIcon v-if="icon" :name="icon" class="size-4" />
+    <IconDisplay v-if="icon" :name="icon" class="size-4" />
     {{ label }}
   </button>
 </template>
