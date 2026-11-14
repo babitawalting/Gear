@@ -39,7 +39,7 @@ Nuxt 4 (`app/` directory), Vue 3, Tailwind CSS v4 (via `@tailwindcss/vite`, no `
 We work component based and every person builds their own screens.
 
 - **Ask first.** When someone starts a new component, ask: "Will this be used on other screens, or only on yours?" Then place it by the answer. If they don't know, treat it as screen-specific. Tell them in your reply which folder you used and why.
-- **Shared components** (buttons, page header, icon, cards used on more than one screen) go in `app/components/shared/`, for example `shared/IconDisplay.vue`, `shared/PageHeader.vue`, `shared/ActionButton.vue`. The `shared` folder does not become part of the component name (it is set in `nuxt.config.ts`), so you still write `<IconDisplay />`, not `<SharedIconDisplay />`.
+- **Shared components** (page header, icon, search bar, cards used on more than one screen) go in `app/components/shared/`, for example `shared/IconDisplay.vue`, `shared/PageHeader.vue`, `shared/SearchBar.vue`. Buttons are the exception, see Button states. The `shared` folder does not become part of the component name (it is set in `nuxt.config.ts`), so you still write `<IconDisplay />`, not `<SharedIconDisplay />`.
 - **Screen-specific components** (used by one screen only) go in a folder named after that screen or feature (see Naming): `app/components/plan-overview/PlanOverviewCard.vue`. If a second screen needs it later, move it up to `app/components/shared/`.
 - **Don't change another person's component** inside your own screen's work. If you need a change, ask them or make a small separate PR for it.
 - **Naming:** `PascalCase`, always two or more words, starting with the subject and ending with what it is: `PlanOverviewCard.vue`, `PlanOverviewFilterBar.vue`, `PlanOverviewList.vue`. Repeat the folder name at the start of the file name, so Nuxt gives it the short name `<PlanOverviewCard />` and not `<PlanOverviewPlanOverviewCard />`.
@@ -203,80 +203,78 @@ Rules:
 - Only one Primary button per screen section, so it is clear what the main action is.
 - Colors and borders may not change per page. If a page needs a different look, ask first.
 - All four share the same shape and text: `rounded-xl px-4 py-2 text-sm font-semibold min-h-11`, plus the focus outline from the code style section.
+- **There is no shared button component.** Every person writes the buttons directly where they are used (inside the page or component they are building), with the classes of the state. Do not create an `ActionButton` or other shared button component unless the user asks for it.
 - No hover styles on any state (see code style).
 - Any state can have an **icon** in front of the text. The icon always has the same color as the text of that state: white for Primary and Disabled, blue for Secondary, grey for Cancel. `IconDisplay` uses `currentColor`, so don't set a color on the icon, it follows the button's `text-*` class.
 
-Class example (Options API):
+Examples (write the `<button>` directly in the template, with the classes of its state):
 
 ```vue
-<script lang="ts">
-export default defineComponent({
-  props: {
-    label: { type: String, required: true },
-    // "primary", "secondary" or "cancel". Disabled is set with the disabled prop
-    variant: { type: String, default: "primary" },
-    disabled: { type: Boolean, default: false },
-    // Optional icon name from the icon list, shown in front of the label
-    icon: { type: String, default: "" },
-  },
-  computed: {
-    // Picks the Tailwind classes that belong to the button state
-    stateClasses(): string {
-      if (this.disabled) return "bg-grey text-white";
-      if (this.variant === "secondary") return "border border-sand bg-white text-blue";
-      if (this.variant === "cancel") return "border border-sand bg-white text-grey";
-      return "bg-blue text-white";
-    },
-  },
-});
-</script>
+<!-- Primary, which becomes Disabled while something is missing (one button, two moments) -->
+<button
+  type="button"
+  :disabled="!hasCategory"
+  :class="hasCategory ? 'bg-blue text-white' : 'bg-grey text-white'"
+  class="flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+>
+  Plan starten
+</button>
 
-<template>
-  <button
-    :disabled="disabled"
-    :class="stateClasses"
-    class="flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-blue"
-  >
-    <!-- The icon uses currentColor, so it gets the same color as the text -->
-    <IconDisplay v-if="icon" :name="icon" class="size-4" />
-    {{ label }}
-  </button>
-</template>
+<!-- Secondary, with an icon in front (the icon follows the text color) -->
+<button
+  type="button"
+  class="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-sm font-semibold text-blue focus-visible:outline-2 focus-visible:outline-blue"
+>
+  <IconDisplay name="archive" class="size-5" />
+  Plan archiveren
+</button>
+
+<!-- Cancel -->
+<button
+  type="button"
+  class="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-sm font-semibold text-grey focus-visible:outline-2 focus-visible:outline-blue"
+>
+  Annuleren
+</button>
 ```
 
 ## Example component
 
 ```vue
-<!-- app/components/shared/ActionButton.vue -->
+<!-- app/components/plan-overview/PlanOverviewNote.vue -->
 <script lang="ts">
 // Options API: everything a component needs is listed in one object
 export default defineComponent({
   // Props are the values a parent component passes in
   props: {
-    label: { type: String, required: true },
-    icon: { type: String, default: "" },
+    text: { type: String, required: true },
   },
   // data() holds the values that can change
   data() {
-    return { isPressed: false };
+    return { isOpen: false };
   },
   // methods are the functions the template can call
   methods: {
-    handleClick() {
-      this.isPressed = !this.isPressed;
+    toggle() {
+      this.isOpen = !this.isOpen;
     },
   },
 });
 </script>
 
 <template>
-  <button
-    @click="handleClick"
-    class="flex items-center gap-2 rounded-xl bg-blue px-4 py-2 text-sm font-semibold text-white disabled:bg-grey focus-visible:outline-2 focus-visible:outline-blue"
-  >
-    <IconDisplay v-if="icon" :name="icon" class="size-4" />
-    {{ label }}
-  </button>
+  <div class="flex flex-col gap-4">
+    <!-- A button is written directly where it is used, here in the Secondary state -->
+    <button
+      type="button"
+      :aria-expanded="isOpen"
+      class="flex min-h-11 items-center justify-center rounded-xl border border-sand bg-white px-4 py-2 text-sm font-semibold text-blue focus-visible:outline-2 focus-visible:outline-blue"
+      @click="toggle"
+    >
+      {{ isOpen ? "Verberg notitie" : "Toon notitie" }}
+    </button>
+    <p v-if="isOpen" class="text-sm font-normal text-navy">{{ text }}</p>
+  </div>
 </template>
 ```
 
