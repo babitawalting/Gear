@@ -48,7 +48,7 @@ export default defineComponent({
         :aria-disabled="isReadOnly"
         target="_blank"
         rel="noopener"
-        class="flex h-7.25 w-full items-center justify-center rounded-xl px-4 text-xs font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+        class="flex min-h-7.25 py-1.5 leading-4 text-center w-full items-center justify-center rounded-xl px-4 text-xs font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
         :class="filledButtonClasses"
       >
         Naar de website van uw gemeente
@@ -58,7 +58,7 @@ export default defineComponent({
         :aria-disabled="isReadOnly"
         target="_blank"
         rel="noopener"
-        class="flex h-7.25 w-full items-center justify-center rounded-xl px-4 text-xs font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+        class="flex min-h-7.25 py-1.5 leading-4 text-center w-full items-center justify-center rounded-xl px-4 text-xs font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
         :class="filledButtonClasses"
       >
         Naar de website van de RDW
@@ -79,7 +79,7 @@ export default defineComponent({
         v-else
         type="button"
         :disabled="isReadOnly"
-        class="flex h-7.25 w-full items-center justify-center rounded-xl border bg-white px-4 text-xs font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+        class="flex min-h-7.25 py-1.5 leading-4 text-center w-full items-center justify-center rounded-xl border bg-white px-4 text-xs font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
         :class="outlineButtonClasses"
         @click="$emit('appointment')"
       >

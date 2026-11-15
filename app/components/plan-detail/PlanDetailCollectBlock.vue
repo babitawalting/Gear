@@ -36,7 +36,7 @@ export default defineComponent({
       <button
         type="button"
         :disabled="isReadOnly"
-        class="mt-3 flex h-7.25 w-full items-center justify-center rounded-xl px-4 text-xs font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+        class="mt-3 flex min-h-7.25 py-1.5 leading-4 text-center w-full items-center justify-center rounded-xl px-4 text-xs font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
         :class="isReadOnly ? 'bg-grey' : 'bg-blue'"
         @click="$emit('add-to-vault')"
       >
@@ -52,7 +52,7 @@ export default defineComponent({
       <button
         type="button"
         :disabled="isReadOnly"
-        class="mt-3 flex h-7.25 w-full items-center justify-center rounded-xl px-4 text-xs font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+        class="mt-3 flex min-h-7.25 py-1.5 leading-4 text-center w-full items-center justify-center rounded-xl px-4 text-xs font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
         :class="isReadOnly ? 'bg-grey' : 'bg-blue'"
         @click="$emit('received')"
       >

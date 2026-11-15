@@ -32,7 +32,7 @@ export default defineComponent({
       <button
         type="button"
         :disabled="isReadOnly"
-        class="flex h-7.25 w-full items-center justify-center rounded-xl px-4 text-xs font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+        class="flex min-h-7.25 py-1.5 leading-4 text-center w-full items-center justify-center rounded-xl px-4 text-xs font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
         :class="filledButtonClasses"
       >
         Zoek rijschool in de omgeving
@@ -40,7 +40,7 @@ export default defineComponent({
       <button
         type="button"
         :disabled="isReadOnly"
-        class="flex h-7.25 w-full items-center justify-center rounded-xl border bg-white px-4 text-xs font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+        class="flex min-h-7.25 py-1.5 leading-4 text-center w-full items-center justify-center rounded-xl border bg-white px-4 text-xs font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
         :class="outlineButtonClasses"
       >
         Ik heb al een rijschool
@@ -48,7 +48,7 @@ export default defineComponent({
       <button
         type="button"
         :disabled="isReadOnly"
-        class="flex h-7.25 w-full items-center justify-center rounded-xl border bg-white px-4 text-xs font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+        class="flex min-h-7.25 py-1.5 leading-4 text-center w-full items-center justify-center rounded-xl border bg-white px-4 text-xs font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
         :class="outlineButtonClasses"
         @click="$emit('completed')"
       >
