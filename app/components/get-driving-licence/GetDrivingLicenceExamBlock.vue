@@ -1,8 +1,8 @@
-<!-- app/components/plan-detail/PlanDetailExamBlock.vue
+<!-- app/components/get-driving-licence/GetDrivingLicenceExamBlock.vue
      The content of the "Examens" step: three buttons.
      The first two buttons do nothing yet. The third one tells the page that the exam is done (event `completed`).
      While the step is locked (`is-read-only`) the buttons are grey and can't be used yet.
-     Usage: <PlanDetailExamBlock :is-read-only="step1NotDone" @completed="markStepDone" /> -->
+     Usage: <GetDrivingLicenceExamBlock :is-read-only="step1NotDone" @completed="markStepDone" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

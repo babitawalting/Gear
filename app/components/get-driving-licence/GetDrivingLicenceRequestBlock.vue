@@ -1,10 +1,10 @@
-<!-- app/components/plan-detail/PlanDetailPickupBlock.vue
-     The content of the "Rijbewijs ophalen" step: a short explanation, two blue buttons that open a website
+<!-- app/components/get-driving-licence/GetDrivingLicenceRequestBlock.vue
+     The content of the "Rijbewijs aanvragen" step (step 3): a short explanation, two blue buttons that open a website
      (the gemeente of the user and the RDW) and a white button for someone who already has an appointment.
      When that white button is pressed (`appointment` event), the page sets `has-appointment`: the white button is
      replaced by a date field where the user fills in the date of the appointment.
      When the step is locked (`is-read-only`) the text can be read, but the buttons are grey and can't be used yet.
-     Usage: <PlanDetailPickupBlock text="..." municipality-url="https://..." rdw-url="https://..." :is-read-only="step2NotDone" /> -->
+     Usage: <GetDrivingLicenceRequestBlock text="..." municipality-url="https://..." rdw-url="https://..." :is-read-only="step2NotDone" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {
