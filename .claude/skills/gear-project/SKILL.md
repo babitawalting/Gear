@@ -105,6 +105,8 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 | `arrow-up-from-bracket` |
 | `award` |
 | `bell` |
+| `chevron-right` |
+| `edit` |
 | `ellipsis` |
 | `file-arrow-up` |
 | `file-lines` |
