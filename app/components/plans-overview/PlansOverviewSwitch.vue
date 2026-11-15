@@ -1,6 +1,6 @@
-<!-- app/components/plan-overview/PlanOverviewSwitch.vue
+<!-- app/components/plans-overview/PlansOverviewSwitch.vue
      Switch between the active plans ("Overzicht") and the archived plans ("Archief").
-     Usage: <PlanOverviewSwitch v-model="view" />
+     Usage: <PlansOverviewSwitch v-model="view" />
      `view` is "overview" or "archive". The page decides which cards to show. -->
 <script lang="ts">
 export default defineComponent({

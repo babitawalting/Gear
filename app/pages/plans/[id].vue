@@ -18,6 +18,7 @@ export default defineComponent({
       },
       // The number of the step that is open (1 to 4). 0 means none. Only one step is open at a time
       openStep: 1,
+      // The state of the steps. It is saved in the browser per plan (see app/utils/planProgress.ts) and loaded again in mounted()
       // Step 1: the user has Rijbewijs B in the vault. For now "+ Toevoegen" sets this to true
       hasLicenseB: false,
       // Step 2: the exam is done
@@ -33,18 +34,33 @@ export default defineComponent({
     };
   },
   computed: {
-    // Which of the four steps are done, in order
+    // The id of this plan, from the address: /plans/12 gives "12"
+    planId(): string {
+      return String(this.$route.params.id);
+    },
+    // Everything that has to be saved, in one object. When one of these values changes, the watcher below saves it
+    savedProgress(): PlanProgress {
+      return {
+        hasLicenseB: this.hasLicenseB,
+        examDone: this.examDone,
+        hasAppointment: this.hasAppointment,
+        appointmentDate: this.appointmentDate,
+        licenseReceived: this.licenseReceived,
+        notes: this.notes,
+      };
+    },
+    // Which of the four steps are done, in order. A step only counts when the steps before it are done too
     done(): boolean[] {
-      return [this.hasLicenseB, this.examDone, this.appointmentDate !== "", this.licenseReceived];
+      return drivingLicenceDoneSteps(this.savedProgress);
     },
     // The index (0 to 3) of the first step that is not done: this one has to be finished next. 4 means all done
     nextIndex(): number {
       const index = this.done.findIndex((isDone) => !isDone);
       return index === -1 ? 4 : index;
     },
-    // The progress of the plan: every step that is done is 25%. The plan card will show the same number
+    // The progress of the plan: every step that is done is 25% (4 steps). The plan card on the overview shows the same number
     progress(): number {
-      return (this.done.filter((isDone) => isDone).length / 4) * 100;
+      return percentageDone(this.done);
     },
     // A step is locked while the step before it is not done
     step2Locked(): boolean {
@@ -64,8 +80,19 @@ export default defineComponent({
       return this.examDone && this.openStep !== 2 ? "Examens afgerond" : "Vereiste examens voor dit rijbewijs";
     },
   },
-  // mounted() runs once, when the page is on the screen. We start listening to scrolling and resizing
+  watch: {
+    // Runs every time something in savedProgress changes (deep: also changes inside the object). It saves the progress
+    savedProgress: {
+      handler(progress: PlanProgress) {
+        savePlanProgress(this.planId, progress);
+      },
+      deep: true,
+    },
+  },
+  // mounted() runs once, when the page is on the screen. First we load the saved progress of this plan (the browser storage
+  // does not exist on the server, so this can only happen here). Then we start listening to scrolling and resizing
   mounted() {
+    Object.assign(this, loadPlanProgress(this.planId));
     window.addEventListener("scroll", this.updateShade);
     window.addEventListener("resize", this.updateShade);
     this.updateShade();
@@ -178,30 +205,14 @@ export default defineComponent({
     <NotesField v-model="notes" />
 
     <!-- A soft shade at the bottom of the screen: see-through at the top and 20% navy at the bottom.
-         pointer-events-none lets clicks go through it. It fades away at the bottom of the page (opacity-0).
-         It comes before the buttons in the page, and the buttons are `relative`, so they are drawn on top of it -->
+         pointer-events-none lets clicks go through it. It fades away at the bottom of the page (opacity-0) -->
     <div
       aria-hidden="true"
       class="pointer-events-none fixed inset-x-0 bottom-0 h-56 bg-linear-to-b from-transparent to-navy/20 transition-opacity duration-200"
       :class="isScrolledToBottom ? 'opacity-0' : 'opacity-100'"
     />
 
-    <!-- The two buttons at the bottom are written here directly, in the Secondary and Primary states of the skill. They do nothing yet -->
-    <div class="relative flex gap-4">
-      <button
-        type="button"
-        class="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-sm font-normal text-blue focus-visible:outline-2 focus-visible:outline-blue"
-      >
-        <IconDisplay name="archive" class="size-5" />
-        Plan archiveren
-      </button>
-      <button
-        type="button"
-        class="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-blue px-4 py-2 text-sm font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
-      >
-        <IconDisplay name="share" class="size-5" />
-        Plan delen
-      </button>
-    </div>
+    <!-- The buttons "Plan archiveren" and "Plan delen" are made by another team member and go here later -->
+
   </div>
 </template>

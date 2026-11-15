@@ -1,5 +1,5 @@
-<!-- app/pages/plan-overview.vue
-     The file name is the route: this page is at /plan-overview (Nuxt file-based routing). -->
+<!-- app/pages/plans-overview.vue
+     The file name is the route: this page is at /plans-overview (Nuxt file-based routing). -->
 <script lang="ts">
 export default defineComponent({
   // setup() is only used for Nuxt's useSeoMeta, which sets the page <title>
@@ -15,8 +15,7 @@ export default defineComponent({
       isCategorySheetOpen: false,
       // Sample data for now, this will come from the database later
       plans: [
-        { id: 1, title: "Titel", category: "personal", progress: 10, isShared: false, isArchived: false, archivedAt: "" },
-        { id: 2, title: "Titel", category: "career", progress: 100, isShared: false, isArchived: true, archivedAt: "2026-01-01" },
+        { id: 1, title: "Rijbewijs BE", category: "personal", progress: 0, isShared: false, isArchived: false, archivedAt: "" },
       ],
     };
   },
@@ -31,6 +30,13 @@ export default defineComponent({
         return matchesView && matchesSearch;
       });
     },
+  },
+  // mounted() runs once, when the page is on the screen. The progress of each plan is saved in the browser by the plan page,
+  // so here we read it and show the same percentage on the card
+  mounted() {
+    for (const plan of this.plans) {
+      plan.progress = percentageDone(drivingLicenceDoneSteps(loadPlanProgress(String(plan.id))));
+    }
   },
   methods: {
     // Called when the user chose a category and pressed "Plan starten"
@@ -52,22 +58,23 @@ export default defineComponent({
   <div class="flex min-h-screen flex-col gap-4 py-4">
     <!-- The top bar, the filters and the bottom tab bar are made by other team members and go here later -->
     <PageHeader title="Plannen" subtitle="Een overzicht van uw plannen" />
-    <PlanOverviewSwitch v-model="view" />
+    <PlansOverviewSwitch v-model="view" />
     <SearchBar v-model="search" placeholder="Zoek in mijn plannen" />
 
     <ul v-if="filteredPlans.length > 0" class="flex flex-col gap-4">
       <li v-for="plan in filteredPlans" :key="plan.id">
         <!-- Archived plans get their own card, with the archive date instead of a progress bar -->
-        <PlanOverviewArchiveCard
+        <PlansOverviewArchiveCard
           v-if="plan.isArchived"
           :title="plan.title"
           :category="plan.category"
           :archived-at="plan.archivedAt"
           :is-shared="plan.isShared"
         />
-        <PlanOverviewCard
+        <PlansOverviewCard
           v-else
           :title="plan.title"
+          :to="`/plans/${plan.id}`"
           :category="plan.category"
           :progress="plan.progress"
           :is-shared="plan.isShared"
@@ -82,7 +89,7 @@ export default defineComponent({
       <AddButton label="Nieuw plan" @click="isCategorySheetOpen = true" />
     </div>
 
-    <PlanOverviewNewPlanCategorySheet
+    <PlansOverviewNewPlanCategorySheet
       :open="isCategorySheetOpen"
       @close="isCategorySheetOpen = false"
       @start="handleStartPlan"

@@ -1,6 +1,6 @@
-<!-- app/components/plan-overview/new-plan/PlanOverviewNewPlanCategorySheetCancelButton.vue
+<!-- app/components/plans-overview/new-plan/PlansOverviewNewPlanCategorySheetCancelButton.vue
      The "Annuleren" button of the category sheet (Cancel state of the skill: white, sand border, grey text).
-     Usage: <PlanOverviewNewPlanCategorySheetCancelButton @click="close" /> -->
+     Usage: <PlansOverviewNewPlanCategorySheetCancelButton @click="close" /> -->
 <script lang="ts">
 export default defineComponent({
   // No props or emits needed: a @click on this component automatically goes to the <button> below

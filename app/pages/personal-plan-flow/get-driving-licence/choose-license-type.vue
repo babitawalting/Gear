@@ -52,11 +52,11 @@ export default defineComponent({
     goToNextStep() {
       const chosen = this.licenseTypes.find((license) => license.value === this.selectedLicense);
       if (!chosen) return;
-      // navigateTo is a Nuxt function (auto-imported). The query becomes "?title=Rijbewijs BE" in the address,
+      // navigateTo is a Nuxt function (auto-imported). The query becomes "?title=Rijbewijs BE&license=be" in the address,
       // so the next page can read it
       navigateTo({
         path: "/personal-plan-flow/get-driving-licence/plan-details",
-        query: { title: chosen.title },
+        query: { title: chosen.title, license: chosen.value },
       });
     },
   },
