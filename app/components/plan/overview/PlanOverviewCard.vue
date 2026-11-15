@@ -1,4 +1,4 @@
-<!-- app/components/plan-overview/PlanOverviewCard.vue
+<!-- app/components/plan/overview/PlanOverviewCard.vue
      One plan in the plan overview.
      Usage: <PlanOverviewCard title="Titel" category="personal" :progress="10" is-shared /> -->
 <script lang="ts">
