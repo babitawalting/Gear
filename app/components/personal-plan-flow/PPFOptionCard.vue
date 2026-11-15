@@ -1,7 +1,7 @@
-<!-- app/components/personal-plan-flow/PersonalPlanFlowOptionCard.vue
+<!-- app/components/personal-plan-flow/PPFOptionCard.vue
      One option the user can choose in the personal plan flow: a radio circle, a title and a short description.
      Several cards with the same `name` form one group, and only one can be chosen.
-     Usage: <PersonalPlanFlowOptionCard v-model="option" name="option" value="template" title="Template" description="Template subtekst" /> -->
+     Usage: <PPFOptionCard v-model="option" name="option" value="template" title="Template" description="Template subtekst" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

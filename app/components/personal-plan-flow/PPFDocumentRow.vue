@@ -1,10 +1,10 @@
-<!-- app/components/personal-plan-flow/PersonalPlanFlowDocumentRow.vue
+<!-- app/components/personal-plan-flow/PPFDocumentRow.vue
      One document in the list of an open step: the name on the left and a blue edit button on the right.
      A thin line under the row is only shown when `has-line` is set. The page sets it when the list has 2 or more documents.
      When the user does not have the document yet (`is-missing`), the edit button is replaced by a blue "+ Toevoegen" button.
      Both buttons do nothing yet: they only tell the page they were tapped (`edit` and `add`).
-     Usage: <PersonalPlanFlowDocumentRow title="Rijbewijs B" :has-line="documents.length > 1" @edit="editDocument" />
-            <PersonalPlanFlowDocumentRow title="Rijbewijs B" is-missing @add="addDocument" /> -->
+     Usage: <PPFDocumentRow title="Rijbewijs B" :has-line="documents.length > 1" @edit="editDocument" />
+            <PPFDocumentRow title="Rijbewijs B" is-missing @add="addDocument" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

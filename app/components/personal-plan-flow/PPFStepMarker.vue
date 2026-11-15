@@ -1,4 +1,4 @@
-<!-- app/components/personal-plan-flow/PersonalPlanFlowStepMarker.vue
+<!-- app/components/personal-plan-flow/PPFStepMarker.vue
      The marker of one step in the vertical progress bar: a circle with a piece of line above and below it.
      Put it left of a step card, in a row. The line stretches with the height of the card.
      - Step done: a blue circle with a white check.
@@ -7,7 +7,7 @@
      - The step that is open has a dot in its circle, as an indicator of where the user is: blue for the next step,
        grey for a locked step. Only one step is open at a time, so there is only one dot.
      The line between two steps is blue when the step above it is done, otherwise grey.
-     Usage: <PersonalPlanFlowStepMarker :is-done="false" is-next is-open line-above="blue" line-below="grey" /> -->
+     Usage: <PPFStepMarker :is-done="false" is-next is-open line-above="blue" line-below="grey" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

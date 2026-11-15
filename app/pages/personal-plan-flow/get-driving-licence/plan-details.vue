@@ -34,7 +34,7 @@ export default defineComponent({
     <!-- The title is required, so the button stays grey until it is filled in.
          It does nothing yet: the next screen does not exist. mt-auto pushes it to the bottom -->
     <div class="mt-auto">
-      <PersonalPlanFlowNextButton :disabled="title.trim() === ''" />
+      <PPFNextButton :disabled="title.trim() === ''" />
     </div>
   </div>
 </template>

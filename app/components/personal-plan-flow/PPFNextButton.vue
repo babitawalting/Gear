@@ -1,8 +1,8 @@
-<!-- app/components/personal-plan-flow/PersonalPlanFlowNextButton.vue
+<!-- app/components/personal-plan-flow/PPFNextButton.vue
      The "Volgende" button at the bottom of the personal plan flow, as wide as its parent.
      Primary state of the skill (blue, white text). It is grey and disabled while nothing is chosen.
      It does not know where it goes: the page decides what happens when it is tapped.
-     Usage: <PersonalPlanFlowNextButton :disabled="option === ''" @click="goToNextStep" /> -->
+     Usage: <PPFNextButton :disabled="option === ''" @click="goToNextStep" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {
