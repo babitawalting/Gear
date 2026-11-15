@@ -15,8 +15,7 @@ export default defineComponent({
       isCategorySheetOpen: false,
       // Sample data for now, this will come from the database later
       plans: [
-        { id: 1, title: "Titel", category: "personal", progress: 10, isShared: false, isArchived: false, archivedAt: "" },
-        { id: 2, title: "Titel", category: "career", progress: 100, isShared: false, isArchived: true, archivedAt: "2026-01-01" },
+        { id: 1, title: "Rijbewijs BE", category: "personal", progress: 0, isShared: false, isArchived: false, archivedAt: "" },
       ],
     };
   },
@@ -31,6 +30,13 @@ export default defineComponent({
         return matchesView && matchesSearch;
       });
     },
+  },
+  // mounted() runs once, when the page is on the screen. The progress of each plan is saved in the browser by the plan page,
+  // so here we read it and show the same percentage on the card
+  mounted() {
+    for (const plan of this.plans) {
+      plan.progress = progressPercentage(loadPlanProgress(String(plan.id)));
+    }
   },
   methods: {
     // Called when the user chose a category and pressed "Plan starten"
@@ -68,6 +74,7 @@ export default defineComponent({
         <PlanOverviewCard
           v-else
           :title="plan.title"
+          :to="`/plans/${plan.id}`"
           :category="plan.category"
           :progress="plan.progress"
           :is-shared="plan.isShared"
