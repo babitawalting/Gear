@@ -1,7 +1,7 @@
-<!-- app/components/plan-overview/PlanOverviewCard.vue
+<!-- app/components/plans-overview/PlansOverviewCard.vue
      One plan in the plan overview.
      The whole card is a link to the page of the plan. The menu button on the right still works on its own.
-     Usage: <PlanOverviewCard title="Titel" category="personal" :progress="10" to="/plans/12" is-shared /> -->
+     Usage: <PlansOverviewCard title="Titel" category="personal" :progress="10" to="/plans/12" is-shared /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

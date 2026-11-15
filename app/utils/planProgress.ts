@@ -52,12 +52,27 @@ export function savePlanProgress(planId: string, progress: PlanProgress): void {
   }
 }
 
-// Which of the four steps are done, in order
-export function doneSteps(progress: PlanProgress): boolean[] {
-  return [progress.hasLicenseB, progress.examDone, progress.appointmentDate !== "", progress.licenseReceived];
+// ---- Works for any plan, with any number of steps ----
+
+// A step only counts as done when all the steps before it are done too. The steps unlock one after the other,
+// so a step can not be done while an earlier one is still open (for example when the user clears a date later)
+export function countedSteps(flags: boolean[]): boolean[] {
+  let allBeforeAreDone = true;
+  return flags.map((isDone) => {
+    allBeforeAreDone = allBeforeAreDone && isDone;
+    return allBeforeAreDone;
+  });
 }
 
-// The progress of the plan in percent: every step that is done is 25%
-export function progressPercentage(progress: PlanProgress): number {
-  return (doneSteps(progress).filter((isDone) => isDone).length / 4) * 100;
+// The progress in percent: the steps that count as done, divided by all the steps. 4 steps: 25% each, 5 steps: 20% each
+export function percentageDone(flags: boolean[]): number {
+  if (flags.length === 0) return 0;
+  return (countedSteps(flags).filter((isDone) => isDone).length / flags.length) * 100;
+}
+
+// ---- Only for the "get a driving licence" plan ----
+
+// Which of its four steps are done, in order (with the rule that every step needs the ones before it)
+export function drivingLicenceDoneSteps(progress: PlanProgress): boolean[] {
+  return countedSteps([progress.hasLicenseB, progress.examDone, progress.appointmentDate !== "", progress.licenseReceived]);
 }

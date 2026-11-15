@@ -49,18 +49,18 @@ export default defineComponent({
         notes: this.notes,
       };
     },
-    // Which of the four steps are done, in order
+    // Which of the four steps are done, in order. A step only counts when the steps before it are done too
     done(): boolean[] {
-      return doneSteps(this.savedProgress);
+      return drivingLicenceDoneSteps(this.savedProgress);
     },
     // The index (0 to 3) of the first step that is not done: this one has to be finished next. 4 means all done
     nextIndex(): number {
       const index = this.done.findIndex((isDone) => !isDone);
       return index === -1 ? 4 : index;
     },
-    // The progress of the plan: every step that is done is 25%. The plan card on the overview shows the same number
+    // The progress of the plan: every step that is done is 25% (4 steps). The plan card on the overview shows the same number
     progress(): number {
-      return progressPercentage(this.savedProgress);
+      return percentageDone(this.done);
     },
     // A step is locked while the step before it is not done
     step2Locked(): boolean {
