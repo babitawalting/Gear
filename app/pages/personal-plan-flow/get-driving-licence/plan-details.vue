@@ -11,7 +11,10 @@ export default defineComponent({
     // The previous screen sends the chosen licence in the address ("?title=Rijbewijs BE").
     // this.$route is the current address, this.$route.query holds the part after the "?"
     const titleFromAddress = this.$route.query.title;
+    const licenseFromAddress = this.$route.query.license;
     return {
+      // The code of the chosen licence, for example "be". It decides if there is a plan page for it
+      license: typeof licenseFromAddress === "string" ? licenseFromAddress : "",
       // The title of the plan, filled in from the choice on the previous screen. The user can change it
       title: typeof titleFromAddress === "string" ? titleFromAddress : "",
       // The end date, written as "2026-11-14". Empty means no date
@@ -22,6 +25,8 @@ export default defineComponent({
     // Called when the user presses "Volgende": goes to the plan page, with the title in the address.
     // The plan does not exist in a database yet, so the id "12" is a sample
     goToNextStep() {
+      // Only the plan page of Rijbewijs BE exists so far. For the other licences there is no next page yet
+      if (this.license !== "be") return;
       navigateTo({ path: "/plans/12", query: { title: this.title.trim() } });
     },
   },
