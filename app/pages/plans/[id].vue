@@ -23,6 +23,8 @@ export default defineComponent({
       // Step 4: the licence was received
       licenseReceived: false,
       notes: "",
+      // True when the page is scrolled all the way down: then the shade at the bottom goes away
+      isScrolledToBottom: false,
     };
   },
   computed: {
@@ -57,7 +59,23 @@ export default defineComponent({
       return this.examDone && this.openStep !== 2 ? "Examens afgerond" : "Vereiste examens voor dit rijbewijs";
     },
   },
+  // mounted() runs once, when the page is on the screen. We start listening to scrolling and resizing
+  mounted() {
+    window.addEventListener("scroll", this.updateShade);
+    window.addEventListener("resize", this.updateShade);
+    this.updateShade();
+  },
+  // beforeUnmount() runs when the user leaves the page. We stop listening, so nothing keeps running
+  beforeUnmount() {
+    window.removeEventListener("scroll", this.updateShade);
+    window.removeEventListener("resize", this.updateShade);
+  },
   methods: {
+    // Checks if the bottom of the page is reached (1px of room for rounding)
+    updateShade() {
+      const bottomOfScreen = window.scrollY + window.innerHeight;
+      this.isScrolledToBottom = bottomOfScreen >= document.documentElement.scrollHeight - 1;
+    },
     // Tapping a header opens that step and closes the other one. Tapping the open step closes it
     toggle(step: number) {
       this.openStep = this.openStep === step ? 0 : step;
@@ -154,8 +172,17 @@ export default defineComponent({
 
     <NotesField v-model="notes" />
 
+    <!-- A soft shade at the bottom of the screen: see-through at the top and 20% navy at the bottom.
+         pointer-events-none lets clicks go through it. It fades away at the bottom of the page (opacity-0).
+         It comes before the buttons in the page, and the buttons are `relative`, so they are drawn on top of it -->
+    <div
+      aria-hidden="true"
+      class="pointer-events-none fixed inset-x-0 bottom-0 h-56 bg-linear-to-b from-transparent to-navy/20 transition-opacity duration-200"
+      :class="isScrolledToBottom ? 'opacity-0' : 'opacity-100'"
+    />
+
     <!-- The two buttons at the bottom are written here directly, in the Secondary and Primary states of the skill. They do nothing yet -->
-    <div class="flex gap-4">
+    <div class="relative flex gap-4">
       <button
         type="button"
         class="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-sm font-normal text-blue focus-visible:outline-2 focus-visible:outline-blue"
