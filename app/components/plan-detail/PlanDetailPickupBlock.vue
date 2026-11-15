@@ -1,8 +1,9 @@
 <!-- app/components/plan-detail/PlanDetailPickupBlock.vue
      The content of the "Rijbewijs ophalen" step: a short explanation, two blue buttons that open a website
      (the gemeente of the user and the RDW) and a white button for someone who already has an appointment.
+     When that white button is pressed (`appointment` event), the page sets `has-appointment`: the white button is
+     replaced by a date field where the user fills in the date of the appointment.
      When the step is locked (`is-read-only`) the text can be read, but the buttons are grey and can't be used yet.
-     The white button does nothing yet.
      Usage: <PlanDetailPickupBlock text="..." municipality-url="https://..." rdw-url="https://..." :is-read-only="step2NotDone" /> -->
 <script lang="ts">
 export default defineComponent({
@@ -15,7 +16,13 @@ export default defineComponent({
     rdwUrl: { type: String, required: true },
     // True while the step is locked: readable, but nothing can be done yet
     isReadOnly: { type: Boolean, default: false },
+    // True after the user pressed "Ik heb al een afspraak": the date field shows
+    hasAppointment: { type: Boolean, default: false },
+    // The date of the appointment, written as "2026-11-14". With v-model:appointment-date the parent passes it in
+    appointmentDate: { type: String, default: "" },
   },
+  // "appointment": the user pressed the white button. "update:appointmentDate": the date field changed
+  emits: ["appointment", "update:appointmentDate"],
   computed: {
     // The classes of the two website buttons: blue with white text, or grey (Disabled state of the skill) when the step is locked
     filledButtonClasses(): string {
@@ -56,12 +63,25 @@ export default defineComponent({
       >
         Naar de website van de RDW
       </a>
+      <!-- After the white button was pressed, it is replaced by a date field -->
+      <FormField
+        v-if="hasAppointment"
+        class="mt-2"
+        label="Datum van uw afspraak"
+        type="date"
+        required
+        small
+        :model-value="appointmentDate"
+        @update:model-value="$emit('update:appointmentDate', $event)"
+      />
       <!-- The white button (Secondary look): a real button, because it does not go to a website -->
       <button
+        v-else
         type="button"
         :disabled="isReadOnly"
         class="flex h-7.25 w-full items-center justify-center rounded-xl border bg-white px-4 text-xs font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
         :class="outlineButtonClasses"
+        @click="$emit('appointment')"
       >
         Ik heb al een afspraak
       </button>
