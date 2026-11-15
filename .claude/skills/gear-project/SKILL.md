@@ -57,6 +57,7 @@ Use the same words and the same style everywhere, so everyone finds things in th
 
 - **Everything that belongs to one screen uses the same words:** folder `plan-overview/`, page `plan-overview.vue`, components `PlanOverview...`. Never mix spellings like `planoverview`, `planOverview` or `Plan_Overview`.
 - Components start with the subject (the screen or feature) and end with what they are: `PlanOverviewCard`, `PlanOverviewFilterBar`. The file name repeats the folder name, so Nuxt gives it the short name (see Components).
+- **Folders can be nested** when things belong together (`plan-overview/new-plan/`, `personal-plan-flow/get-driving-licence/`). Nuxt puts all folder names in front of the component name, so the file name starts with all of them: `plan-overview/new-plan/PlanOverviewNewPlanCategorySheet.vue` is used as `<PlanOverviewNewPlanCategorySheet />`.
 - Pages, folders and components have **English** names (only the text users see is Dutch).
 - Never use capitals, spaces or underscores in page file names or folders.
 
@@ -105,6 +106,9 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 | `arrow-up-from-bracket` |
 | `award` |
 | `bell` |
+| `check` |
+| `chevron-right` |
+| `edit` |
 | `ellipsis` |
 | `file-arrow-up` |
 | `file-lines` |

@@ -69,7 +69,7 @@ export default defineComponent({
     <PageHeader title="Type rijbewijs" subtitle="Welk rijbewijs wilt u behalen?" />
 
     <div role="radiogroup" aria-label="Type rijbewijs" class="flex flex-col gap-4">
-      <PersonalPlanFlowOptionCard
+      <PPFOptionCard
         v-for="license in licenseTypes"
         :key="license.value"
         v-model="selectedLicense"
@@ -91,7 +91,7 @@ export default defineComponent({
 
     <!-- Floats at the bottom of the screen, over the list. It is always there, grey until a type is chosen -->
     <div class="sticky bottom-7 mt-auto">
-      <PersonalPlanFlowNextButton :disabled="selectedLicense === ''" @click="goToNextStep" />
+      <PPFNextButton :disabled="selectedLicense === ''" @click="goToNextStep" />
     </div>
   </div>
 </template>

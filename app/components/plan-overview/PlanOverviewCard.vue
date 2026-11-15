@@ -24,10 +24,6 @@ export default defineComponent({
       };
       return icons[this.category] ?? "id-card";
     },
-    // Keeps the progress between 0 and 100, so the bar never breaks
-    safeProgress(): number {
-      return Math.min(100, Math.max(0, this.progress));
-    },
   },
 });
 </script>
@@ -42,21 +38,8 @@ export default defineComponent({
     <!-- Plan name with progress -->
     <div class="flex min-w-0 flex-1 flex-col">
       <h2 class="truncate text-sm leading-4 font-semibold text-navy">{{ title }}</h2>
-      <div class="flex items-center gap-2">
-        <span class="w-10 shrink-0 text-sm leading-4 font-normal text-grey">{{ safeProgress }}%</span>
-        <!-- role="progressbar" tells screen readers what this bar shows -->
-        <div
-          role="progressbar"
-          :aria-valuenow="safeProgress"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          :aria-label="`Voortgang ${title}`"
-          class="h-1 w-25 rounded-full bg-sand"
-        >
-          <!-- Tailwind can't make a class for every percentage, so the width is set with style -->
-          <div class="h-1 rounded-full bg-grey" :style="{ width: `${safeProgress}%` }" />
-        </div>
-      </div>
+      <!-- The shared progress bar, the same one as on the plan detail screen -->
+      <ProgressBar :progress="progress" :label="`Voortgang ${title}`" />
     </div>
 
     <!-- Shared indicator: the icon is decorative, so the text is for screen readers -->
