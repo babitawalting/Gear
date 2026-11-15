@@ -43,6 +43,7 @@ Nuxt 4 (`app/` directory), Vue 3, Tailwind CSS v4 (via `@tailwindcss/vite`, no `
 | `grey` | `#697782` | Buttons like cancel, and buttons that can't be used (yet) or are inactive |
 | `sand` | `#E3DED9` | **Border color only** |
 | `white` | `#FCFCFC` | Main background color, and text on blue backgrounds |
+| `red` | `#B42318` | **Delete actions only** (text and border of buttons like "Verwijderen") |
 
 Define them once in `@theme` (see `templates/main.css`), then use `bg-blue`, `text-navy`, `bg-grey`, `border-sand`, `bg-white`. **Never** use other Tailwind colors (`bg-gray-100`, `text-red-500`, ...) or random hex values. If something needs another color (e.g. an error), ask first.
 
@@ -88,10 +89,12 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 | `id-card` |
 | `industry` |
 | `magnifying-glass` |
+| `pen-to-square` |
 | `people-arrows` |
 | `school` |
 | `share` |
 | `stethoscope` |
+| `unlock` |
 
 ### Setup (once)
 Copy these files if they don't exist yet:
@@ -202,7 +205,7 @@ Never use other formats (`my_branch`, `Feature-Login`, `login`). Never work dire
 - Code is accessible (semantic HTML, alt text, labels, aria-labels, keyboard, touch targets).
 - Branch name follows the `type/name/branchname` format.
 - Nothing is committed, pushed or opened as a pull request without asking first.
-- Colors only used for their role (navy text, grey inactive/cancel buttons, sand borders, white background, blue accent), only the 5 colors, only Public Sans (400 / 600), only the icons listed.
+- Colors only used for their role (navy text, grey inactive/cancel buttons, sand borders, white background, blue accent, red delete actions), only the 6 colors, only Public Sans (400 / 600), only the icons listed.
 - Components use the Options API (`export default defineComponent`), no `<script setup>` or Composition API.
 - Code is something a second-year student can read and explain.
 - Run `npm run dev` or lint when you changed config files, and report anything not verified.

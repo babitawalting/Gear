@@ -17,6 +17,15 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
+  // Settings for the <head> of every page: the website is in Dutch
+  app: {
+    head: {
+      htmlAttrs: { lang: "nl" },
+    },
+  },
+  fonts: {
+    families: [{ name: "Public Sans", weights: [400, 600] }],
+  },
   vite: {
     plugins: [tailwindcss(),
     ]
