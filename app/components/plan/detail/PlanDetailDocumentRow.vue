@@ -1,4 +1,4 @@
-<!-- app/components/plan-detail/PlanDetailDocumentRow.vue
+<!-- app/components/plan/detail/PlanDetailDocumentRow.vue
      One document in the list of an open step: the name on the left and a blue edit button on the right.
      A thin line under the row is only shown when `has-line` is set. The page sets it when the list has 2 or more documents.
      When the user does not have the document yet (`is-missing`), the edit button is replaced by a blue "+ Toevoegen" button.

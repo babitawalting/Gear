@@ -1,4 +1,4 @@
-<!-- app/components/plan-detail/PlanDetailStepMarker.vue
+<!-- app/components/plan/detail/PlanDetailStepMarker.vue
      The marker of one step in the vertical progress bar: a circle with a piece of line above and below it.
      Put it left of a step card, in a row. The line stretches with the height of the card.
      - Step done: a blue circle with a white check.

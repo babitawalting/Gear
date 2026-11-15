@@ -40,7 +40,7 @@ We work component based and every person builds their own screens.
 
 - **Ask first.** When someone starts a new component, ask: "Will this be used on other screens, or only on yours?" Then place it by the answer. If they don't know, treat it as screen-specific. Tell them in your reply which folder you used and why.
 - **Shared components** (page header, icon, search bar, cards used on more than one screen) go in `app/components/shared/`, for example `shared/IconDisplay.vue`, `shared/PageHeader.vue`, `shared/SearchBar.vue`. Buttons are the exception, see Button states. The `shared` folder does not become part of the component name (it is set in `nuxt.config.ts`), so you still write `<IconDisplay />`, not `<SharedIconDisplay />`.
-- **Screen-specific components** (used by one screen only) go in a folder named after that screen or feature (see Naming): `app/components/plan-overview/PlanOverviewCard.vue`. If a second screen needs it later, move it up to `app/components/shared/`.
+- **Screen-specific components** (used by one screen only) go in a folder named after that screen or feature (see Naming): `app/components/plan/overview/PlanOverviewCard.vue`. If a second screen needs it later, move it up to `app/components/shared/`.
 - **Don't change another person's component** inside your own screen's work. If you need a change, ask them or make a small separate PR for it.
 - **Naming:** `PascalCase`, always two or more words, starting with the subject and ending with what it is: `PlanOverviewCard.vue`, `PlanOverviewFilterBar.vue`, `PlanOverviewList.vue`. Repeat the folder name at the start of the file name, so Nuxt gives it the short name `<PlanOverviewCard />` and not `<PlanOverviewPlanOverviewCard />`.
 - One component, one job. Keep components small.
@@ -50,13 +50,14 @@ Use the same words and the same style everywhere, so everyone finds things in th
 
 | What | Style | Example |
 |---|---|---|
-| Folders (in `components/`, `pages/`) | lowercase kebab-case | `components/plan-overview/` |
+| Folders (in `components/`, `pages/`) | lowercase kebab-case | `components/plan/overview/` |
 | Page files (the file name is the URL) | lowercase kebab-case | `pages/plan-overview.vue` → `/plan-overview` |
 | Components | `PascalCase`, two or more words | `PlanOverviewCard.vue`, used as `<PlanOverviewCard />` |
 | Code (variables, functions) | camelCase, English | `isMenuOpen` |
 
-- **Everything that belongs to one screen uses the same words:** folder `plan-overview/`, page `plan-overview.vue`, components `PlanOverview...`. Never mix spellings like `planoverview`, `planOverview` or `Plan_Overview`.
+- **Everything that belongs to one screen uses the same words:** folder `plan/overview/`, page `plan-overview.vue`, components `PlanOverview...`. Never mix spellings like `planoverview`, `planOverview` or `Plan_Overview`.
 - Components start with the subject (the screen or feature) and end with what they are: `PlanOverviewCard`, `PlanOverviewFilterBar`. The file name repeats the folder name, so Nuxt gives it the short name (see Components).
+- **Folders can be nested** when things belong together (`plan/overview/`, `plan/detail/`). Nuxt puts all folder names in front of the component name, so the file name starts with all of them: `plan/detail/PlanDetailStepCard.vue` is used as `<PlanDetailStepCard />`.
 - Pages, folders and components have **English** names (only the text users see is Dutch).
 - Never use capitals, spaces or underscores in page file names or folders.
 
@@ -244,7 +245,7 @@ Examples (write the `<button>` directly in the template, with the classes of its
 ## Example component
 
 ```vue
-<!-- app/components/plan-overview/PlanOverviewNote.vue -->
+<!-- app/components/plan/overview/PlanOverviewNote.vue -->
 <script lang="ts">
 // Options API: everything a component needs is listed in one object
 export default defineComponent({

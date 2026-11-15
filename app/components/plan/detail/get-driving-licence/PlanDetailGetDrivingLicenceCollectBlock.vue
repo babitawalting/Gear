@@ -1,10 +1,10 @@
-<!-- app/components/get-driving-licence/GetDrivingLicenceCollectBlock.vue
+<!-- app/components/get-driving-licence/PlanDetailGetDrivingLicenceCollectBlock.vue
      The content of the "Ophalen en toevoegen" step (step 4). It has two looks:
      1. Waiting for the licence: a line with the date of the appointment and a button "Rijbewijs ontvangen".
      2. After that button was pressed (`is-received`): a congratulation and a button "Rijbewijs toevoegen aan kluis".
      The page decides which look it is. When the step is locked (`is-read-only`) the buttons are grey and can't be used yet.
      The button to add the licence to the vault does nothing yet.
-     Usage: <GetDrivingLicenceCollectBlock appointment-date="2026-01-01" :is-received="received" @received="received = true" /> -->
+     Usage: <PlanDetailGetDrivingLicenceCollectBlock appointment-date="2026-01-01" :is-received="received" @received="received = true" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

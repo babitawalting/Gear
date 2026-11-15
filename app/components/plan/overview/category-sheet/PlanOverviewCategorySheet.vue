@@ -1,4 +1,4 @@
-<!-- app/components/plan-overview/category-sheet/PlanOverviewCategorySheet.vue
+<!-- app/components/plan/overview/category-sheet/PlanOverviewCategorySheet.vue
      The sheet that slides up from the bottom to choose the category of a new plan.
      It is a native <dialog>: the browser gives us the dark/blurred background, closing with Escape
      and keeping the keyboard focus inside the sheet, so we don't have to build that ourselves.

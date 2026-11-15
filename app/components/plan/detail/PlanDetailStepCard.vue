@@ -1,4 +1,4 @@
-<!-- app/components/plan-detail/PlanDetailStepCard.vue
+<!-- app/components/plan/detail/PlanDetailStepCard.vue
      One step of a plan: a number, a title, a description and an arrow. When it is open, the content of the step shows below.
      A locked step (grey) can be opened, but nothing in it can be done yet, so the page makes its content read-only.
      Usage: <PlanDetailStepCard :number="1" title="Wat heb ik al?" description="Rijbewijs B" :is-open="openStep === 1" @toggle="openStep = 1">
