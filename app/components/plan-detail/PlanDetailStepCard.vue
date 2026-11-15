@@ -31,11 +31,11 @@ export default defineComponent({
       @click="$emit('toggle')"
     >
       <span
-        class="flex size-11.5 shrink-0 items-center justify-center rounded-xl text-xl font-semibold text-white"
+        class="flex size-11.5 shrink-0 items-center justify-center rounded-xl text-xl font-normal text-white"
         :class="isLocked ? 'bg-grey' : 'bg-blue'"
       >{{ number }}</span>
       <span class="flex min-w-0 flex-1 flex-col">
-        <span class="text-sm leading-5 font-normal" :class="isLocked ? 'text-grey' : 'text-navy'">{{ title }}</span>
+        <span class="text-sm leading-5 font-semibold" :class="isLocked ? 'text-grey' : 'text-navy'">{{ title }}</span>
         <span class="text-xs leading-4 font-normal text-grey">{{ description }}</span>
       </span>
       <!-- One arrow pointing right. When the step is open it is turned a quarter (rotate-90) so it points down -->
