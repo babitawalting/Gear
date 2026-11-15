@@ -5,12 +5,17 @@
 export default defineComponent({
   // setup() is only used for Nuxt's useSeoMeta, which sets the page <title>
   setup() {
-    useSeoMeta({ title: "Rijbewijs BE" });
+    useSeoMeta({ title: "Plan" });
   },
   data() {
+    // The plan details screen sends the title in the address ("?title=Rijbewijs BE"). Without it we use a sample title
+    const titleFromAddress = this.$route.query.title;
     return {
       // Sample data for now, this will come from the database later (this.$route.params.id says which plan)
-      plan: { title: "Rijbewijs BE", subtitle: "Rijbewijs behalen" },
+      plan: {
+        title: typeof titleFromAddress === "string" && titleFromAddress !== "" ? titleFromAddress : "Rijbewijs BE",
+        subtitle: "Rijbewijs behalen",
+      },
       // The number of the step that is open (1 to 4). 0 means none. Only one step is open at a time
       openStep: 1,
       // Step 1: the user has Rijbewijs B in the vault. For now "+ Toevoegen" sets this to true

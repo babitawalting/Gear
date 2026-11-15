@@ -18,6 +18,13 @@ export default defineComponent({
       endDate: "",
     };
   },
+  methods: {
+    // Called when the user presses "Volgende": goes to the plan page, with the title in the address.
+    // The plan does not exist in a database yet, so the id "12" is a sample
+    goToNextStep() {
+      navigateTo({ path: "/plans/12", query: { title: this.title.trim() } });
+    },
+  },
 });
 </script>
 
@@ -31,10 +38,9 @@ export default defineComponent({
       <FormField v-model="endDate" label="Einddatum" type="date" />
     </div>
 
-    <!-- The title is required, so the button stays grey until it is filled in.
-         It does nothing yet: the next screen does not exist. mt-auto pushes it to the bottom -->
+    <!-- The title is required, so the button stays grey until it is filled in. mt-auto pushes it to the bottom -->
     <div class="mt-auto">
-      <PPFNextButton :disabled="title.trim() === ''" />
+      <PPFNextButton :disabled="title.trim() === ''" @click="goToNextStep" />
     </div>
   </div>
 </template>
