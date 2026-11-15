@@ -1,15 +1,14 @@
-<!-- app/components/plan/overview/PlanOverviewArchiveCard.vue
-     One archived plan in the plan overview (the "Archief" view).
-     It looks like PlanOverviewCard, but shows the archive date instead of a progress bar.
-     Usage: <PlanOverviewArchiveCard title="Titel" category="career" archived-at="2026-01-01" /> -->
+<!-- app/components/plan-overview/PlanOverviewCard.vue
+     One plan in the plan overview.
+     Usage: <PlanOverviewCard title="Titel" category="personal" :progress="10" is-shared /> -->
 <script lang="ts">
 export default defineComponent({
   props: {
     title: { type: String, required: true },
     // "career", "education" or "personal": decides which icon is shown
     category: { type: String, default: "personal" },
-    // The date the plan was archived, written as "2026-11-14" (year-month-day)
-    archivedAt: { type: String, required: true },
+    // Percentage completed, from 0 to 100
+    progress: { type: Number, default: 0 },
     // True when the user shared this plan with another user
     isShared: { type: Boolean, default: false },
   },
@@ -25,10 +24,9 @@ export default defineComponent({
       };
       return icons[this.category] ?? "id-card";
     },
-    // Turns "2026-11-14" into "14/11/2026" (dd/mm/yyyy)
-    formattedDate(): string {
-      const [year, month, day] = this.archivedAt.split("-");
-      return `${day}/${month}/${year}`;
+    // Keeps the progress between 0 and 100, so the bar never breaks
+    safeProgress(): number {
+      return Math.min(100, Math.max(0, this.progress));
     },
   },
 });
@@ -41,15 +39,24 @@ export default defineComponent({
       <IconDisplay :name="categoryIcon" class="size-5 text-white" />
     </div>
 
-    <!-- Plan name with the date it was archived -->
+    <!-- Plan name with progress -->
     <div class="flex min-w-0 flex-1 flex-col">
       <h2 class="truncate text-sm leading-4 font-semibold text-navy">{{ title }}</h2>
-      <p class="truncate text-sm leading-4 font-normal text-grey">
-        <!-- Hidden text: screen readers say what the date means, the screen only shows the date -->
-        <span class="sr-only">Gearchiveerd op</span>
-        <!-- <time> with a datetime attribute lets browsers and screen readers read the date correctly -->
-        <time :datetime="archivedAt">{{ formattedDate }}</time>
-      </p>
+      <div class="flex items-center gap-2">
+        <span class="w-10 shrink-0 text-sm leading-4 font-normal text-grey">{{ safeProgress }}%</span>
+        <!-- role="progressbar" tells screen readers what this bar shows -->
+        <div
+          role="progressbar"
+          :aria-valuenow="safeProgress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          :aria-label="`Voortgang ${title}`"
+          class="h-1 w-25 rounded-full bg-sand"
+        >
+          <!-- Tailwind can't make a class for every percentage, so the width is set with style -->
+          <div class="h-1 rounded-full bg-grey" :style="{ width: `${safeProgress}%` }" />
+        </div>
+      </div>
     </div>
 
     <!-- Shared indicator: the icon is decorative, so the text is for screen readers -->

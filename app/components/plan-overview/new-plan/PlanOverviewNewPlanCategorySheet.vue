@@ -1,8 +1,8 @@
-<!-- app/components/plan/overview/category-sheet/PlanOverviewCategorySheet.vue
+<!-- app/components/plan-overview/new-plan/PlanOverviewNewPlanCategorySheet.vue
      The sheet that slides up from the bottom to choose the category of a new plan.
      It is a native <dialog>: the browser gives us the dark/blurred background, closing with Escape
      and keeping the keyboard focus inside the sheet, so we don't have to build that ourselves.
-     Usage: <PlanOverviewCategorySheet :open="isSheetOpen" @close="isSheetOpen = false" @start="startPlan" /> -->
+     Usage: <PlanOverviewNewPlanCategorySheet :open="isSheetOpen" @close="isSheetOpen = false" @start="startPlan" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {
@@ -61,14 +61,14 @@ export default defineComponent({
       <p class="text-sm leading-5 font-normal text-grey">Onder welke categorie valt het nieuwe plan?</p>
 
       <div role="radiogroup" aria-labelledby="category-sheet-title" class="mt-5.5 flex flex-col gap-4">
-        <PlanOverviewCategorySheetRow v-model="category" name="category" value="education" label="Educatie" icon="school" />
-        <PlanOverviewCategorySheetRow v-model="category" name="category" value="career" label="Carrière" icon="industry" />
-        <PlanOverviewCategorySheetRow v-model="category" name="category" value="personal" label="Persoonlijk" icon="id-card" />
+        <PlanOverviewNewPlanCategorySheetRow v-model="category" name="category" value="education" label="Educatie" icon="school" />
+        <PlanOverviewNewPlanCategorySheetRow v-model="category" name="category" value="career" label="Carrière" icon="industry" />
+        <PlanOverviewNewPlanCategorySheetRow v-model="category" name="category" value="personal" label="Persoonlijk" icon="id-card" />
       </div>
 
       <div class="mt-8 flex gap-6">
-        <PlanOverviewCategorySheetCancelButton @click="$emit('close')" />
-        <PlanOverviewCategorySheetStartButton :disabled="category === ''" @click="handleStart" />
+        <PlanOverviewNewPlanCategorySheetCancelButton @click="$emit('close')" />
+        <PlanOverviewNewPlanCategorySheetStartButton :disabled="category === ''" @click="handleStart" />
       </div>
     </div>
   </dialog>
