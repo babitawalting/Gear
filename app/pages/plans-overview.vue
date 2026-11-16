@@ -45,8 +45,10 @@ export default defineComponent({
       if (category === "personal") {
         // navigateTo is a Nuxt function (auto-imported) that goes to another page
         navigateTo("/personal-plan-flow/choose-plan");
+      } else if (category === "education") {
+        navigateTo("/education-plan-flow/choose-plan");
       } else {
-        // The flows for the other categories do not exist yet
+        // The flow for the career category does not exist yet
         console.log("Nieuw plan starten met categorie:", category);
       }
     },
