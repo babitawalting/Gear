@@ -88,7 +88,7 @@ export default defineComponent({
 
     <!-- Sticks to the bottom right of the column. It opens the category sheet to start a new plan -->
     <div class="sticky bottom-6 mt-auto flex justify-end">
-      <AddButton label="Nieuw plan" @click="isCategorySheetOpen = true" />
+      <PlansOverviewAddButton label="Nieuw plan" @click="isCategorySheetOpen = true" />
     </div>
 
     <PlansOverviewNewPlanCategorySheet

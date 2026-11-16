@@ -1,9 +1,9 @@
-<!-- app/components/shared/FormField.vue
+<!-- app/components/personal-plan-flow/PPFFormField.vue
      A form field with a label above it: a text field, or a date field that opens the phone's own date picker.
      With `small` the label and the field are smaller (12px, regular), for use inside a card.
-     Usage: <FormField v-model="title" label="Titel" required />
-            <FormField v-model="endDate" label="Einddatum" type="date" />
-            <FormField v-model="date" label="Datum" type="date" small /> -->
+     Usage: <PPFFormField v-model="title" label="Titel" required />
+            <PPFFormField v-model="endDate" label="Einddatum" type="date" />
+            <PPFFormField v-model="date" label="Datum" type="date" small /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

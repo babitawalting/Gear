@@ -39,8 +39,8 @@ export default defineComponent({
     <PageHeader title="Plandetails" subtitle="Rijbewijs behalen" />
 
     <div class="flex flex-col gap-5">
-      <FormField v-model="title" label="Titel" required />
-      <FormField v-model="endDate" label="Einddatum" type="date" />
+      <PPFFormField v-model="title" label="Titel" required />
+      <PPFFormField v-model="endDate" label="Einddatum" type="date" />
     </div>
 
     <!-- The title is required, so the button stays grey until it is filled in. mt-auto pushes it to the bottom -->
