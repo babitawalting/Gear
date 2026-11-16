@@ -9,17 +9,18 @@ export default defineComponent({
   },
   data() {
     return {
-      // The options the user can choose from. There is only a placeholder for now, the real education plans come later
-      options: [{ value: "placeholder", title: "PLACEHOLDER", description: "PLACEHOLDER" }],
+      // The options the user can choose from. There is only one for now, more education plans may come later
+      options: [
+        { value: "diploma-description", title: "Diplomabeschrijving aanvragen", description: "Laat uw diploma uitleggen voor een opleiding of baan in het buitenland" },
+      ],
       // The chosen option. With only one option it is chosen right away
-      selectedOption: "placeholder",
+      selectedOption: "diploma-description",
     };
   },
   methods: {
-    // Called when the user presses "Volgende". Only the "start a degree" flow exists for now
+    // Called when the user presses "Volgende". The next screen of the diploma description flow does not exist yet
     goToNextStep() {
-      // navigateTo is a Nuxt function (auto-imported) that goes to another page
-      navigateTo("/education-plan-flow/start-degree/choose-degree-type");
+      // Nothing to go to yet
     },
   },
 });
