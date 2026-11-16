@@ -16,9 +16,10 @@ export default defineComponent({
     };
   },
   methods: {
-    // Called when the user presses "Volgende". The next screen of the education flow does not exist yet
+    // Called when the user presses "Volgende". Only the "start a degree" flow exists for now
     goToNextStep() {
-      // Nothing to go to yet
+      // navigateTo is a Nuxt function (auto-imported) that goes to another page
+      navigateTo("/education-plan-flow/start-degree/choose-degree-type");
     },
   },
 });
