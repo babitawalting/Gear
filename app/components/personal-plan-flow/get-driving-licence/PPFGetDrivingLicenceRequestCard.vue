@@ -64,7 +64,7 @@ export default defineComponent({
         Naar de website van de RDW
       </a>
       <!-- After the white button was pressed, it is replaced by a date field -->
-      <FormField
+      <PPFFormField
         v-if="hasAppointment"
         class="mt-2"
         label="Datum van uw afspraak"

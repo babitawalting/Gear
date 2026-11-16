@@ -145,7 +145,7 @@ export default defineComponent({
       </button>
     </div>
 
-    <ProgressBar :progress="progress" size="large" :label="`Voortgang ${plan.title}`" />
+    <PPFProgressBar :progress="progress" size="large" :label="`Voortgang ${plan.title}`" />
 
     <!-- The four steps. Each row has the marker of the vertical progress bar on the left and the step on the right -->
     <div>
@@ -202,7 +202,7 @@ export default defineComponent({
       </div>
     </div>
 
-    <NotesField v-model="notes" />
+    <PPFNotesField v-model="notes" />
 
     <!-- A soft shade at the bottom of the screen: see-through at the top and 20% navy at the bottom.
          pointer-events-none lets clicks go through it. It fades away at the bottom of the page (opacity-0) -->

@@ -45,8 +45,10 @@ export default defineComponent({
       if (category === "personal") {
         // navigateTo is a Nuxt function (auto-imported) that goes to another page
         navigateTo("/personal-plan-flow/choose-plan");
+      } else if (category === "education") {
+        navigateTo("/education-plan-flow/choose-plan");
       } else {
-        // The flows for the other categories do not exist yet
+        // The flow for the career category does not exist yet
         console.log("Nieuw plan starten met categorie:", category);
       }
     },
@@ -86,10 +88,10 @@ export default defineComponent({
 
     <!-- Sticks to the bottom right of the column. It opens the category sheet to start a new plan -->
     <div class="sticky bottom-6 mt-auto flex justify-end">
-      <AddButton label="Nieuw plan" @click="isCategorySheetOpen = true" />
+      <PlansOverviewAddButton label="Nieuw plan" @click="isCategorySheetOpen = true" />
     </div>
 
-    <PlansOverviewNewPlanCategorySheet
+    <PlanCategorySheet
       :open="isCategorySheetOpen"
       @close="isCategorySheetOpen = false"
       @start="handleStartPlan"
