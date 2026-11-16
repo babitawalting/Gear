@@ -31,8 +31,7 @@ export default defineComponent({
     <PageHeader title="Nieuw educatieplan" subtitle="Welk educatieplan wilt u starten?" />
 
     <div role="radiogroup" aria-label="Educatieplan" class="flex flex-col gap-4">
-      <!-- PPFOptionCard and PPFNextButton are made for the personal plan flow, but are reused here -->
-      <PPFOptionCard
+      <EPFOptionCard
         v-for="option in options"
         :key="option.value"
         v-model="selectedOption"
@@ -45,7 +44,7 @@ export default defineComponent({
 
     <!-- mt-auto pushes the button to the bottom of the screen -->
     <div class="mt-auto">
-      <PPFNextButton :disabled="selectedOption === ''" @click="goToNextStep" />
+      <EPFNextButton :disabled="selectedOption === ''" @click="goToNextStep" />
     </div>
   </div>
 </template>

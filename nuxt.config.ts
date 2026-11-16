@@ -19,6 +19,8 @@ export default defineNuxtConfig({
     { path: "~/components/shared", pathPrefix: false },
     // Components in personal-plan-flow start with PPF (short for personal plan flow): <PPFStepCard />, not <PersonalPlanFlowPPFStepCard />
     { path: "~/components/personal-plan-flow", pathPrefix: false },
+    // Same for education-plan-flow, with EPF (short for education plan flow): <EPFOptionCard />
+    { path: "~/components/education-plan-flow", pathPrefix: false },
     "~/components",
   ],
   compatibilityDate: "2025-07-15",

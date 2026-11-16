@@ -34,7 +34,7 @@ export default defineComponent({
     <PageHeader title="Type opleiding" subtitle="Welk type opleiding wilt u volgen?" />
 
     <div role="radiogroup" aria-label="Type opleiding" class="flex flex-col gap-4">
-      <PPFOptionCard
+      <EPFOptionCard
         v-for="degree in degreeTypes"
         :key="degree.value"
         v-model="selectedDegree"
@@ -47,7 +47,7 @@ export default defineComponent({
 
     <!-- mt-auto pushes the button to the bottom of the screen. It is grey until a type is chosen -->
     <div class="mt-auto">
-      <PPFNextButton :disabled="selectedDegree === ''" @click="goToNextStep" />
+      <EPFNextButton :disabled="selectedDegree === ''" @click="goToNextStep" />
     </div>
   </div>
 </template>
