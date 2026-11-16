@@ -18,9 +18,10 @@ export default defineComponent({
     };
   },
   methods: {
-    // Called when the user presses "Volgende". The next screen of the diploma description flow does not exist yet
+    // Called when the user presses "Volgende". Only the diploma description plan exists, so it goes to its plan details
     goToNextStep() {
-      // Nothing to go to yet
+      // navigateTo is a Nuxt function (auto-imported) that goes to another page
+      navigateTo("/education-plan-flow/diploma-description/plan-details");
     },
   },
 });
