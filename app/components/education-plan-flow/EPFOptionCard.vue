@@ -1,7 +1,8 @@
 <!-- app/components/education-plan-flow/EPFOptionCard.vue
-     One option the user can choose in the education plan flow: a radio circle, a title and a short description.
+     One option the user can choose in the education plan flow: a radio circle, a title and an optional short description.
      Several cards with the same `name` form one group, and only one can be chosen.
-     Usage: <EPFOptionCard v-model="option" name="option" value="template" title="Template" description="Template subtekst" /> -->
+     Usage: <EPFOptionCard v-model="option" name="option" value="template" title="Template" description="Template subtekst" />
+            <EPFOptionCard v-model="option" name="option" value="template" title="Template" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {
@@ -13,8 +14,8 @@ export default defineComponent({
     name: { type: String, required: true },
     // The name of the option, in Dutch
     title: { type: String, required: true },
-    // The line under the title, in Dutch
-    description: { type: String, required: true },
+    // The line under the title, in Dutch. Empty means no line: then only the title is shown
+    description: { type: String, default: "" },
   },
   // Tells the parent that this card was chosen (this makes v-model work)
   emits: ["update:modelValue"],
@@ -58,7 +59,7 @@ export default defineComponent({
         class="text-sm leading-5 font-semibold"
         :class="isSelected ? 'text-white' : isOtherSelected ? 'text-grey' : 'text-navy'"
       >{{ title }}</span>
-      <span class="text-xs leading-4 font-normal" :class="isSelected ? 'text-white' : 'text-grey'">{{ description }}</span>
+      <span v-if="description !== ''" class="text-xs leading-4 font-normal" :class="isSelected ? 'text-white' : 'text-grey'">{{ description }}</span>
     </span>
   </label>
 </template>
