@@ -1,7 +1,7 @@
-<!-- app/components/plans-overview/new-plan/PlansOverviewNewPlanCategorySheetStartButton.vue
+<!-- app/components/plans-overview/new-plan/PlanCategorySheetStartButton.vue
      The "Plan starten" button of the category sheet. It is grey and disabled until a category is chosen,
      then it turns into the Primary state of the skill (blue with white text).
-     Usage: <PlansOverviewNewPlanCategorySheetStartButton :disabled="category === ''" @click="start" /> -->
+     Usage: <PlanCategorySheetStartButton :disabled="category === ''" @click="start" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

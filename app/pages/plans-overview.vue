@@ -91,7 +91,7 @@ export default defineComponent({
       <PlansOverviewAddButton label="Nieuw plan" @click="isCategorySheetOpen = true" />
     </div>
 
-    <PlansOverviewNewPlanCategorySheet
+    <PlanCategorySheet
       :open="isCategorySheetOpen"
       @close="isCategorySheetOpen = false"
       @start="handleStartPlan"

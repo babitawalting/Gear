@@ -21,6 +21,8 @@ export default defineNuxtConfig({
     { path: "~/components/personal-plan-flow", pathPrefix: false },
     // Same for education-plan-flow, with EPF (short for education plan flow): <EPFOptionCard />
     { path: "~/components/education-plan-flow", pathPrefix: false },
+    // The category sheet components keep a short name: <PlanCategorySheet />, not <PlansOverviewNewPlanCategorySheet />
+    { path: "~/components/plans-overview/new-plan", pathPrefix: false },
     "~/components",
   ],
   compatibilityDate: "2025-07-15",
