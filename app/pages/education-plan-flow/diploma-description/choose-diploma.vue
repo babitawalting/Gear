@@ -12,16 +12,16 @@ export default defineComponent({
       // The diplomas the user can choose from. For MBO the description is made by SBB and not by Nuffic,
       // so the flow after this choice will be different (that screen does not exist yet)
       diplomas: [
-        { value: "vmbo-t", title: "VMBO-T", description: "Voortgezet onderwijs" },
-        { value: "havo", title: "HAVO", description: "Voortgezet onderwijs" },
-        { value: "vwo", title: "VWO", description: "Voortgezet onderwijs" },
-        { value: "mbo", title: "MBO", description: "Middelbaar beroepsonderwijs" },
-        { value: "hbo-propedeuse", title: "HBO-propedeuse", description: "Hogeschool" },
-        { value: "hbo-bachelor", title: "HBO-bachelor", description: "Hogeschool" },
-        { value: "hbo-master", title: "HBO-master", description: "Hogeschool" },
-        { value: "wo-propedeuse", title: "WO-propedeuse", description: "Universiteit" },
-        { value: "wo-bachelor", title: "WO-bachelor", description: "Universiteit" },
-        { value: "wo-master", title: "WO-master", description: "Universiteit" },
+        { value: "vmbo-t", title: "VMBO-T" },
+        { value: "havo", title: "HAVO" },
+        { value: "vwo", title: "VWO" },
+        { value: "mbo", title: "MBO" },
+        { value: "hbo-propedeuse", title: "HBO-propedeuse" },
+        { value: "hbo-bachelor", title: "HBO-bachelor" },
+        { value: "hbo-master", title: "HBO-master" },
+        { value: "wo-propedeuse", title: "WO-propedeuse" },
+        { value: "wo-bachelor", title: "WO-bachelor" },
+        { value: "wo-master", title: "WO-master" },
       ],
       // The chosen diploma. Empty means nothing is chosen yet
       selectedDiploma: "",
@@ -68,7 +68,6 @@ export default defineComponent({
         name="diploma"
         :value="diploma.value"
         :title="diploma.title"
-        :description="diploma.description"
       />
     </div>
 
