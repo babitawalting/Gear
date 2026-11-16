@@ -9,11 +9,13 @@ export default defineComponent({
   },
   data() {
     return {
-      // The diplomas Nuffic makes a description for (an mbo diploma is not in the list: that goes through SBB)
+      // The diplomas the user can choose from. For MBO the description is made by SBB and not by Nuffic,
+      // so the flow after this choice will be different (that screen does not exist yet)
       diplomas: [
         { value: "vmbo-t", title: "VMBO-T", description: "Voortgezet onderwijs" },
         { value: "havo", title: "HAVO", description: "Voortgezet onderwijs" },
         { value: "vwo", title: "VWO", description: "Voortgezet onderwijs" },
+        { value: "mbo", title: "MBO", description: "Middelbaar beroepsonderwijs" },
         { value: "hbo", title: "HBO", description: "Propedeuse, bachelor of master" },
         { value: "wo", title: "WO", description: "Propedeuse, bachelor of master" },
       ],
@@ -47,9 +49,6 @@ export default defineComponent({
         :description="diploma.description"
       />
     </div>
-
-    <!-- An MBO diploma is not in the list: Nuffic does not describe it, SBB does -->
-    <p class="text-xs leading-4 font-normal text-grey">Een MBO-diploma? Neem dan contact op met SBB.</p>
 
     <!-- mt-auto pushes the button to the bottom of the screen. It is grey until a diploma is chosen -->
     <div class="mt-auto">
