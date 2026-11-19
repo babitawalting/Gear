@@ -1,6 +1,6 @@
-<!-- app/components/personal-plan-flow/PPFNotesField.vue
+<!-- app/components/shared/NotesField.vue
      The "Notities" block: a heading and a large text box where the user can write a note.
-     Usage: <PPFNotesField v-model="notes" /> -->
+     Usage: <NotesField v-model="notes" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

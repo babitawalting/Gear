@@ -61,7 +61,7 @@ export default defineComponent({
     <PageHeader title="Type diploma" subtitle="Voor welk diploma wilt u een beschrijving?" />
 
     <div role="radiogroup" aria-label="Type diploma" class="flex flex-col gap-4">
-      <EPFOptionCard
+      <OptionCard
         v-for="diploma in diplomas"
         :key="diploma.value"
         v-model="selectedDiploma"
@@ -82,7 +82,7 @@ export default defineComponent({
 
     <!-- Floats at the bottom of the screen, over the list. It is grey until a diploma is chosen -->
     <div class="sticky bottom-7 mt-auto">
-      <EPFNextButton :disabled="selectedDiploma === ''" @click="goToNextStep" />
+      <PrimaryButton label="Volgende" :disabled="selectedDiploma === ''" @click="goToNextStep" />
     </div>
   </div>
 </template>

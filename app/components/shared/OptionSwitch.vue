@@ -1,23 +1,21 @@
-<!-- app/components/plans-overview/PlansOverviewSwitch.vue
-     Switch between the active plans ("Overzicht") and the archived plans ("Archief").
-     Usage: <PlansOverviewSwitch v-model="view" />
-     `view` is "overview" or "archive". The page decides which cards to show. -->
+<!-- app/components/shared/OptionSwitch.vue
+     A switch between two (or more) options next to each other, each with an icon and a text, for example "Overzicht" and "Archief".
+     Usage: <OptionSwitch v-model="view" :options="[{ value: 'overview', label: 'Overzicht', icon: 'file-lines' }, ...]" label="Weergave plannen" />
+     The page decides what to show for the chosen value. -->
 <script lang="ts">
+import type { PropType } from "vue";
+
 export default defineComponent({
   props: {
-    // The current choice. With v-model the parent passes this in as `modelValue`
-    modelValue: { type: String, default: "overview" },
+    // The value of the current choice. With v-model the parent passes this in as `modelValue`
+    modelValue: { type: String, default: "" },
+    // The options: a list of { value, label, icon }. The icon is the name of an icon of IconDisplay
+    options: { type: Array as PropType<{ value: string; label: string; icon: string }[]>, required: true },
+    // Text for screen readers that says what the switch is for, in Dutch
+    label: { type: String, required: true },
   },
   // Tells the parent when the user picks the other option (this makes v-model work)
   emits: ["update:modelValue"],
-  data() {
-    return {
-      options: [
-        { value: "overview", label: "Overzicht", icon: "file-lines" },
-        { value: "archive", label: "Archief", icon: "archive" },
-      ],
-    };
-  },
 });
 </script>
 
@@ -25,7 +23,7 @@ export default defineComponent({
   <!-- role="group" with a label tells screen readers these two buttons belong together -->
   <div
     role="group"
-    aria-label="Weergave plannen"
+    :aria-label="label"
     class="grid grid-cols-2 rounded-xl border border-sand bg-white"
   >
     <button

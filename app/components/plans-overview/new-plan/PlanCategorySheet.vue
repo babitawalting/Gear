@@ -67,8 +67,8 @@ export default defineComponent({
       </div>
 
       <div class="mt-8 flex gap-6">
-        <PlanCategorySheetCancelButton @click="$emit('close')" />
-        <PlanCategorySheetStartButton :disabled="category === ''" @click="handleStart" />
+        <CancelButton label="Annuleren" @click="$emit('close')" />
+        <PrimaryButton label="Plan starten" :disabled="category === ''" @click="handleStart" />
       </div>
     </div>
   </dialog>

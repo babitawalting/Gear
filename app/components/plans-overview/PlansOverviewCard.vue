@@ -50,7 +50,7 @@ export default defineComponent({
         >{{ title }}</NuxtLink>
       </h2>
       <!-- The shared progress bar, the same one as on the plan detail screen -->
-      <PlansOverviewProgressBar :progress="progress" :label="`Voortgang ${title}`" />
+      <ProgressBar :progress="progress" :label="`Voortgang ${title}`" />
     </div>
 
     <!-- Shared indicator: the icon is decorative, so the text is for screen readers -->

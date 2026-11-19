@@ -145,35 +145,35 @@ export default defineComponent({
       </button>
     </div>
 
-    <PPFProgressBar :progress="progress" size="large" :label="`Voortgang ${plan.title}`" />
+    <ProgressBar :progress="progress" size="large" :label="`Voortgang ${plan.title}`" />
 
     <!-- The four steps. Each row has the marker of the vertical progress bar on the left and the step on the right -->
     <div>
       <div class="flex gap-4">
-        <PPFStepMarker :is-done="done[0]" :is-next="nextIndex === 0" :is-open="openStep === 1" :line-above="lineAbove(1)" :line-below="lineBelow(1)" />
+        <StepMarker :is-done="done[0]" :is-next="nextIndex === 0" :is-open="openStep === 1" :line-above="lineAbove(1)" :line-below="lineBelow(1)" />
         <div class="min-w-0 flex-1 pb-4">
-          <PPFStepCard :number="1" title="Wat heb ik al?" :description="step1Description" :is-open="openStep === 1" @toggle="toggle(1)">
+          <StepCard :number="1" title="Wat heb ik al?" :description="step1Description" :is-open="openStep === 1" @toggle="toggle(1)">
             <p v-if="!hasLicenseB" class="mb-1 text-xs leading-4 font-normal text-grey">
               Er ontbreekt nog een document in uw kluis. Voeg het toe om verder te gaan.
             </p>
-            <PPFDocumentRow title="Rijbewijs B" :is-missing="!hasLicenseB" @add="hasLicenseB = true" />
-          </PPFStepCard>
+            <DocumentRow title="Rijbewijs B" :is-missing="!hasLicenseB" @add="hasLicenseB = true" />
+          </StepCard>
         </div>
       </div>
 
       <div class="flex gap-4">
-        <PPFStepMarker :is-done="done[1]" :is-next="nextIndex === 1" :is-open="openStep === 2" :line-above="lineAbove(2)" :line-below="lineBelow(2)" />
+        <StepMarker :is-done="done[1]" :is-next="nextIndex === 1" :is-open="openStep === 2" :line-above="lineAbove(2)" :line-below="lineBelow(2)" />
         <div class="min-w-0 flex-1 pb-4">
-          <PPFStepCard :number="2" title="Examens" :description="step2Description" :is-locked="step2Locked" :is-open="openStep === 2" @toggle="toggle(2)">
+          <StepCard :number="2" title="Examens" :description="step2Description" :is-locked="step2Locked" :is-open="openStep === 2" @toggle="toggle(2)">
             <PPFGetDrivingLicenceExamCard :is-read-only="step2Locked" @completed="completeExam" />
-          </PPFStepCard>
+          </StepCard>
         </div>
       </div>
 
       <div class="flex gap-4">
-        <PPFStepMarker :is-done="done[2]" :is-next="nextIndex === 2" :is-open="openStep === 3" :line-above="lineAbove(3)" :line-below="lineBelow(3)" />
+        <StepMarker :is-done="done[2]" :is-next="nextIndex === 2" :is-open="openStep === 3" :line-above="lineAbove(3)" :line-below="lineBelow(3)" />
         <div class="min-w-0 flex-1 pb-4">
-          <PPFStepCard :number="3" title="Rijbewijs aanvragen" description="Via uw gemeente of de RDW" :is-locked="step3Locked" :is-open="openStep === 3" @toggle="toggle(3)">
+          <StepCard :number="3" title="Rijbewijs aanvragen" description="Via uw gemeente of de RDW" :is-locked="step3Locked" :is-open="openStep === 3" @toggle="toggle(3)">
             <PPFGetDrivingLicenceRequestCard
               v-model:appointment-date="appointmentDate"
               text="Na uw praktijkexamen vraagt u uw rijbewijs aan bij uw gemeente, of online via de RDW."
@@ -183,26 +183,26 @@ export default defineComponent({
               :has-appointment="hasAppointment"
               @appointment="hasAppointment = true"
             />
-          </PPFStepCard>
+          </StepCard>
         </div>
       </div>
 
       <div class="flex gap-4">
-        <PPFStepMarker :is-done="done[3]" :is-next="nextIndex === 3" :is-open="openStep === 4" :line-above="lineAbove(4)" :line-below="lineBelow(4)" />
+        <StepMarker :is-done="done[3]" :is-next="nextIndex === 3" :is-open="openStep === 4" :line-above="lineAbove(4)" :line-below="lineBelow(4)" />
         <div class="min-w-0 flex-1">
-          <PPFStepCard :number="4" title="Ophalen en toevoegen" description="Upload uw nieuwe rijbewijs" :is-locked="step4Locked" :is-open="openStep === 4" @toggle="toggle(4)">
+          <StepCard :number="4" title="Ophalen en toevoegen" description="Upload uw nieuwe rijbewijs" :is-locked="step4Locked" :is-open="openStep === 4" @toggle="toggle(4)">
             <PPFGetDrivingLicenceCollectCard
               :appointment-date="appointmentDate"
               :is-received="licenseReceived"
               :is-read-only="step4Locked"
               @received="licenseReceived = true"
             />
-          </PPFStepCard>
+          </StepCard>
         </div>
       </div>
     </div>
 
-    <PPFNotesField v-model="notes" />
+    <NotesField v-model="notes" />
 
     <!-- A soft shade at the bottom of the screen: see-through at the top and 20% navy at the bottom.
          pointer-events-none lets clicks go through it. It fades away at the bottom of the page (opacity-0) -->
