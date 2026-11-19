@@ -65,7 +65,7 @@ export default defineComponent({
   <div class="flex min-h-screen flex-col gap-4 py-4">
     <!-- The top bar, the filters and the bottom tab bar are made by other team members and go here later -->
     <PageHeader title="Plannen" subtitle="Een overzicht van uw plannen" />
-    <OptionSwitch v-model="view" :options="viewOptions" label="Weergave plannen" />
+    <ArchiveSwitch v-model="view" :options="viewOptions" label="Weergave plannen" />
     <SearchBar v-model="search" placeholder="Zoek in mijn plannen" />
 
     <ul v-if="filteredPlans.length > 0" class="flex flex-col gap-4">

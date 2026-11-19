@@ -1,6 +1,6 @@
-<!-- app/components/shared/OptionSwitch.vue
+<!-- app/components/shared/ArchiveSwitch.vue
      A switch between two (or more) options next to each other, each with an icon and a text, for example "Overzicht" and "Archief".
-     Usage: <OptionSwitch v-model="view" :options="[{ value: 'overview', label: 'Overzicht', icon: 'file-lines' }, ...]" label="Weergave plannen" />
+     Usage: <ArchiveSwitch v-model="view" :options="[{ value: 'overview', label: 'Overzicht', icon: 'file-lines' }, ...]" label="Weergave plannen" />
      The page decides what to show for the chosen value. -->
 <script lang="ts">
 import type { PropType } from "vue";
