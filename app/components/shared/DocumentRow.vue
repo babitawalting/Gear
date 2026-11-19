@@ -1,10 +1,10 @@
-<!-- app/components/personal-plan-flow/PPFDocumentRow.vue
+<!-- app/components/shared/DocumentRow.vue
      One document in the list of an open step: the name on the left and a blue edit button on the right.
      A thin line under the row is only shown when `has-line` is set. The page sets it when the list has 2 or more documents.
      When the user does not have the document yet (`is-missing`), the edit button is replaced by a blue "+ Toevoegen" button.
      Both buttons do nothing yet: they only tell the page they were tapped (`edit` and `add`).
-     Usage: <PPFDocumentRow title="Rijbewijs B" :has-line="documents.length > 1" @edit="editDocument" />
-            <PPFDocumentRow title="Rijbewijs B" is-missing @add="addDocument" /> -->
+     Usage: <DocumentRow title="Rijbewijs B" :has-line="documents.length > 1" @edit="editDocument" />
+            <DocumentRow title="Rijbewijs B" is-missing @add="addDocument" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {
@@ -14,6 +14,10 @@ export default defineComponent({
     hasLine: { type: Boolean, default: false },
     // True when the user does not have this document in the vault yet: a "+ Toevoegen" button shows
     isMissing: { type: Boolean, default: false },
+    // The text on the add button, in Dutch (the "+" is an icon)
+    addLabel: { type: String, default: "Toevoegen" },
+    // The end of the text for screen readers on the edit button: "<title> <editLabel>", in Dutch
+    editLabel: { type: String, default: "bewerken" },
   },
   // "edit": the edit button was tapped. "add": the "+ Toevoegen" button was tapped
   emits: ["edit", "add"],
@@ -34,13 +38,13 @@ export default defineComponent({
       @click="$emit('add')"
     >
       <IconDisplay name="plus" class="size-3" />
-      Toevoegen<span class="sr-only"> {{ title }}</span>
+      {{ addLabel }}<span class="sr-only"> {{ title }}</span>
     </button>
     <!-- The button looks 28px, but before:-inset-2 makes the tappable area 44px (the skill's minimum) -->
     <button
       v-else
       type="button"
-      :aria-label="`${title} bewerken`"
+      :aria-label="`${title} ${editLabel}`"
       class="relative flex size-7 shrink-0 items-center justify-center rounded-lg bg-blue text-white before:absolute before:-inset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
       @click="$emit('edit')"
     >

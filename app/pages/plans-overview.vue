@@ -10,6 +10,11 @@ export default defineComponent({
     return {
       // "overview" shows the active plans, "archive" shows the archived plans
       view: "overview",
+      // The two options of the switch: the value, the text and the icon of each
+      viewOptions: [
+        { value: "overview", label: "Overzicht", icon: "file-lines" },
+        { value: "archive", label: "Archief", icon: "archive" },
+      ],
       search: "",
       // True while the category sheet (the pop-up to start a new plan) is shown
       isCategorySheetOpen: false,
@@ -60,7 +65,7 @@ export default defineComponent({
   <div class="flex min-h-screen flex-col gap-4 py-4">
     <!-- The top bar, the filters and the bottom tab bar are made by other team members and go here later -->
     <PageHeader title="Plannen" subtitle="Een overzicht van uw plannen" />
-    <PlansOverviewSwitch v-model="view" />
+    <ArchiveSwitch v-model="view" :options="viewOptions" label="Weergave plannen" />
     <SearchBar v-model="search" placeholder="Zoek in mijn plannen" />
 
     <ul v-if="filteredPlans.length > 0" class="flex flex-col gap-4">
@@ -88,7 +93,7 @@ export default defineComponent({
 
     <!-- Sticks to the bottom right of the column. It opens the category sheet to start a new plan -->
     <div class="sticky bottom-6 mt-auto flex justify-end">
-      <PlansOverviewAddButton label="Nieuw plan" @click="isCategorySheetOpen = true" />
+      <AddButton label="Nieuw plan" @click="isCategorySheetOpen = true" />
     </div>
 
     <PlanCategorySheet

@@ -30,13 +30,13 @@ export default defineComponent({
     <PageHeader title="Plandetails" subtitle="Diplomabeschrijving aanvragen" />
 
     <div class="flex flex-col gap-5">
-      <EPFFormField v-model="title" label="Titel" required />
-      <EPFFormField v-model="endDate" label="Einddatum" type="date" />
+      <FormField v-model="title" label="Titel" required />
+      <FormField v-model="endDate" label="Einddatum" type="date" />
     </div>
 
     <!-- The title is required, so the button stays grey until it is filled in. mt-auto pushes it to the bottom -->
     <div class="mt-auto">
-      <EPFNextButton :disabled="title.trim() === ''" @click="goToNextStep" />
+      <PrimaryButton label="Volgende" :disabled="title.trim() === ''" @click="goToNextStep" />
     </div>
   </div>
 </template>

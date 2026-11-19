@@ -36,12 +36,8 @@ Nuxt 4 (`app/` directory), Vue 3, Tailwind CSS v4 (via `@tailwindcss/vite`, no `
 - Global CSS: `app/assets/css/main.css`
 
 ## Components
-We work component based and every person builds their own screens.
-
-- **Ask first.** When someone starts a new component, ask: "Will this be used on other screens, or only on yours?" Then place it by the answer. If they don't know, treat it as screen-specific. Tell them in your reply which folder you used and why.
 - **Shared components** (page header, icon, search bar, cards used on more than one screen) go in `app/components/shared/`, for example `shared/IconDisplay.vue`, `shared/PageHeader.vue`, `shared/SearchBar.vue`. Buttons are the exception, see Button states. The `shared` folder does not become part of the component name (it is set in `nuxt.config.ts`), so you still write `<IconDisplay />`, not `<SharedIconDisplay />`.
 - **Screen-specific components** (used by one screen only) go in a folder named after that screen or feature (see Naming): `app/components/plans-overview/PlansOverviewCard.vue`. If a second screen needs it later, move it up to `app/components/shared/`.
-- **Don't change another person's component** inside your own screen's work. If you need a change, ask them or make a small separate PR for it.
 - **Naming:** `PascalCase`, always two or more words, starting with the subject and ending with what it is: `PlansOverviewCard.vue`, `PlansOverviewFilterBar.vue`, `PlansOverviewList.vue`. Repeat the folder name at the start of the file name, so Nuxt gives it the short name `<PlansOverviewCard />` and not `<PlansOverviewPlansOverviewCard />`.
 - One component, one job. Keep components small.
 
