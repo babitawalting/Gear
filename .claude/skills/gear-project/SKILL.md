@@ -99,6 +99,7 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 |---|
 | `archive` |
 | `arrow-down-short-wide` |
+| `arrow-right` |
 | `arrow-up-from-bracket` |
 | `award` |
 | `bell` |
@@ -120,6 +121,7 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 | `school` |
 | `share` |
 | `stethoscope` |
+| `unlock` |
 
 ### Setup (once)
 Copy these files if they don't exist yet:
