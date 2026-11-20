@@ -1,6 +1,7 @@
 <!-- app/components/shared/FilterBar.vue
      A row of filter buttons: each one has an icon with a short label under it.
      Tapping a button chooses that filter (it turns blue). Tapping it again turns the filter off.
+     When there are more filters than fit on the screen, the row scrolls sideways (the user swipes to see the rest).
      Usage: <FilterBar v-model="filter" :filters="[
               { value: 'sort', label: 'Sorteren', icon: 'arrow-down-short-wide' },
               { value: 'career', label: 'Carrière', icon: 'industry' },
@@ -38,8 +39,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <!-- One equal column per filter, so the buttons always fill the width together -->
-  <div class="grid w-full grid-flow-col auto-cols-fr gap-2">
+  <!-- The buttons have a fixed size with 16px (gap-4) between them.
+       overflow-x-auto: when the buttons don't fit, the row scrolls sideways instead of squeezing them.
+       [scrollbar-width:none] hides the scrollbar (swiping still works).
+       p-1 with -m-1 gives the focus outline room, so the scroll area doesn't cut it off, without moving the buttons -->
+  <div class="-m-1 flex gap-4 overflow-x-auto p-1 [scrollbar-width:none]">
     <!-- Not chosen: Secondary look (white, blue text). Chosen: blue with white text.
          aria-pressed tells screen readers if the filter is on -->
     <button
@@ -47,13 +51,14 @@ export default defineComponent({
       :key="filter.value"
       type="button"
       :aria-pressed="isActive(filter)"
-      class="flex min-h-11 flex-col items-center justify-center gap-1 rounded-xl border px-1 py-2 text-sm font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+      class="flex h-16 w-[67px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl border text-[10px] leading-3 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
       :class="isActive(filter) ? 'border-blue bg-blue text-white' : 'border-sand bg-white text-blue'"
       @click="toggle(filter)"
     >
-      <!-- The icon follows the text color of the button -->
+      <!-- The icon follows the color of the button: blue, or white when chosen -->
       <IconDisplay :name="filter.icon" class="size-6" />
-      {{ filter.label }}
+      <!-- The label is navy (the "black" of our colors), or white when chosen so it stays readable on blue -->
+      <span :class="isActive(filter) ? 'text-white' : 'text-navy'">{{ filter.label }}</span>
     </button>
   </div>
 </template>
