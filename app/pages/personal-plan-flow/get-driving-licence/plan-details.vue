@@ -39,13 +39,13 @@ export default defineComponent({
     <PageHeader title="Plandetails" subtitle="Rijbewijs behalen" />
 
     <div class="flex flex-col gap-5">
-      <PPFFormField v-model="title" label="Titel" required />
-      <PPFFormField v-model="endDate" label="Einddatum" type="date" />
+      <FormField v-model="title" label="Titel" required />
+      <FormField v-model="endDate" label="Einddatum" type="date" />
     </div>
 
     <!-- The title is required, so the button stays grey until it is filled in. mt-auto pushes it to the bottom -->
     <div class="mt-auto">
-      <PPFNextButton :disabled="title.trim() === ''" @click="goToNextStep" />
+      <PrimaryButton label="Volgende" :disabled="title.trim() === ''" @click="goToNextStep" />
     </div>
   </div>
 </template>

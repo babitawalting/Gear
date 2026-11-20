@@ -1,9 +1,9 @@
-<!-- app/components/personal-plan-flow/PPFStepCard.vue
+<!-- app/components/shared/StepCard.vue
      One step of a plan: a number, a title, a description and an arrow. When it is open, the content of the step shows below.
      A locked step (grey) can be opened, but nothing in it can be done yet, so the page makes its content read-only.
-     Usage: <PPFStepCard :number="1" title="Wat heb ik al?" description="Rijbewijs B" :is-open="openStep === 1" @toggle="openStep = 1">
+     Usage: <StepCard :number="1" title="Wat heb ik al?" description="Rijbewijs B" :is-open="openStep === 1" @toggle="openStep = 1">
               ...the content of the step...
-            </PPFStepCard> -->
+            </StepCard> -->
 <script lang="ts">
 export default defineComponent({
   props: {

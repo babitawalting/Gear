@@ -33,7 +33,7 @@ export default defineComponent({
     <PageHeader title="Nieuw persoonlijk plan" subtitle="Welk persoonlijk plan wilt u starten?" />
 
     <div role="radiogroup" aria-label="Persoonlijk plan" class="flex flex-col gap-4">
-      <PPFOptionCard
+      <OptionCard
         v-for="option in options"
         :key="option.value"
         v-model="selectedOption"
@@ -46,7 +46,7 @@ export default defineComponent({
 
     <!-- mt-auto pushes the button to the bottom of the screen -->
     <div class="mt-auto">
-      <PPFNextButton :disabled="selectedOption === ''" @click="goToNextStep" />
+      <PrimaryButton label="Volgende" :disabled="selectedOption === ''" @click="goToNextStep" />
     </div>
   </div>
 </template>

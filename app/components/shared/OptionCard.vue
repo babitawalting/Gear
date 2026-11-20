@@ -1,8 +1,8 @@
-<!-- app/components/education-plan-flow/EPFOptionCard.vue
-     One option the user can choose in the education plan flow: a radio circle, a title and an optional short description.
+<!-- app/components/shared/OptionCard.vue
+     One option the user can choose in a list: a radio circle, a title and an optional short description.
      Several cards with the same `name` form one group, and only one can be chosen.
-     Usage: <EPFOptionCard v-model="option" name="option" value="template" title="Template" description="Template subtekst" />
-            <EPFOptionCard v-model="option" name="option" value="template" title="Template" /> -->
+     Usage: <OptionCard v-model="option" name="option" value="template" title="Template" description="Template subtekst" />
+            <OptionCard v-model="option" name="option" value="template" title="Template" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

@@ -1,8 +1,8 @@
-<!-- app/components/personal-plan-flow/PPFProgressBar.vue
-     A progress bar with the percentage in front of it, used on the plan detail screen.
-     The plan card on the overview has its own copy (PlansOverviewProgressBar), so a change here does not change the card.
-     Usage: <PPFProgressBar :progress="25" label="Voortgang Rijbewijs BE" />
-            <PPFProgressBar :progress="25" size="large" label="Voortgang Rijbewijs BE" /> -->
+<!-- app/components/shared/ProgressBar.vue
+     A progress bar with the percentage in front of it. It is used in the plan card (small) and on the plan detail screen (large).
+     Both show the progress of the same plan, so the page gives both the same `progress`.
+     Usage: <ProgressBar :progress="25" label="Voortgang Rijbewijs BE" />
+            <ProgressBar :progress="25" size="large" label="Voortgang Rijbewijs BE" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {
