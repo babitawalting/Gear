@@ -4,6 +4,10 @@
      The background colors #E8F3F9 and #C7E0F5 are only used on the start and PIN screens,
      so they are written here instead of being added to the shared colors in main.css. -->
 <script lang="ts">
+// definePageMeta gives the page extra settings for the layout (Nuxt reads it before the page is shown).
+// This screen draws its own background, so the shared PageBackground of the default layout is turned off.
+definePageMeta({ pageBackground: false });
+
 export default defineComponent({
   // setup() is only used for Nuxt's useSeoMeta, which sets the page <title>
   setup() {
