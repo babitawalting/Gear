@@ -2,6 +2,10 @@
      The screen of one plan. The file name [id] makes it a page with a variable part: /plans/12 opens this page with id "12"
      (Nuxt file-based routing). For now the plan is sample data, the same for every id. -->
 <script lang="ts">
+// definePageMeta gives the page extra settings for the layout (Nuxt reads it before the page is shown).
+// backTo: the back button in the top bar always goes to the plan overview, also right after the plan was created
+definePageMeta({ backTo: "/plans-overview" });
+
 export default defineComponent({
   // setup() is only used for Nuxt's useSeoMeta, which sets the page <title>
   setup() {
@@ -24,6 +28,9 @@ export default defineComponent({
       // Step 4: the licence was received
       licenseReceived: false,
       notes: "",
+      // The documents the user added from the vault, per step. The step of the open vault drawer (0 = closed)
+      evidenceByStep: { 1: [], 2: [], 3: [], 4: [] } as Record<string, string[]>,
+      vaultStep: 0,
       // True when the page is scrolled all the way down: then the shade at the bottom goes away
       isScrolledToBottom: false,
     };
@@ -47,6 +54,7 @@ export default defineComponent({
         appointmentDate: this.appointmentDate,
         licenseReceived: this.licenseReceived,
         notes: this.notes,
+        evidenceByStep: this.evidenceByStep,
       };
     },
     // Which of the four steps are done, in order. A step only counts when the steps before it are done too
@@ -93,14 +101,6 @@ export default defineComponent({
   // does not exist on the server, so this can only happen here). Then we start listening to scrolling and resizing
   mounted() {
     Object.assign(this, loadPlanProgress(this.planId));
-    // The plan details screen sends the title of a new plan in the address ("?title=Rijbewijs BE").
-    // It is saved as the title, and then removed from the address (router.replace changes the address without
-    // opening a new page), so a reload never undoes a title the user changed later
-    const titleFromAddress = this.$route.query.title;
-    if (typeof titleFromAddress === "string" && titleFromAddress.trim() !== "") {
-      this.title = titleFromAddress.trim();
-      this.$router.replace({ query: {} });
-    }
     window.addEventListener("scroll", this.updateShade);
     window.addEventListener("resize", this.updateShade);
     this.updateShade();
@@ -123,6 +123,25 @@ export default defineComponent({
     // Called by EditableTitle when the user saved a new title. The watcher on savedProgress saves it
     saveTitle(newTitle: string) {
       this.title = newTitle;
+    },
+    // The evidence of one step as { id, title }, with the names from the vault (findVaultDocument is in app/utils/vaultDocuments.ts)
+    evidenceFor(step: number): { id: string; title: string }[] {
+      const ids = this.evidenceByStep[step] ?? [];
+      // A document that was deleted from the vault is left out (flatMap: an empty list means "nothing for this id")
+      return ids.flatMap((id) => {
+        const document = findVaultDocument(id);
+        return document ? [{ id, title: document.title }] : [];
+      });
+    },
+    // Called by the vault drawer with the ids of the chosen documents: they are added to the step of the drawer
+    addEvidence(ids: string[]) {
+      const current = this.evidenceByStep[this.vaultStep] ?? [];
+      this.evidenceByStep[this.vaultStep] = [...current, ...ids];
+      this.vaultStep = 0;
+    },
+    // Called by the pencil ("Verwijderen") of a piece of evidence: takes the document out of that step
+    removeEvidence(step: number, id: string) {
+      this.evidenceByStep[step] = (this.evidenceByStep[step] ?? []).filter((evidenceId) => evidenceId !== id);
     },
     completeExam() {
       this.examDone = true;
@@ -154,7 +173,7 @@ export default defineComponent({
       <div class="flex gap-4">
         <StepMarker :is-done="done[0]" :is-next="nextIndex === 0" :is-open="openStep === 1" :line-above="lineAbove(1)" :line-below="lineBelow(1)" />
         <div class="min-w-0 flex-1 pb-4">
-          <StepCard :number="1" title="Wat heb ik al?" :description="step1Description" :is-open="openStep === 1" @toggle="toggle(1)">
+          <StepCard :number="1" title="Wat heb ik al?" :description="step1Description" :is-open="openStep === 1" :evidence="evidenceFor(1)" @toggle="toggle(1)" @add-evidence="vaultStep = 1" @remove-evidence="removeEvidence(1, $event)">
             <p v-if="!hasLicenseB" class="mb-1 text-xs leading-4 font-normal text-grey">
               Er ontbreekt nog een document in uw kluis. Voeg het toe om verder te gaan.
             </p>
@@ -166,7 +185,7 @@ export default defineComponent({
       <div class="flex gap-4">
         <StepMarker :is-done="done[1]" :is-next="nextIndex === 1" :is-open="openStep === 2" :line-above="lineAbove(2)" :line-below="lineBelow(2)" />
         <div class="min-w-0 flex-1 pb-4">
-          <StepCard :number="2" title="Examens" :description="step2Description" :is-locked="step2Locked" :is-open="openStep === 2" @toggle="toggle(2)">
+          <StepCard :number="2" title="Examens" :description="step2Description" :is-locked="step2Locked" :is-open="openStep === 2" :evidence="evidenceFor(2)" @toggle="toggle(2)" @add-evidence="vaultStep = 2" @remove-evidence="removeEvidence(2, $event)">
             <PPFGetDrivingLicenceExamCard :is-read-only="step2Locked" @completed="completeExam" />
           </StepCard>
         </div>
@@ -175,7 +194,7 @@ export default defineComponent({
       <div class="flex gap-4">
         <StepMarker :is-done="done[2]" :is-next="nextIndex === 2" :is-open="openStep === 3" :line-above="lineAbove(3)" :line-below="lineBelow(3)" />
         <div class="min-w-0 flex-1 pb-4">
-          <StepCard :number="3" title="Rijbewijs aanvragen" description="Via uw gemeente of de RDW" :is-locked="step3Locked" :is-open="openStep === 3" @toggle="toggle(3)">
+          <StepCard :number="3" title="Rijbewijs aanvragen" description="Via uw gemeente of de RDW" :is-locked="step3Locked" :is-open="openStep === 3" :evidence="evidenceFor(3)" @toggle="toggle(3)" @add-evidence="vaultStep = 3" @remove-evidence="removeEvidence(3, $event)">
             <PPFGetDrivingLicenceRequestCard
               v-model:appointment-date="appointmentDate"
               text="Na uw praktijkexamen vraagt u uw rijbewijs aan bij uw gemeente, of online via de RDW."
@@ -192,7 +211,7 @@ export default defineComponent({
       <div class="flex gap-4">
         <StepMarker :is-done="done[3]" :is-next="nextIndex === 3" :is-open="openStep === 4" :line-above="lineAbove(4)" :line-below="lineBelow(4)" />
         <div class="min-w-0 flex-1">
-          <StepCard :number="4" title="Ophalen en toevoegen" description="Upload uw nieuwe rijbewijs" :is-locked="step4Locked" :is-open="openStep === 4" @toggle="toggle(4)">
+          <StepCard :number="4" title="Ophalen en toevoegen" description="Upload uw nieuwe rijbewijs" :is-locked="step4Locked" :is-open="openStep === 4" :evidence="evidenceFor(4)" @toggle="toggle(4)" @add-evidence="vaultStep = 4" @remove-evidence="removeEvidence(4, $event)">
             <PPFGetDrivingLicenceCollectCard
               :appointment-date="appointmentDate"
               :is-received="licenseReceived"
@@ -205,6 +224,14 @@ export default defineComponent({
     </div>
 
     <NotesField v-model="notes" />
+
+    <!-- The vault drawer: open while vaultStep is a step number (1 to 4). It leaves out what is already in that step -->
+    <VaultPickerSheet
+      :open="vaultStep !== 0"
+      :hidden-ids="evidenceByStep[vaultStep] ?? []"
+      @close="vaultStep = 0"
+      @add="addEvidence"
+    />
 
     <!-- A soft shade at the bottom of the screen: see-through at the top and 20% navy at the bottom.
          pointer-events-none lets clicks go through it. It fades away at the bottom of the page (opacity-0) -->

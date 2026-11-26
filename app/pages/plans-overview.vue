@@ -44,6 +44,11 @@ export default defineComponent({
   // mounted() runs once, when the page is on the screen. The progress of each plan is saved in the browser by the plan page,
   // so here we read it and show the same percentage on the card
   mounted() {
+    // /plans-overview?view=archive opens the "Archief" tab (the plan page does this after "Plan archiveren").
+    // $route.query holds the part of the address after the "?"
+    if (this.$route.query.view === "archive") {
+      this.view = "archive";
+    }
     for (const plan of this.plans) {
       if (plan.category === "career") {
         // A job application plan ("Sollicitatie") has its own saved progress, see app/utils/jobApplicationProgress.ts

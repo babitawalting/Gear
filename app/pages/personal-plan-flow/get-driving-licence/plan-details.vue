@@ -22,12 +22,13 @@ export default defineComponent({
     };
   },
   methods: {
-    // Called when the user presses "Volgende": goes to the plan page, with the title in the address.
-    // The plan does not exist in a database yet, so the id "12" is a sample
+    // Called when the user presses "Volgende": starts a new plan with this title (0%, no evidence) and opens it.
+    // The plan does not exist in a database yet, so the id "12" is a sample (savePlanProgress is in app/utils)
     goToNextStep() {
       // Only the plan page of Rijbewijs BE exists so far. For the other licences there is no next page yet
       if (this.license !== "be") return;
-      navigateTo({ path: "/plans/12", query: { title: this.title.trim() } });
+      savePlanProgress("12", { ...emptyPlanProgress(), title: this.title.trim() });
+      navigateTo("/plans/12");
     },
   },
 });

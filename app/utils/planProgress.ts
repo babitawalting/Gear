@@ -19,11 +19,13 @@ export interface PlanProgress {
   licenseReceived: boolean;
   // The text in the notes field
   notes: string;
+  // The documents the user added from the vault, per step: { "1": ["cv"], "2": [], ... }
+  evidenceByStep: Record<string, string[]>;
 }
 
 // A plan where nothing is done yet
 export function emptyPlanProgress(): PlanProgress {
-  return { title: "", hasLicenseB: false, examDone: false, hasAppointment: false, appointmentDate: "", licenseReceived: false, notes: "" };
+  return { title: "", hasLicenseB: false, examDone: false, hasAppointment: false, appointmentDate: "", licenseReceived: false, notes: "", evidenceByStep: { 1: [], 2: [], 3: [], 4: [] } };
 }
 
 // The key under which the progress of one plan is saved

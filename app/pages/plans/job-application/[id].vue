@@ -2,8 +2,16 @@
      The screen of one job application plan ("Sollicitatie"). The file name [id] makes it a page with a variable part:
      /plans/job-application/7 opens this page with id "7" (Nuxt file-based routing).
      The folder "job-application" is a fixed part of the address, so Nuxt picks this page before plans/[id].vue.
-     For now the documents are sample data from app/utils/jobApplicationProgress.ts, the same for every id. -->
+     How the steps work:
+     - A new plan starts at 0% without evidence. The user adds documents from the vault with "Bewijs toevoegen uit kluis".
+     - A step is concluded when it has its evidence and the user taps the next step. Then it gets its checkmark (33% per step).
+       The last step has no next step, so it is concluded with "Plan afronden".
+     - Steps that are not reached yet are grey (locked) until the step before them is concluded. -->
 <script lang="ts">
+// definePageMeta gives the page extra settings for the layout (Nuxt reads it before the page is shown).
+// backTo: the back button in the top bar always goes to the plan overview, also right after the plan was created
+definePageMeta({ backTo: "/plans-overview" });
+
 export default defineComponent({
   // setup() is only used for Nuxt's useSeoMeta, which sets the page <title>
   setup() {
@@ -11,21 +19,21 @@ export default defineComponent({
   },
   data() {
     return {
-      // The sample lists (auto-imported from app/utils/jobApplicationProgress.ts)
-      vaultDocuments: jobApplicationVaultDocuments,
+      // The documents the vacancy asks for (auto-imported from app/utils/jobApplicationProgress.ts)
       requirements: jobApplicationRequirements,
-      optionalDocuments: jobApplicationOptionalDocuments,
       // The number of the step that is open (1 to 3). 0 means none. Only one step is open at a time
       openStep: 1,
       // The state of the plan. It is saved in the browser per plan and loaded again in mounted()
       // The title of the plan. Empty means the default title (see planTitle)
       title: "",
+      completedSteps: 0,
+      evidenceByStep: { 1: [], 2: [], 3: [] } as Record<string, string[]>,
       addedRequirementIds: [] as string[],
-      addedOptionalIds: [] as string[],
-      isSupplementDone: false,
       notes: "",
       isShared: false,
       archivedAt: "",
+      // The step the vault drawer adds documents to. 0 means the drawer is closed
+      vaultStep: 0,
       // True while the share sheet is shown, and while the "Plan gedeeld" message is shown
       isShareSheetOpen: false,
       isToastOpen: false,
@@ -52,42 +60,45 @@ export default defineComponent({
     savedProgress(): JobApplicationProgress {
       return {
         title: this.title,
+        completedSteps: this.completedSteps,
+        evidenceByStep: this.evidenceByStep,
         addedRequirementIds: this.addedRequirementIds,
-        addedOptionalIds: this.addedOptionalIds,
-        isSupplementDone: this.isSupplementDone,
         notes: this.notes,
         isShared: this.isShared,
         archivedAt: this.archivedAt,
       };
     },
-    // Which of the three steps are done, in order. A step only counts when the steps before it are done too
+    // Which of the three steps are concluded, in order
     done(): boolean[] {
       return jobApplicationDoneSteps(this.savedProgress);
     },
-    // The index (0 to 2) of the first step that is not done: this one has to be finished next. 3 means all done
+    // The index (0 to 2) of the step the user works on now. 3 means all steps are concluded
     nextIndex(): number {
-      const index = this.done.findIndex((isDone) => !isDone);
-      return index === -1 ? 3 : index;
+      return this.completedSteps;
     },
-    // Every step that is done is a third of the plan. Rounded, so the bar shows 33% and not 33.333...%
+    // Every concluded step is a third of the plan. Rounded, so the bar shows 33% and not 33.333...%
     progress(): number {
       return Math.round(percentageDone(this.done));
     },
-    // A step is locked while the step before it is not done
+    // A step is locked (grey) until the step before it is concluded
     step2Locked(): boolean {
-      return !this.done[0];
+      return this.completedSteps < 1;
     },
     step3Locked(): boolean {
-      return !this.done[1];
+      return this.completedSteps < 2;
     },
-    // The number of required documents the user does not have yet
+    // The number of required documents the plan does not have yet
     missingCount(): number {
-      return this.requirements.filter((requirement) => !this.hasDocument(requirement)).length;
+      return this.requirements.filter((requirement) => !this.hasDocument(requirement.id)).length;
     },
-    // When a step is done and closed, the description shows the result. Otherwise the normal text
+    // Step 2 lists the requirements itself, so its evidence list only shows the other documents (no double rows)
+    step2ExtraEvidence(): { id: string; title: string }[] {
+      return this.evidenceFor(2).filter((item) => !this.requirements.some((requirement) => requirement.id === item.id));
+    },
+    // When a step is concluded and closed, the description shows the result. Otherwise the normal text
     step1Description(): string {
       if (this.done[0] && this.openStep !== 1) {
-        return this.vaultDocuments.map((document) => document.title).join(", ");
+        return this.evidenceFor(1).map((item) => item.title).join(", ");
       }
       return "Documenten uit uw kluis";
     },
@@ -96,6 +107,10 @@ export default defineComponent({
     },
     step3Description(): string {
       return this.done[2] && this.openStep !== 3 ? "Aanvullen afgerond" : "Optionele documenten toevoegen";
+    },
+    // The documents that are already in the step of the open drawer: the drawer leaves them out
+    vaultHiddenIds(): string[] {
+      return this.vaultStep === 0 ? [] : (this.evidenceByStep[this.vaultStep] ?? []);
     },
   },
   watch: {
@@ -111,14 +126,8 @@ export default defineComponent({
   // does not exist on the server, so this can only happen here). Then we start listening to scrolling and resizing
   mounted() {
     Object.assign(this, loadJobApplicationProgress(this.planId));
-    // The plan details screen sends the title of a new plan in the address ("?title=Software developer").
-    // It is saved as the title, and then removed from the address (router.replace changes the address without
-    // opening a new page), so a reload or a link to this page never undoes a title the user changed later
-    const titleFromAddress = this.$route.query.title;
-    if (typeof titleFromAddress === "string" && titleFromAddress.trim() !== "") {
-      this.title = titleFromAddress.trim();
-      this.$router.replace({ query: {} });
-    }
+    // Open the step the user works on now (all concluded: no step open)
+    this.openStep = this.completedSteps < jobApplicationStepCount ? this.completedSteps + 1 : 0;
     window.addEventListener("scroll", this.updateShade);
     window.addEventListener("resize", this.updateShade);
     this.updateShade();
@@ -134,43 +143,75 @@ export default defineComponent({
       const bottomOfScreen = window.scrollY + window.innerHeight;
       this.isScrolledToBottom = bottomOfScreen >= document.documentElement.scrollHeight - 1;
     },
-    // Tapping a header opens that step and closes the other one. Tapping the open step closes it
+    // Tapping a header opens that step and closes the other one. Tapping the open step closes it.
+    // Tapping the step right after the current one also concludes the current step, when it has its evidence:
+    // the checkmark appears and the progress goes up. Without evidence the next step opens, but stays grey
     toggle(step: number) {
+      const previousStep = step - 1;
+      if (previousStep === this.completedSteps + 1 && this.canConclude(previousStep)) {
+        this.completedSteps = previousStep;
+      }
       this.openStep = this.openStep === step ? 0 : step;
     },
-    // True when the user has this required document (in the vault already, or added with "+ Toevoegen")
-    hasDocument(requirement: { id: string; inVault: boolean }): boolean {
-      return hasRequirement(this.savedProgress, requirement);
+    // The evidence of one step as { id, title }, with the names from the vault (findVaultDocument is in app/utils/vaultDocuments.ts)
+    evidenceFor(step: number): { id: string; title: string }[] {
+      const ids = this.evidenceByStep[step] ?? [];
+      // A document that was deleted from the vault is left out (flatMap: an empty list means "nothing for this id")
+      return ids.flatMap((id) => {
+        const document = findVaultDocument(id);
+        return document ? [{ id, title: document.title }] : [];
+      });
     },
-    // For now "+ Toevoegen" only marks the document as added. Later it opens the upload screen of the vault
+    // True when the plan has this required document (added from the vault in some step, or with "+ Toevoegen")
+    hasDocument(requirementId: string): boolean {
+      return hasRequirement(this.savedProgress, requirementId);
+    },
+    // True when the step has what it needs to be concluded:
+    // step 1 needs at least one document, step 2 needs every requirement, step 3 is optional
+    canConclude(step: number): boolean {
+      if (step === 1) return this.evidenceFor(1).length > 0;
+      if (step === 2) return this.missingCount === 0;
+      return true;
+    },
+    // "Plan afronden" in the last step: there is no next step to tap, so this button concludes it (all steps close)
+    finishPlan() {
+      this.completedSteps = jobApplicationStepCount;
+      this.openStep = 0;
+    },
+    // "Bewijs toevoegen uit kluis" of a step (built into StepCard): opens the vault drawer for that step
+    openVault(step: number) {
+      this.vaultStep = step;
+    },
+    // Called by the vault drawer with the ids of the chosen documents: they are added to the step of the drawer
+    addEvidence(ids: string[]) {
+      const current = this.evidenceByStep[this.vaultStep] ?? [];
+      this.evidenceByStep[this.vaultStep] = [...current, ...ids];
+      this.vaultStep = 0;
+    },
+    // Called by the pencil ("Verwijderen") of a piece of evidence: takes the document out of that step
+    removeEvidence(step: number, id: string) {
+      this.evidenceByStep[step] = (this.evidenceByStep[step] ?? []).filter((evidenceId) => evidenceId !== id);
+    },
+    // For now "+ Toevoegen" only marks the requirement as added. Later it opens the upload screen of the vault
     addRequirement(id: string) {
       this.addedRequirementIds.push(id);
     },
-    addOptional(id: string) {
-      this.addedOptionalIds.push(id);
+    // Called by the pencil ("Verwijderen") of a requirement: the document is taken out of the whole plan,
+    // so the requirement shows as missing again
+    removeRequirement(id: string) {
+      this.addedRequirementIds = this.addedRequirementIds.filter((addedId) => addedId !== id);
+      for (const step of Object.keys(this.evidenceByStep)) {
+        this.removeEvidence(Number(step), id);
+      }
     },
-    isOptionalAdded(id: string): boolean {
-      return this.addedOptionalIds.includes(id);
-    },
-    finishSupplement() {
-      this.isSupplementDone = true;
-      this.openStep = 0;
-    },
-    // The edit buttons of the documents do nothing yet. Later they open the document in the vault
-    editDocument() {},
-    // The "Bewijs toevoegen uit kluis" button of a step (built into StepCard). The vault does not exist yet,
-    // so this does nothing for now. Later it opens the vault to pick a document for this step
-    addEvidence(step: number) {
-      console.log("Bewijs toevoegen uit kluis voor stap", step);
-    },
-    // The line above step n (1 to 3) is blue when step n-1 is done. The first step has no line above
+    // The line above step n (1 to 3) is blue when step n-1 is concluded. The first step has no line above
     lineAbove(step: number): string {
       if (step === 1) return "none";
       return this.done[step - 2] ? "blue" : "grey";
     },
-    // The line below step n is blue when step n is done. The last step has no line below
+    // The line below step n is blue when step n is concluded. The last step has no line below
     lineBelow(step: number): string {
-      if (step === 3) return "none";
+      if (step === jobApplicationStepCount) return "none";
       return this.done[step - 1] ? "blue" : "grey";
     },
     // Called by the share sheet with the ids of the chosen people. Sharing is not saved anywhere yet,
@@ -185,12 +226,13 @@ export default defineComponent({
     saveTitle(newTitle: string) {
       this.title = newTitle;
     },
-    // Saves today's date as the archive date ("2026-11-26") and goes back to the overview, where the plan is now in "Archief"
+    // Saves today's date as the archive date ("2026-11-26") and goes to the "Archief" tab of the overview,
+    // where the plan is now. ?view=archive in the address tells the overview to open that tab
     archivePlan() {
       this.archivedAt = new Date().toISOString().slice(0, 10);
       // Saved right away: the watcher would only save after the page is gone
       saveJobApplicationProgress(this.planId, this.savedProgress);
-      navigateTo("/plans-overview");
+      navigateTo("/plans-overview?view=archive");
     },
   },
 });
@@ -208,14 +250,19 @@ export default defineComponent({
       <div class="flex gap-4">
         <StepMarker :is-done="done[0]" :is-next="nextIndex === 0" :is-open="openStep === 1" :line-above="lineAbove(1)" :line-below="lineBelow(1)" />
         <div class="min-w-0 flex-1 pb-4">
-          <StepCard :number="1" title="Wat heb ik al?" :description="step1Description" :is-open="openStep === 1" @toggle="toggle(1)" @add-evidence="addEvidence(1)">
-            <DocumentRow
-              v-for="document in vaultDocuments"
-              :key="document.id"
-              :title="document.title"
-              :has-line="vaultDocuments.length > 1"
-              @edit="editDocument"
-            />
+          <StepCard
+            :number="1"
+            title="Wat heb ik al?"
+            :description="step1Description"
+            :is-open="openStep === 1"
+            :evidence="evidenceFor(1)"
+            @toggle="toggle(1)"
+            @add-evidence="openVault(1)"
+            @remove-evidence="removeEvidence(1, $event)"
+          >
+            <p v-if="evidenceFor(1).length === 0" class="mb-1 text-xs leading-4 font-normal text-grey">
+              Voeg de documenten uit uw kluis toe die u al heeft voor deze sollicitatie.
+            </p>
           </StepCard>
         </div>
       </div>
@@ -223,20 +270,31 @@ export default defineComponent({
       <div class="flex gap-4">
         <StepMarker :is-done="done[1]" :is-next="nextIndex === 1" :is-open="openStep === 2" :line-above="lineAbove(2)" :line-below="lineBelow(2)" />
         <div class="min-w-0 flex-1 pb-4">
-          <StepCard :number="2" title="Vacaturevereisten" :description="step2Description" :is-locked="step2Locked" :is-open="openStep === 2" @toggle="toggle(2)" @add-evidence="addEvidence(2)">
+          <StepCard
+            :number="2"
+            title="Vacaturevereisten"
+            :description="step2Description"
+            :is-locked="step2Locked"
+            :is-open="openStep === 2"
+            :evidence="step2ExtraEvidence"
+            @toggle="toggle(2)"
+            @add-evidence="openVault(2)"
+            @remove-evidence="removeEvidence(2, $event)"
+          >
             <p v-if="missingCount > 0" class="mb-1 text-xs leading-4 font-normal text-grey">
-              De vacature vraagt om {{ missingCount === 1 ? "een document" : `${missingCount} documenten` }} die nog niet in uw kluis
+              De vacature vraagt om {{ missingCount === 1 ? "een document" : `${missingCount} documenten` }} die nog niet in dit plan
               {{ missingCount === 1 ? "staat" : "staan" }}.
             </p>
-            <!-- A locked step can be read, but documents can't be added yet: then every row shows the edit button -->
+            <!-- A locked step can be read, but nothing can be added or removed yet -->
             <DocumentRow
               v-for="requirement in requirements"
               :key="requirement.id"
               :title="requirement.title"
               :has-line="requirements.length > 1"
-              :is-missing="!hasDocument(requirement) && !step2Locked"
+              :is-missing="!hasDocument(requirement.id) && !step2Locked"
+              :can-edit="!step2Locked && hasDocument(requirement.id)"
               @add="addRequirement(requirement.id)"
-              @edit="editDocument"
+              @remove="removeRequirement(requirement.id)"
             />
           </StepCard>
         </div>
@@ -245,30 +303,25 @@ export default defineComponent({
       <div class="flex gap-4">
         <StepMarker :is-done="done[2]" :is-next="nextIndex === 2" :is-open="openStep === 3" :line-above="lineAbove(3)" :line-below="lineBelow(3)" />
         <div class="min-w-0 flex-1">
-          <StepCard :number="3" title="Aanvullen" :description="step3Description" :is-locked="step3Locked" :is-open="openStep === 3" @toggle="toggle(3)" @add-evidence="addEvidence(3)">
+          <StepCard
+            :number="3"
+            title="Aanvullen"
+            :description="step3Description"
+            :is-locked="step3Locked"
+            :is-open="openStep === 3"
+            :evidence="evidenceFor(3)"
+            @toggle="toggle(3)"
+            @add-evidence="openVault(3)"
+            @remove-evidence="removeEvidence(3, $event)"
+          >
             <p class="mb-1 text-xs leading-4 font-normal text-grey">
-              Deze documenten zijn niet verplicht, maar maken uw sollicitatie sterker.
+              Niet verplicht: voeg documenten toe die uw sollicitatie sterker maken.
             </p>
-            <DocumentRow
-              v-for="document in optionalDocuments"
-              :key="document.id"
-              :title="document.title"
-              :has-line="optionalDocuments.length > 1"
-              :is-missing="!isOptionalAdded(document.id) && !step3Locked"
-              @add="addOptional(document.id)"
-              @edit="editDocument"
-            />
-            <!-- Small button like the ones in the driving licence steps. Grey and disabled while the step is locked -->
-            <button
-              v-if="!isSupplementDone"
-              type="button"
-              :disabled="step3Locked"
-              class="mt-3 flex min-h-7.25 w-full items-center justify-center rounded-xl px-4 py-1.5 text-xs leading-4 font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
-              :class="step3Locked ? 'bg-grey' : 'bg-blue'"
-              @click="finishSupplement"
-            >
-              Klaar met aanvullen
-            </button>
+            <template v-if="nextIndex === 2" #actions>
+              <div class="mt-3">
+                <PrimaryButton label="Plan afronden" @click="finishPlan" />
+              </div>
+            </template>
           </StepCard>
         </div>
       </div>
@@ -297,6 +350,13 @@ export default defineComponent({
       <PrimaryButton label="Plan delen" icon="share" @click="isShareSheetOpen = true" />
     </div>
 
+    <!-- The vault drawer: open while vaultStep is a step number (1 to 3) -->
+    <VaultPickerSheet
+      :open="vaultStep !== 0"
+      :hidden-ids="vaultHiddenIds"
+      @close="vaultStep = 0"
+      @add="addEvidence"
+    />
     <SharePlanSheet
       :open="isShareSheetOpen"
       :contacts="contacts"
