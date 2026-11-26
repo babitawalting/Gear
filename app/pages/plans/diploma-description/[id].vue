@@ -34,9 +34,6 @@ export default defineComponent({
       isShared: false,
       archivedAt: "",
       isCancelled: false,
-      // Step 4: the name of the file the user chose, and whether it was added to the vault already. Only for this visit, not saved
-      uploadedFileName: "",
-      isAddedToVault: false,
       // True while the share sheet is shown, and while the "Plan gedeeld" message is shown
       isShareSheetOpen: false,
       isToastOpen: false,
@@ -198,25 +195,6 @@ export default defineComponent({
       saveDiplomaDescriptionProgress(this.planId, this.savedProgress);
       navigateTo({ path: "/plans-overview", query: { cancelled: this.planTitle } });
     },
-    // Called by the upload box in step 4 with the name of the chosen file. The file is not in the vault yet:
-    // the button "Toevoegen aan kluis" turns blue and the user presses it
-    chooseFile(fileName: string) {
-      this.uploadedFileName = fileName;
-      this.isAddedToVault = false;
-    },
-    // "Toevoegen aan kluis" in step 4: adds the chosen file to the vault (addVaultDocument is in app/utils/vaultDocuments.ts).
-    // The button turns grey again until the user chooses another file
-    addToVault() {
-      addVaultDocument({
-        id: `document-${Date.now()}`,
-        title: this.diploma !== "" ? `Diplomabeschrijving ${this.diploma}` : "Diplomabeschrijving",
-        category: "certificates",
-        // Today, written as "2026-11-26"
-        date: new Date().toISOString().slice(0, 10),
-        fileName: this.uploadedFileName,
-      });
-      this.isAddedToVault = true;
-    },
     // Called by the pencil ("Verwijderen") of a piece of evidence: takes the document out of that step
     removeEvidence(step: number, id: string) {
       this.evidenceByStep[step] = (this.evidenceByStep[step] ?? []).filter((evidenceId) => evidenceId !== id);
@@ -373,21 +351,16 @@ export default defineComponent({
             @toggle="toggle(4)"
           >
             <p class="text-xs leading-4 font-normal text-grey">{{ step4Text }}</p>
-            <!-- The upload box of the vault (made by a team member), in its small size: the user chooses the downloaded file.
-                 The button under it is grey until a file is chosen and goes grey again after it was added -->
-            <div class="mt-3 flex flex-col gap-3">
-              <VaultUploadField
-                small
-                :model-value="uploadedFileName"
-                :is-disabled="step4Locked"
-                @update:model-value="chooseFile"
-              />
-              <PrimaryButton
-                :label="isAddedToVault ? 'Toegevoegd aan kluis' : 'Toevoegen aan kluis'"
-                :disabled="step4Locked || uploadedFileName === '' || isAddedToVault"
-                @click="addToVault"
-              />
-            </div>
+            <!-- The button to add the downloaded description to the vault. It does nothing yet, like "Rijbewijs toevoegen aan kluis" in the
+                 driving licence plan. In a locked step it is grey (Disabled state) -->
+            <button
+              type="button"
+              :disabled="step4Locked"
+              class="mt-3 flex min-h-7.25 w-full items-center justify-center rounded-xl px-4 py-1.5 text-center text-xs leading-4 font-normal text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+              :class="step4Locked ? 'bg-grey' : 'bg-blue'"
+            >
+              Diplomabeschrijving toevoegen aan kluis
+            </button>
           </StepCard>
         </div>
       </div>
