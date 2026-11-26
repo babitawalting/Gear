@@ -30,6 +30,8 @@ export default defineComponent({
     isOpen: { type: Boolean, default: false },
     // The documents from the vault that the user added to this step
     evidence: { type: Array as PropType<StepEvidence[]>, default: () => [] },
+    // False hides the vault button, for a step where the user does not add documents from the vault
+    canAddEvidence: { type: Boolean, default: true },
     // The text on the vault button, in Dutch
     evidenceLabel: { type: String, default: "Bewijs toevoegen uit kluis" },
   },
@@ -82,6 +84,7 @@ export default defineComponent({
            In a locked step it is the Disabled state: grey and it can't be used yet.
            aria-haspopup tells screen readers that the button opens a pop-up (the vault drawer) -->
       <button
+        v-if="canAddEvidence"
         type="button"
         :disabled="isLocked"
         aria-haspopup="dialog"

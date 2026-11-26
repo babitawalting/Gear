@@ -1,6 +1,7 @@
 <!-- app/components/share-plan/SharePlanToast.vue
-     A short message at the top of the screen after a plan was shared: "Plan gedeeld".
-     - Tapping it opens the plan.
+     A short message at the top of the screen, by default after a plan was shared: "Plan gedeeld".
+     The texts can be changed with `title` and `message`, for example for a cancelled plan.
+     - Tapping it opens the plan (when `to` is given). Without `to` there is no arrow and tapping only closes it.
      - It goes away by itself after 5 seconds, or when the user swipes it up off the screen.
      Usage: <SharePlanToast :open="isToastOpen" plan-title="Rijbewijs BE" to="/plans/12" @close="isToastOpen = false" /> -->
 <script lang="ts">
@@ -8,10 +9,14 @@ export default defineComponent({
   props: {
     // True when the message is shown. The parent decides when to show it
     open: { type: Boolean, default: false },
-    // The name of the plan that was shared, for example "Rijbewijs BE"
+    // The name of the plan, for example "Rijbewijs BE"
     planTitle: { type: String, required: true },
-    // The page of the plan, for example "/plans/12"
-    to: { type: String, required: true },
+    // The bold first line, in Dutch
+    title: { type: String, default: "Plan gedeeld" },
+    // The second line, in Dutch. Empty means the sentence about sharing: Het plan "Rijbewijs BE" is gedeeld.
+    message: { type: String, default: "" },
+    // The page of the plan, for example "/plans/12". Empty means there is nothing to open: no link and no arrow
+    to: { type: String, default: "" },
   },
   // "close": the message should go away (time is up, swiped away, or tapped)
   emits: ["close"],
@@ -28,6 +33,16 @@ export default defineComponent({
       // True when the user really dragged (not just tapped), so the tap doesn't open the plan
       wasDragged: false,
     };
+  },
+  computed: {
+    // A link to the plan when `to` is given, otherwise a plain box (resolveComponent finds NuxtLink by its name)
+    wrapper() {
+      return this.to !== "" ? resolveComponent("NuxtLink") : "div";
+    },
+    // The second line: the `message` from the parent, or the sentence about sharing
+    messageText(): string {
+      return this.message !== "" ? this.message : `Het plan "${this.planTitle}" is gedeeld.`;
+    },
   },
   watch: {
     // Runs every time the `open` prop changes: start the timer when shown, stop it when hidden
@@ -130,10 +145,11 @@ export default defineComponent({
       @pointercancel="endDrag"
       @click.capture="blockClickAfterDrag"
     >
-      <!-- The whole message is one link to the plan. Tapping it also closes the message.
+      <!-- The whole message is one link to the plan (a plain box without `to`). Tapping it also closes the message.
            draggable="false": otherwise the browser starts dragging the link itself and the swipe stops -->
-      <NuxtLink
-        :to="to"
+      <component
+        :is="wrapper"
+        :to="to !== '' ? to : undefined"
         draggable="false"
         class="flex w-full items-center gap-3 rounded-xl border border-sand bg-white p-2.5 pr-4 shadow-lg shadow-navy/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
         @click="$emit('close')"
@@ -144,12 +160,12 @@ export default defineComponent({
         </span>
 
         <span class="flex min-w-0 flex-1 flex-col">
-          <span class="text-sm leading-5 font-semibold text-navy">Plan gedeeld</span>
-          <span class="text-xs leading-4 font-normal text-grey">Het plan "{{ planTitle }}" is gedeeld.</span>
+          <span class="text-sm leading-5 font-semibold text-navy">{{ title }}</span>
+          <span class="text-xs leading-4 font-normal text-grey">{{ messageText }}</span>
         </span>
 
-        <IconDisplay name="chevron-right" class="size-4 shrink-0 text-blue" />
-      </NuxtLink>
+        <IconDisplay v-if="to !== ''" name="chevron-right" class="size-4 shrink-0 text-blue" />
+      </component>
     </div>
   </Transition>
 </template>

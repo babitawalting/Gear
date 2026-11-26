@@ -5,7 +5,7 @@
 export default defineComponent({
   // setup() is only used for Nuxt's useSeoMeta, which sets the page <title>
   setup() {
-    useSeoMeta({ title: "Type diploma" });
+    useSeoMeta({ title: "Diploma keuze" });
   },
   data() {
     return {
@@ -46,10 +46,16 @@ export default defineComponent({
       const bottomOfScreen = window.scrollY + window.innerHeight;
       this.isScrolledToBottom = bottomOfScreen >= document.documentElement.scrollHeight - 1;
     },
-    // Called when the user presses "Volgende": goes to the plan details
+    // Called when the user presses "Volgende": goes to the plan details, with the chosen diploma in the title
     goToNextStep() {
-      // navigateTo is a Nuxt function (auto-imported) that goes to another page
-      navigateTo("/education-plan-flow/diploma-description/plan-details");
+      const chosen = this.diplomas.find((diploma) => diploma.value === this.selectedDiploma);
+      if (!chosen) return;
+      // navigateTo is a Nuxt function (auto-imported). The query becomes "?title=HBO-bachelor beschrijving&diploma=HBO-bachelor" in the address,
+      // so the next page can read it
+      navigateTo({
+        path: "/education-plan-flow/diploma-description/plan-details",
+        query: { title: `${chosen.title} beschrijving`, diploma: chosen.title },
+      });
     },
   },
 });
@@ -57,9 +63,9 @@ export default defineComponent({
 
 <template>
   <div class="flex flex-1 flex-col gap-4 pt-4 pb-7">
-    <PageHeader title="Type diploma" subtitle="Voor welk diploma wilt u een beschrijving?" />
+    <PageHeader title="Diploma keuze" subtitle="Welk diploma wilt u laten beschrijven?" />
 
-    <div role="radiogroup" aria-label="Type diploma" class="flex flex-col gap-4">
+    <div role="radiogroup" aria-label="Diploma keuze" class="flex flex-col gap-4">
       <OptionCard
         v-for="diploma in diplomas"
         :key="diploma.value"

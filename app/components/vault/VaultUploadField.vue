@@ -9,6 +9,10 @@ export default defineComponent({
     // The name of the chosen file, for example "cv.pdf". With v-model the parent passes this in as `modelValue`.
     // Empty means no file is chosen yet
     modelValue: { type: String, default: "" },
+    // True while the box can't be used yet (for example in a locked step of a plan): it turns grey and stays visible
+    isDisabled: { type: Boolean, default: false },
+    // True for a smaller box (80px high with a smaller icon), for example inside the step of a plan
+    small: { type: Boolean, default: false },
   },
   // Tells the parent which file was chosen (this makes v-model work)
   emits: ["update:modelValue"],
@@ -34,11 +38,15 @@ export default defineComponent({
   <!-- The <label> wraps the hidden file input, so tapping anywhere in the box opens the file picker.
        focus-within shows the focus outline on the box when the hidden input has keyboard focus -->
   <label
-    class="relative flex h-34 w-full flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-blue bg-white px-4 text-center focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-blue"
+    class="relative flex w-full flex-col items-center justify-center rounded-xl border border-dashed bg-white px-4 text-center focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-blue"
+    :class="[isDisabled ? 'border-grey' : 'border-blue', small ? 'h-20 gap-1' : 'h-34 gap-4']"
   >
     <!-- A real file input, so the keyboard and screen readers just work. sr-only hides it, the box is what the user sees -->
-    <input type="file" class="sr-only" @change="handleChange">
-    <IconDisplay :name="hasFile ? 'file-lines' : 'arrow-up-from-bracket'" class="size-12 text-blue" />
+    <input type="file" class="sr-only" :disabled="isDisabled" @change="handleChange">
+    <IconDisplay
+      :name="hasFile ? 'file-lines' : 'arrow-up-from-bracket'"
+      :class="[small ? 'size-6' : 'size-12', isDisabled ? 'text-grey' : 'text-blue']"
+    />
     <span v-if="hasFile" class="flex min-w-0 max-w-full flex-col">
       <span class="truncate text-sm leading-5 font-semibold text-navy">{{ modelValue }}</span>
       <span class="text-xs leading-4 font-normal text-grey">Tik om een ander bestand te kiezen</span>

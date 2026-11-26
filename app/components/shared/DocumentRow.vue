@@ -16,6 +16,8 @@ export default defineComponent({
     hasLine: { type: Boolean, default: false },
     // True when the user does not have this document in the vault yet: a "+ Toevoegen" button shows
     isMissing: { type: Boolean, default: false },
+    // True while the step is locked: the "+ Toevoegen" button stays visible, but is grey and can't be used yet
+    isDisabled: { type: Boolean, default: false },
     // The text on the add button, in Dutch (the "+" is an icon)
     addLabel: { type: String, default: "Toevoegen" },
     // False hides the pencil, for example in a locked step where nothing can be changed yet
@@ -52,7 +54,9 @@ export default defineComponent({
     <button
       v-if="isMissing"
       type="button"
-      class="relative flex h-7 shrink-0 items-center gap-1.5 rounded-xl bg-blue px-3 text-xs font-normal text-white before:absolute before:-inset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+      :disabled="isDisabled"
+      class="relative flex h-7 shrink-0 items-center gap-1.5 rounded-xl px-3 text-xs font-normal text-white before:absolute before:-inset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+      :class="isDisabled ? 'bg-grey' : 'bg-blue'"
       @click="$emit('add')"
     >
       <IconDisplay name="plus" class="size-3" />
