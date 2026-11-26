@@ -8,14 +8,9 @@ export default defineComponent({
     useSeoMeta({ title: "Plan" });
   },
   data() {
-    // The plan details screen sends the title in the address ("?title=Rijbewijs BE"). Without it we use a sample title
-    const titleFromAddress = this.$route.query.title;
     return {
-      // Sample data for now, this will come from the database later (this.$route.params.id says which plan)
-      plan: {
-        title: typeof titleFromAddress === "string" && titleFromAddress !== "" ? titleFromAddress : "Rijbewijs BE",
-        subtitle: "Rijbewijs behalen",
-      },
+      // The title of the plan. Empty means the default title (see planTitle). It is saved with the progress below
+      title: "",
       // The number of the step that is open (1 to 4). 0 means none. Only one step is open at a time
       openStep: 1,
       // The state of the steps. It is saved in the browser per plan (see app/utils/planProgress.ts) and loaded again in mounted()
@@ -38,9 +33,14 @@ export default defineComponent({
     planId(): string {
       return String(this.$route.params.id);
     },
+    // The title shown at the top and in the progress bar label
+    planTitle(): string {
+      return drivingLicenceTitle(this.savedProgress);
+    },
     // Everything that has to be saved, in one object. When one of these values changes, the watcher below saves it
     savedProgress(): PlanProgress {
       return {
+        title: this.title,
         hasLicenseB: this.hasLicenseB,
         examDone: this.examDone,
         hasAppointment: this.hasAppointment,
@@ -93,6 +93,14 @@ export default defineComponent({
   // does not exist on the server, so this can only happen here). Then we start listening to scrolling and resizing
   mounted() {
     Object.assign(this, loadPlanProgress(this.planId));
+    // The plan details screen sends the title of a new plan in the address ("?title=Rijbewijs BE").
+    // It is saved as the title, and then removed from the address (router.replace changes the address without
+    // opening a new page), so a reload never undoes a title the user changed later
+    const titleFromAddress = this.$route.query.title;
+    if (typeof titleFromAddress === "string" && titleFromAddress.trim() !== "") {
+      this.title = titleFromAddress.trim();
+      this.$router.replace({ query: {} });
+    }
     window.addEventListener("scroll", this.updateShade);
     window.addEventListener("resize", this.updateShade);
     this.updateShade();
@@ -111,6 +119,10 @@ export default defineComponent({
     // Tapping a header opens that step and closes the other one. Tapping the open step closes it
     toggle(step: number) {
       this.openStep = this.openStep === step ? 0 : step;
+    },
+    // Called by EditableTitle when the user saved a new title. The watcher on savedProgress saves it
+    saveTitle(newTitle: string) {
+      this.title = newTitle;
     },
     completeExam() {
       this.examDone = true;
@@ -132,20 +144,10 @@ export default defineComponent({
 
 <template>
   <div class="flex flex-col gap-6 pt-4 pb-7">
-    <!-- The top bar (back button, logo and avatar) is made by other team members and goes here later -->
-    <div class="flex items-start justify-between gap-4">
-      <PageHeader :title="plan.title" :subtitle="plan.subtitle" />
-      <!-- The menu button does nothing yet. The negative margins keep the 44px tappable area from pushing the header -->
-      <button
-        type="button"
-        aria-label="Meer opties"
-        class="-mt-1 -mr-2 flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-xl text-grey focus-visible:outline-2 focus-visible:outline-blue"
-      >
-        <IconDisplay name="ellipsis" class="size-5 rotate-90" />
-      </button>
-    </div>
+    <!-- The title with the three dots: tapping the dots lets the user change the title (shared component) -->
+    <EditableTitle :title="planTitle" subtitle="Rijbewijs behalen" @save="saveTitle" />
 
-    <ProgressBar :progress="progress" size="large" :label="`Voortgang ${plan.title}`" />
+    <ProgressBar :progress="progress" size="large" :label="`Voortgang ${planTitle}`" />
 
     <!-- The four steps. Each row has the marker of the vertical progress bar on the left and the step on the right -->
     <div>

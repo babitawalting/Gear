@@ -66,6 +66,8 @@ Use the same words and the same style everywhere, so everyone finds things in th
 | `grey` | `#697782` | Background of disabled buttons, text of cancel buttons, and the subtext in page headers |
 | `sand` | `#E3DED9` | **Border color only** |
 | `white` | `#FCFCFC` | Main background color, and text on blue backgrounds |
+| `ochre` | `#D39E00` | **Progress bar fill only**, while a plan is not finished (below 100%) |
+| `green` | `#1B9B01` | **Progress bar fill only**, when a plan is complete (100%) |
 
 Define them once in `@theme` (see `templates/main.css`), then use `bg-blue`, `text-navy`, `bg-grey`, `border-sand`, `bg-white`. **Never** use other Tailwind colors (`bg-gray-100`, `text-red-500`, ...) or random hex values. If something needs another color (e.g. an error), ask first.
 
@@ -122,6 +124,7 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 | `share` |
 | `stethoscope` |
 | `unlock` |
+| `xmark` |
 
 ### Setup (once)
 Copy these files if they don't exist yet:

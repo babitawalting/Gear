@@ -7,7 +7,7 @@
 <script lang="ts">
 // definePageMeta gives the page extra settings for the layout (Nuxt reads it before the page is shown).
 // This screen draws its own background (PinBackground), so the shared PageBackground of the default layout is turned off.
-definePageMeta({ pageBackground: false });
+definePageMeta({ pageBackground: false, topBar: false });
 
 export default defineComponent({
   // setup() is only used for Nuxt's useSeoMeta, which sets the page <title>

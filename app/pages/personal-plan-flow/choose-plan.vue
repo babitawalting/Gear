@@ -28,8 +28,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col gap-4 pt-4 pb-7">
-    <!-- The top bar (back button, logo and avatar) is made by other team members and goes here later -->
+  <div class="flex flex-1 flex-col gap-4 pt-4 pb-7">
     <PageHeader title="Nieuw persoonlijk plan" subtitle="Welk persoonlijk plan wilt u starten?" />
 
     <div role="radiogroup" aria-label="Persoonlijk plan" class="flex flex-col gap-4">

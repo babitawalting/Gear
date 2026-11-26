@@ -21,6 +21,10 @@ export default defineComponent({
     isLarge(): boolean {
       return this.size === "large";
     },
+    // Green when the plan is complete (100%), ochre while it is still in progress
+    fillClasses(): string {
+      return this.safeProgress >= 100 ? "bg-green" : "bg-ochre";
+    },
   },
 });
 </script>
@@ -38,11 +42,12 @@ export default defineComponent({
       aria-valuemin="0"
       aria-valuemax="100"
       :aria-label="label"
-      class="rounded-full bg-sand"
+      class="rounded-full bg-white"
       :class="isLarge ? 'h-3 flex-1' : 'h-1 w-25'"
     >
-      <!-- Tailwind can't make a class for every percentage, so the width is set with style. The fill is grey for now -->
-      <div class="h-full rounded-full bg-grey" :style="{ width: `${safeProgress}%` }" />
+      <!-- Tailwind can't make a class for every percentage, so the width is set with style.
+           The fill is ochre while the plan is not finished and green when it is done (the percentage next to it says the same in text) -->
+      <div class="h-full rounded-full" :class="fillClasses" :style="{ width: `${safeProgress}%` }" />
     </div>
   </div>
 </template>

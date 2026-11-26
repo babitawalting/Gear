@@ -64,8 +64,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col gap-4 pt-4 pb-7">
-    <!-- The top bar (back button, logo and avatar) is made by other team members and goes here later -->
+  <div class="flex flex-1 flex-col gap-4 pt-4 pb-7">
     <PageHeader title="Type rijbewijs" subtitle="Welk rijbewijs wilt u behalen?" />
 
     <div role="radiogroup" aria-label="Type rijbewijs" class="flex flex-col gap-4">
@@ -90,7 +89,8 @@ export default defineComponent({
     />
 
     <!-- Floats at the bottom of the screen, over the list. It is always there, grey until a type is chosen -->
-    <div class="sticky bottom-7 mt-auto">
+    <!-- 28px above the bottom of the screen, or above the navigation bar when a page shows it (--bottom-nav-space is set in the layout) -->
+    <div class="sticky bottom-[calc(var(--bottom-nav-space)+28px)] mt-auto">
       <PrimaryButton label="Volgende" :disabled="selectedLicense === ''" @click="goToNextStep" />
     </div>
   </div>
