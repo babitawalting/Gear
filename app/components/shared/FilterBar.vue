@@ -42,17 +42,20 @@ export default defineComponent({
   <!-- The buttons have a fixed size with 16px (gap-4) between them.
        overflow-x-auto: when the buttons don't fit, the row scrolls sideways instead of squeezing them.
        [scrollbar-width:none] hides the scrollbar (swiping still works).
-       p-1 with -m-1 gives the focus outline room, so the scroll area doesn't cut it off, without moving the buttons -->
-  <div class="-m-1 flex gap-4 overflow-x-auto p-1 [scrollbar-width:none]">
+       The row is exactly as wide as the page column, so when it scrolls the buttons are cut off at the same line as the
+       search field and the cards. py-1 with -my-1 only gives the focus outline room above and below -->
+  <div class="-my-1 flex gap-4 overflow-x-auto py-1 [scrollbar-width:none]">
     <!-- Not chosen: Secondary look (white, blue text). Chosen: blue with white text.
-         aria-pressed tells screen readers if the filter is on -->
+         aria-pressed tells screen readers if the filter is on.
+         The focus outline sits inside the button (-outline-offset-4), so the edge of the row never cuts it off.
+         On a chosen (blue) button the outline is white, so it stays visible -->
     <button
       v-for="filter in filters"
       :key="filter.value"
       type="button"
       :aria-pressed="isActive(filter)"
-      class="flex h-16 w-[67px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl border text-[10px] leading-3 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
-      :class="isActive(filter) ? 'border-blue bg-blue text-white' : 'border-sand bg-white text-blue'"
+      class="flex h-16 w-[67px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl border text-[10px] leading-3 font-semibold focus-visible:outline-2 focus-visible:-outline-offset-4"
+      :class="isActive(filter) ? 'border-blue bg-blue text-white focus-visible:outline-white' : 'border-sand bg-white text-blue focus-visible:outline-blue'"
       @click="toggle(filter)"
     >
       <!-- The icon follows the color of the button: blue, or white when chosen -->

@@ -1,5 +1,5 @@
-<!-- app/components/plans-overview/new-plan/PlanCategorySheetRow.vue
-     One choice in the category sheet: a radio circle, the category name and its icon.
+<!-- app/components/shared/PlanCategorySheetRow.vue
+     One choice in the category sheet: a radio circle, the category name and its icon. Used in the plan category sheet and the vault category sheet.
      Several rows with the same `name` form one group, and only one can be chosen.
      Usage: <PlanCategorySheetRow v-model="category" name="category" value="education" label="Educatie" icon="school" /> -->
 <script lang="ts">

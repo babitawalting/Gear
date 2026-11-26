@@ -3,7 +3,8 @@
      With `small` the label and the field are smaller (12px, regular), for use inside a card.
      Usage: <FormField v-model="title" label="Titel" required />
             <FormField v-model="endDate" label="Einddatum" type="date" />
-            <FormField v-model="date" label="Datum" type="date" small /> -->
+            <FormField v-model="date" label="Datum" type="date" small />
+            <FormField v-model="title" label="Titel" placeholder="Voeg hier een titel toe" required /> -->
 <script lang="ts">
 export default defineComponent({
   props: {
@@ -18,6 +19,8 @@ export default defineComponent({
     required: { type: Boolean, default: false },
     // True for the small look: 12px text and a field of 28px high
     small: { type: Boolean, default: false },
+    // Optional grey example text inside the empty field, in Dutch (for example "Voeg hier een titel toe")
+    placeholder: { type: String, default: "" },
   },
   // Tells the parent that the value changed (this makes v-model work)
   emits: ["update:modelValue"],
@@ -50,7 +53,8 @@ export default defineComponent({
       :type="type"
       :value="modelValue"
       :required="required"
-      class="w-full min-w-0 rounded-xl border border-sand bg-white font-normal text-navy focus-visible:outline-2 focus-visible:outline-blue"
+      :placeholder="placeholder"
+      class="w-full min-w-0 rounded-xl border border-sand bg-white font-normal text-navy placeholder:text-grey focus-visible:outline-2 focus-visible:outline-blue"
       :class="inputClasses"
       @input="handleInput"
     >

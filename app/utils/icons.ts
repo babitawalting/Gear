@@ -36,4 +36,8 @@ export const icons: Record<string, string> = {
   "xmark": "M470.6 214.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 274.7 214.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L274.7 320 169.4 425.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L320 365.3 425.4 470.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L365.3 320 470.6 214.6z",
   // A briefcase (Font Awesome Free, briefcase-solid-full.svg), for the "Portfolio" category of the vault
   "briefcase": "M248 112H392c4.4 0 8 3.6 8 8V160H240V120c0 -4.4 3.6 -8 8 -8zm-56 8V160H128C92.7 160 64 188.7 64 224v96H256 384 576V224c0 -35.3 -28.7 -64 -64 -64H448V120c0 -30.9 -25.1 -56 -56 -56H248c-30.9 0 -56 25.1 -56 56zM576 352H384v32c0 17.7 -14.3 32 -32 32H288c-17.7 0 -32 -14.3 -32 -32V352H64V480c0 35.3 28.7 64 64 64H512c35.3 0 64 -28.7 64 -64V352z",
+  // A calendar outline, drawn for the dates in the vault design (filled shapes, so it uses currentColor)
+  "calendar": "M160 128H480A48 48 0 0 1 528 176V528A48 48 0 0 1 480 576H160A48 48 0 0 1 112 528V176A48 48 0 0 1 160 128ZM176 240A16 16 0 0 0 160 256V512A16 16 0 0 0 176 528H464A16 16 0 0 0 480 512V256A16 16 0 0 0 464 240ZM208 64A24 24 0 0 1 232 88V168A24 24 0 0 1 184 168V88A24 24 0 0 1 208 64ZM432 64A24 24 0 0 1 456 88V168A24 24 0 0 1 408 168V88A24 24 0 0 1 432 64Z",
+  // A funnel, drawn for the "Sorteren" filter in the vault design (filled shapes, so it uses currentColor)
+  "filter": "M96 112H544A24 24 0 0 1 562 152L392 352V520A24 24 0 0 1 353 539L273 475A24 24 0 0 1 264 456V352L78 152A24 24 0 0 1 96 112Z",
 };

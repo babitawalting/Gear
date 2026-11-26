@@ -41,9 +41,10 @@ export default defineComponent({
   <!-- fixed: the bar stays at the bottom while the page scrolls.
        left-1/2 + -translate-x-1/2: centered in the same phone-width column as the layout.
        w-[calc(100%-36px)]: 18px space on each side, max-w-[366px]: the width of the bar in Figma.
-       z-40: in front of the page content. The pop-ups (dialogs) and the toast (z-50) still go in front of the bar. -->
+       z-40: in front of the page content. The pop-ups (dialogs) and the toast (z-50) still go in front of the bar.
+       shadow-lg shadow-navy/15: a soft navy shadow, so the bar seems to float above the page -->
   <nav
-    class="fixed bottom-[19px] left-1/2 z-40 h-15 w-[calc(100%-36px)] max-w-[366px] -translate-x-1/2 rounded-xl border-t border-sand bg-white"
+    class="fixed bottom-[19px] left-1/2 z-40 h-15 w-[calc(100%-36px)] max-w-[366px] -translate-x-1/2 rounded-xl border-t border-sand bg-white shadow-lg shadow-navy/15"
     aria-label="Hoofdmenu"
   >
     <ul class="flex h-full">

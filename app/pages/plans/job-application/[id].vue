@@ -156,7 +156,11 @@ export default defineComponent({
     // The evidence of one step as { id, title }, with the names from the vault (findVaultDocument is in app/utils/vaultDocuments.ts)
     evidenceFor(step: number): { id: string; title: string }[] {
       const ids = this.evidenceByStep[step] ?? [];
-      return ids.map((id) => ({ id, title: findVaultDocument(id)?.title ?? id }));
+      // A document that was deleted from the vault is left out (flatMap: an empty list means "nothing for this id")
+      return ids.flatMap((id) => {
+        const document = findVaultDocument(id);
+        return document ? [{ id, title: document.title }] : [];
+      });
     },
     // True when the plan has this required document (added from the vault in some step, or with "+ Toevoegen")
     hasDocument(requirementId: string): boolean {

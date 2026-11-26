@@ -106,6 +106,8 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 | `award` |
 | `bell` |
 | `briefcase` |
+| `calendar` |
+| `filter` |
 | `check` |
 | `chevron-right` |
 | `edit` |
