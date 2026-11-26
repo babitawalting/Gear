@@ -11,9 +11,14 @@ export default defineComponent({
   methods: {
     // Goes back to the page the user came from. When there is no such page (the user opened this address directly),
     // it goes to the home page instead, so the button never does nothing.
+    // A page can choose a fixed page to go back to with definePageMeta({ backTo: "/plans-overview" }).
+    // The plan pages do this: right after a plan is created, back should go to the overview, not to the creation screens.
     // window.history.state.back is filled in by Vue Router with the previous address of this website
     goBack() {
-      if (window.history.state?.back) {
+      const backTo = this.$route.meta.backTo;
+      if (typeof backTo === "string") {
+        navigateTo(backTo);
+      } else if (window.history.state?.back) {
         this.$router.back();
       } else {
         navigateTo("/home");
