@@ -14,11 +14,19 @@ export default defineComponent({
         { to: "/home", label: "Home", icon: "house" },
         { to: "/vault", label: "Kluis", icon: "unlock" },
         { to: "/plans-overview", label: "Plannen", icon: "file-lines" },
+        // The overview of shared plans is built later as app/pages/shared.vue. It is a separate screen, not the plans overview.
         { to: "/shared", label: "Gedeeld", icon: "people-arrows" },
       ],
     };
   },
   methods: {
+    // True when the page of this route exists. Nuxt makes a route for every file in app/pages (file-based routing),
+    // and $router.resolve() looks the address up in that list. No match means the page has not been built yet.
+    // Then the item is shown, but not as a link, so tapping it does not open a 404 page.
+    // As soon as a teammate adds the page (for example app/pages/shared.vue), the item becomes a link by itself.
+    pageExists(to: string): boolean {
+      return this.$router.resolve(to).matched.length > 0;
+    },
     // An item is active on its own page and on the pages below it (for example /vault/12 for Kluis).
     // $route is the current page, Nuxt (vue-router) gives it to every component.
     isActive(to: string): boolean {
@@ -43,6 +51,7 @@ export default defineComponent({
         <!-- NuxtLink is Nuxt's link to another page of the app (no full page reload).
              aria-current="page" tells screen readers which page is open, the color shows it visually. -->
         <NuxtLink
+          v-if="pageExists(link.to)"
           :to="link.to"
           :aria-current="isActive(link.to) ? 'page' : undefined"
           :class="isActive(link.to) ? 'text-blue' : 'text-grey'"
@@ -51,6 +60,17 @@ export default defineComponent({
           <IconDisplay :name="link.icon" class="size-[18px]" />
           {{ link.label }}
         </NuxtLink>
+        <!-- The page does not exist yet: same look as an inactive item, but not a link (nothing happens on tap).
+             aria-disabled and the hidden text tell screen readers that it is not available yet. -->
+        <span
+          v-else
+          aria-disabled="true"
+          class="flex h-full min-h-11 flex-col items-center justify-center gap-1 text-sm leading-4 font-normal text-grey"
+        >
+          <IconDisplay :name="link.icon" class="size-[18px]" />
+          {{ link.label }}
+          <span class="sr-only">(binnenkort beschikbaar)</span>
+        </span>
       </li>
     </ul>
   </nav>
