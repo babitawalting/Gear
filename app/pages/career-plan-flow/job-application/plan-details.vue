@@ -16,10 +16,11 @@ export default defineComponent({
     };
   },
   methods: {
-    // Called when the user presses "Volgende": goes to the plan page, with the title in the address.
-    // The plan does not exist in a database yet, so the id "7" is a sample
+    // Called when the user presses "Volgende": starts a new plan with this title (0%, no evidence) and opens it.
+    // The plan does not exist in a database yet, so the id "7" is a sample (startJobApplication is in app/utils)
     goToNextStep() {
-      navigateTo({ path: "/plans/job-application/7", query: { title: this.title.trim() } });
+      startJobApplication("7", this.title.trim());
+      navigateTo("/plans/job-application/7");
     },
   },
 });

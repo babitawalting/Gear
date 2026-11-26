@@ -4,34 +4,17 @@
 // Nuxt auto-imports everything in app/utils, so pages can use these functions and lists without an import.
 // Later this can move to a database. Only this file would have to change.
 
-// One document in a list of the plan
-export interface JobApplicationDocument {
-  id: string;
-  // The name of the document, in Dutch
-  title: string;
-}
-
-// Sample data for now: the documents the user already has in the vault (step 1, "Wat heb ik al?")
-export const jobApplicationVaultDocuments: JobApplicationDocument[] = [
-  { id: "hbo-diploma", title: "HBO Diploma-ICT" },
-  { id: "cv", title: "CV" },
-  { id: "internship-reference", title: "Stage referentie" },
-  { id: "portfolio", title: "Portfolio PDF" },
-];
+// The number of steps in a job application plan
+export const jobApplicationStepCount = 3;
 
 // Sample data for now: the documents the vacancy asks for (step 2, "Vacaturevereisten").
-// `inVault` is true when the user already has it in the vault
-export const jobApplicationRequirements: (JobApplicationDocument & { inVault: boolean })[] = [
-  { id: "hbo-diploma", title: "HBO Diploma-ICT", inVault: true },
-  { id: "cv", title: "CV", inVault: true },
-  { id: "motivation-letter", title: "Motivatiebrief", inVault: false },
-  { id: "certificate-of-conduct", title: "VOG", inVault: false },
-];
-
-// Sample data for now: documents that are not required, but can make the application stronger (step 3, "Aanvullen")
-export const jobApplicationOptionalDocuments: JobApplicationDocument[] = [
-  { id: "recommendation-letter", title: "Aanbevelingsbrief" },
-  { id: "certificates", title: "Certificaten" },
+// The id is the same as the id of the document in the vault (app/utils/vaultDocuments.ts), so the plan can see
+// when the user added that document. Motivatiebrief and VOG are not in the sample vault, so they start as missing
+export const jobApplicationRequirements = [
+  { id: "hbo-diploma", title: "HBO Diploma - ICT" },
+  { id: "cv", title: "CV" },
+  { id: "motivation-letter", title: "Motivatiebrief" },
+  { id: "certificate-of-conduct", title: "VOG" },
 ];
 
 // The title a plan gets when the user has not given it one (sample data for now)
@@ -41,12 +24,12 @@ export const jobApplicationDefaultTitle = "Software developer";
 export interface JobApplicationProgress {
   // The title of the plan, for example "Software developer". Empty means the default title is used
   title: string;
-  // Step 2: the ids of the missing documents the user added with "+ Toevoegen"
+  // How many steps the user concluded (0 to 3): a step is concluded by tapping the next step, the last one with "Plan afronden". Every concluded step is a third of the progress
+  completedSteps: number;
+  // The documents the user added from the vault, per step: { "1": ["cv", "hbo-diploma"], "2": [], "3": [] }
+  evidenceByStep: Record<string, string[]>;
+  // Step 2: the ids of the missing requirements the user added with "+ Toevoegen"
   addedRequirementIds: string[];
-  // Step 3: the ids of the optional documents the user added
-  addedOptionalIds: string[];
-  // Step 3: the user pressed "Klaar met aanvullen"
-  isSupplementDone: boolean;
   // The text in the notes field
   notes: string;
   // True when the plan was shared with someone
@@ -55,9 +38,17 @@ export interface JobApplicationProgress {
   archivedAt: string;
 }
 
-// A plan where nothing is done yet
+// A new plan: 0%, no evidence, nothing added yet
 export function emptyJobApplicationProgress(): JobApplicationProgress {
-  return { title: "", addedRequirementIds: [], addedOptionalIds: [], isSupplementDone: false, notes: "", isShared: false, archivedAt: "" };
+  return {
+    title: "",
+    completedSteps: 0,
+    evidenceByStep: { 1: [], 2: [], 3: [] },
+    addedRequirementIds: [],
+    notes: "",
+    isShared: false,
+    archivedAt: "",
+  };
 }
 
 // The key under which the progress of one plan is saved
@@ -88,16 +79,26 @@ export function saveJobApplicationProgress(planId: string, progress: JobApplicat
   }
 }
 
-// True when the user has this required document: it was already in the vault, or it was added later
-export function hasRequirement(progress: JobApplicationProgress, requirement: { id: string; inVault: boolean }): boolean {
-  return requirement.inVault || progress.addedRequirementIds.includes(requirement.id);
+// Starts a new plan with this title: everything else is empty (0%, no evidence). The plan details screen calls this
+export function startJobApplication(planId: string, title: string): void {
+  saveJobApplicationProgress(planId, { ...emptyJobApplicationProgress(), title });
 }
 
-// Which of the three steps are done, in order (countedSteps from planProgress.ts: every step needs the ones before it)
-// 1. The vault has documents  2. Nothing the vacancy asks for is missing  3. The user finished adding optional documents
+// True when the plan has this required document: the user added it from the vault in one of the steps,
+// or added it with "+ Toevoegen" in step 2
+export function hasRequirement(progress: JobApplicationProgress, requirementId: string): boolean {
+  const inSomeStep = Object.values(progress.evidenceByStep).some((ids) => ids.includes(requirementId));
+  return inSomeStep || progress.addedRequirementIds.includes(requirementId);
+}
+
+// Which of the three steps are done, in order. A step is done once the user concluded it,
+// and the user can only conclude the steps one after the other
 export function jobApplicationDoneSteps(progress: JobApplicationProgress): boolean[] {
-  const hasAllRequirements = jobApplicationRequirements.every((requirement) => hasRequirement(progress, requirement));
-  return countedSteps([jobApplicationVaultDocuments.length > 0, hasAllRequirements, progress.isSupplementDone]);
+  const steps: boolean[] = [];
+  for (let step = 1; step <= jobApplicationStepCount; step++) {
+    steps.push(progress.completedSteps >= step);
+  }
+  return steps;
 }
 
 // The title to show: the saved one, or the default title when the plan has none yet.

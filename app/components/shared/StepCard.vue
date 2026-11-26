@@ -1,12 +1,23 @@
 <!-- app/components/shared/StepCard.vue
      One step of a plan: a number, a title, a description and an arrow. When it is open, the content of the step shows below.
      A locked step (grey) can be opened, but nothing in it can be done yet, so the page makes its content read-only.
-     Under the content of an open step there is always a button to add evidence from the vault ("Bewijs toevoegen uit kluis").
-     The card only tells the page it was tapped (event `add-evidence`): the page decides what happens.
-     Usage: <StepCard :number="1" title="Wat heb ik al?" description="Rijbewijs B" :is-open="openStep === 1" @toggle="openStep = 1" @add-evidence="addEvidence(1)">
+     An open step shows, from top to bottom:
+     1. the content of the step (the default slot)
+     2. the evidence the user added from the vault (`evidence`), each with the pencil to remove it (event `remove-evidence`)
+     3. the button "Bewijs toevoegen uit kluis" (event `add-evidence`): the page opens the vault drawer
+     4. the "actions" slot, for example the button that concludes the step
+     Usage: <StepCard :number="1" title="Wat heb ik al?" description="Documenten uit uw kluis" :is-open="openStep === 1"
+              :evidence="[{ id: 'cv', title: 'CV' }]" @toggle="toggle(1)" @add-evidence="openVault(1)" @remove-evidence="removeEvidence(1, $event)">
               ...the content of the step...
+              <template #actions>...a button...</template>
             </StepCard> -->
 <script lang="ts">
+// The shape of one piece of evidence, so TypeScript knows which fields it has
+interface StepEvidence {
+  id: string;
+  title: string;
+}
+
 export default defineComponent({
   props: {
     // The number in the square, for example 1
@@ -17,12 +28,15 @@ export default defineComponent({
     isLocked: { type: Boolean, default: false },
     // True when the content of the step is shown. The page decides which step is open
     isOpen: { type: Boolean, default: false },
+    // The documents from the vault that the user added to this step
+    evidence: { type: Array as PropType<StepEvidence[]>, default: () => [] },
     // The text on the vault button, in Dutch
     evidenceLabel: { type: String, default: "Bewijs toevoegen uit kluis" },
   },
   // "toggle": the header was tapped (the page then opens or closes this step)
   // "add-evidence": the vault button was tapped
-  emits: ["toggle", "add-evidence"],
+  // "remove-evidence": "Verwijderen" was tapped on a piece of evidence, the value is its id
+  emits: ["toggle", "add-evidence", "remove-evidence"],
 });
 </script>
 
@@ -52,11 +66,25 @@ export default defineComponent({
     <div v-if="isOpen" class="pr-4.5 pb-4 pl-7">
       <slot />
 
+      <!-- The evidence the user added from the vault. In a locked step the pencil is hidden, because nothing can change yet -->
+      <ul v-if="evidence.length > 0">
+        <li v-for="item in evidence" :key="item.id">
+          <DocumentRow
+            :title="item.title"
+            :has-line="evidence.length > 1"
+            :can-edit="!isLocked"
+            @remove="$emit('remove-evidence', item.id)"
+          />
+        </li>
+      </ul>
+
       <!-- Secondary state (not the main action of the step), with a plus in front.
-           In a locked step it is the Disabled state: grey and it can't be used yet -->
+           In a locked step it is the Disabled state: grey and it can't be used yet.
+           aria-haspopup tells screen readers that the button opens a pop-up (the vault drawer) -->
       <button
         type="button"
         :disabled="isLocked"
+        aria-haspopup="dialog"
         class="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
         :class="isLocked ? 'bg-grey text-white' : 'border border-sand bg-white text-blue'"
         @click="$emit('add-evidence')"
@@ -64,6 +92,9 @@ export default defineComponent({
         <IconDisplay name="plus" class="size-4" />
         {{ evidenceLabel }}
       </button>
+
+      <!-- Room for buttons under the vault button, for example "Volgende stap". Only shown when the page fills it -->
+      <slot name="actions" />
     </div>
   </section>
 </template>
