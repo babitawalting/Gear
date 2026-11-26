@@ -31,9 +31,11 @@ export default defineComponent({
 
 <template>
   <div class="flex items-center" :class="isLarge ? 'gap-3' : 'gap-2'">
+    <!-- The small percentage has a fixed width of 34px (about as wide as "100%"), so the bar starts 42px after the start of the
+         text (34px + the 8px gap), as in the design. All the bars on the plan cards start at the same place, also for "0%" or "50%" -->
     <span
       class="shrink-0 font-normal"
-      :class="isLarge ? 'text-xs leading-4 text-navy' : 'w-10 text-sm leading-4 text-grey'"
+      :class="isLarge ? 'text-xs leading-4 text-navy' : 'w-8.5 text-sm leading-4 text-grey'"
     >{{ safeProgress }}%</span>
     <!-- role="progressbar" tells screen readers what this bar shows -->
     <div
@@ -42,10 +44,12 @@ export default defineComponent({
       aria-valuemin="0"
       aria-valuemax="100"
       :aria-label="label"
-      class="rounded-full bg-white"
-      :class="isLarge ? 'h-3 flex-1' : 'h-1 w-25'"
+      class="rounded-full"
+      :class="isLarge ? 'h-3 flex-1 bg-white' : 'h-1 w-25 bg-sand'"
     >
-      <!-- Tailwind can't make a class for every percentage, so the width is set with style.
+      <!-- The empty part (the track) is white on the plan page, which has a coloured background. On the plan card, which is white itself,
+           a white track would be invisible, so the small bar has a sand coloured track (the same colour as the border of the card).
+           Tailwind can't make a class for every percentage, so the width is set with style.
            The fill is ochre while the plan is not finished and green when it is done (the percentage next to it says the same in text) -->
       <div class="h-full rounded-full" :class="fillClasses" :style="{ width: `${safeProgress}%` }" />
     </div>

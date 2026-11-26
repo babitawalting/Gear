@@ -67,10 +67,39 @@ export function loadOverviewPlans(): OverviewPlan[] {
       ...plan,
       title: drivingLicenceTitle(progress),
       progress: percentageDone(drivingLicenceDoneSteps(progress)),
-      // The driving licence plan can not be shared or archived yet (its page has no buttons for it)
-      isShared: false,
-      isArchived: false,
-      archivedAt: "",
+      isShared: progress.isShared,
+      isArchived: progress.archivedAt !== "",
+      archivedAt: progress.archivedAt,
     };
   });
+}
+
+// ---- The options of the three dots on a plan card ----
+
+// Changes the saved state of one plan: shared, or archived. Every kind of plan saves its own progress,
+// so we load that one, change the two fields and save it again
+function changeSavedPlan(plan: OverviewPlan, changes: { isShared?: boolean; archivedAt?: string }): void {
+  const id = String(plan.id);
+  if (plan.category === "career") {
+    saveJobApplicationProgress(id, { ...loadJobApplicationProgress(id), ...changes });
+  } else if (plan.category === "education") {
+    saveDiplomaDescriptionProgress(id, { ...loadDiplomaDescriptionProgress(id), ...changes });
+  } else {
+    savePlanProgress(id, { ...loadPlanProgress(id), ...changes });
+  }
+}
+
+// "Plan archiveren": saves today's date as the archive date ("2026-11-26"). The plan moves to the "Archief" view
+export function archiveOverviewPlan(plan: OverviewPlan): void {
+  changeSavedPlan(plan, { archivedAt: new Date().toISOString().slice(0, 10) });
+}
+
+// "Plan uit archief halen": an empty archive date means the plan is not archived. The plan moves back to the "Overzicht" view
+export function unarchiveOverviewPlan(plan: OverviewPlan): void {
+  changeSavedPlan(plan, { archivedAt: "" });
+}
+
+// "Plan delen": remembers that the plan was shared. The card shows the shared icon and the plan shows on /shared
+export function shareOverviewPlan(plan: OverviewPlan): void {
+  changeSavedPlan(plan, { isShared: true });
 }

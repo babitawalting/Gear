@@ -47,16 +47,16 @@ export default defineComponent({
 </script>
 
 <template>
-  <!-- The dialog itself has no padding, so a click on `self` can only be a click on the blurred background -->
+  <!-- The dialog itself has no padding, so a click on `self` can only be a click on the blurred background.
+       mx-auto + max-w-[402px]: the sheet is only as wide as the page column (the phone screen), also on a wide window -->
   <dialog
     ref="dialog"
     aria-labelledby="category-sheet-title"
-    class="fixed inset-x-0 top-auto bottom-0 m-0 w-full max-w-none rounded-t-3xl border-t border-sand bg-white p-0 backdrop:bg-white/40 backdrop:backdrop-blur-sm"
+    class="fixed inset-x-0 top-auto bottom-0 mx-auto mb-0 w-full max-w-[402px] rounded-t-3xl border border-b-0 border-sand bg-white p-0 backdrop:bg-white/40 backdrop:backdrop-blur-sm"
     @click.self="$emit('close')"
     @close="$emit('close')"
   >
-    <!-- The sheet is as wide as the screen, but its content stays in the 402px column -->
-    <div class="mx-auto flex w-full max-w-[402px] flex-col px-6 pt-7.5 pb-7">
+    <div class="flex flex-col px-6 pt-7.5 pb-7">
       <h2 id="category-sheet-title" class="text-[26px] leading-8 font-semibold text-navy">Categorie</h2>
       <p class="text-sm leading-5 font-normal text-grey">Onder welke categorie valt het nieuwe plan?</p>
 

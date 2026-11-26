@@ -21,11 +21,15 @@ export interface PlanProgress {
   notes: string;
   // The documents the user added from the vault, per step: { "1": ["cv"], "2": [], ... }
   evidenceByStep: Record<string, string[]>;
+  // True when the plan was shared with someone (the three dots on the plan card in the overview)
+  isShared: boolean;
+  // The date the plan was archived ("2026-11-14"). Empty means not archived
+  archivedAt: string;
 }
 
 // A plan where nothing is done yet
 export function emptyPlanProgress(): PlanProgress {
-  return { title: "", hasLicenseB: false, examDone: false, hasAppointment: false, appointmentDate: "", licenseReceived: false, notes: "", evidenceByStep: { 1: [], 2: [], 3: [], 4: [] } };
+  return { title: "", hasLicenseB: false, examDone: false, hasAppointment: false, appointmentDate: "", licenseReceived: false, notes: "", evidenceByStep: { 1: [], 2: [], 3: [], 4: [] }, isShared: false, archivedAt: "" };
 }
 
 // The key under which the progress of one plan is saved

@@ -26,9 +26,19 @@ export default defineComponent({
       plans: [] as OverviewPlan[],
       // False until the plans are loaded, so "Geen plannen gevonden" does not flash by before that
       hasLoadedPlans: false,
-      // True while the "Plan geannuleerd" message is shown, and the name of the plan that was cancelled
+      // The plan whose three dots were tapped. null means none. The options sheet and the share sheet work on this plan
+      selectedPlan: null as OverviewPlan | null,
+      isOptionsSheetOpen: false,
+      isShareSheetOpen: false,
+      // Sample data for now: the people the user recently shared a plan with (app/utils/sharePlanContacts.ts)
+      contacts: recentContacts,
+      // The short message at the top: true while it is shown, and what it says.
+      // `toastMessage` empty means the standard text of the toast. `toastTo` empty means the toast is not a link
       isToastOpen: false,
-      cancelledTitle: "",
+      toastTitle: "",
+      toastPlanTitle: "",
+      toastMessage: "",
+      toastTo: "",
     };
   },
   computed: {
@@ -55,8 +65,7 @@ export default defineComponent({
     // The query is removed again right away, so the message does not come back when the page is reloaded
     const cancelled = this.$route.query.cancelled;
     if (typeof cancelled === "string" && cancelled !== "") {
-      this.cancelledTitle = cancelled;
-      this.isToastOpen = true;
+      this.showToast("Plan geannuleerd", cancelled, `Het plan "${cancelled}" is niet nodig en is geannuleerd.`);
       this.$router.replace({ query: {} });
     }
     // loadOverviewPlans is auto-imported from app/utils/overviewPlans.ts. The shared plans overview (/shared) uses it too
@@ -64,6 +73,49 @@ export default defineComponent({
     this.hasLoadedPlans = true;
   },
   methods: {
+    // Shows the short message at the top. The sheet-less toast closes by itself after 5 seconds (SharePlanToast)
+    showToast(title: string, planTitle: string, message = "", to = "") {
+      this.toastTitle = title;
+      this.toastPlanTitle = planTitle;
+      this.toastMessage = message;
+      this.toastTo = to;
+      this.isToastOpen = true;
+    },
+    // Called when the user taps the three dots on a card: remember which plan it is and open the options sheet
+    openMenu(plan: OverviewPlan) {
+      this.selectedPlan = plan;
+      this.isOptionsSheetOpen = true;
+    },
+    // "Plan archiveren" in the options sheet. The plan moves to the "Archief" view
+    archiveSelectedPlan() {
+      this.isOptionsSheetOpen = false;
+      if (!this.selectedPlan) return;
+      archiveOverviewPlan(this.selectedPlan);
+      this.plans = loadOverviewPlans();
+      this.showToast("Plan gearchiveerd", this.selectedPlan.title, `Het plan "${this.selectedPlan.title}" staat nu in uw archief.`);
+    },
+    // "Plan uit archief halen" in the options sheet (only for an archived plan). The plan moves back to the "Overzicht" view
+    unarchiveSelectedPlan() {
+      this.isOptionsSheetOpen = false;
+      if (!this.selectedPlan) return;
+      unarchiveOverviewPlan(this.selectedPlan);
+      this.plans = loadOverviewPlans();
+      this.showToast("Plan teruggezet", this.selectedPlan.title, `Het plan "${this.selectedPlan.title}" staat weer in uw overzicht.`);
+    },
+    // "Plan delen" in the options sheet: the options sheet closes and the share sheet opens
+    startSharing() {
+      this.isOptionsSheetOpen = false;
+      this.isShareSheetOpen = true;
+    },
+    // Called by the share sheet with the ids of the chosen people. Sharing is not saved with the people yet,
+    // so we only remember that the plan is shared and show the "Plan gedeeld" message (tapping it opens the plan)
+    shareSelectedPlan() {
+      this.isShareSheetOpen = false;
+      if (!this.selectedPlan) return;
+      shareOverviewPlan(this.selectedPlan);
+      this.plans = loadOverviewPlans();
+      this.showToast("Plan gedeeld", this.selectedPlan.title, "", this.selectedPlan.to);
+    },
     // Called when the user chose a category and pressed "Plan starten"
     handleStartPlan(category: string) {
       this.isCategorySheetOpen = false;
@@ -96,6 +148,7 @@ export default defineComponent({
           :category="plan.category"
           :archived-at="plan.archivedAt"
           :is-shared="plan.isShared"
+          @open-menu="openMenu(plan)"
         />
         <PlansOverviewCard
           v-else
@@ -104,6 +157,7 @@ export default defineComponent({
           :category="plan.category"
           :progress="plan.progress"
           :is-shared="plan.isShared"
+          @open-menu="openMenu(plan)"
         />
       </li>
     </ul>
@@ -121,12 +175,29 @@ export default defineComponent({
       @close="isCategorySheetOpen = false"
       @start="handleStartPlan"
     />
-    <!-- The message after a plan was cancelled. There is nothing to open, so it has no `to` (no arrow). Tapping it closes it -->
+    <!-- The three dots of a card: choose "Plan archiveren" or "Plan delen" -->
+    <PlansOverviewOptionsSheet
+      :open="isOptionsSheetOpen"
+      :title="selectedPlan?.title ?? ''"
+      :is-archived="selectedPlan?.isArchived ?? false"
+      @close="isOptionsSheetOpen = false"
+      @archive="archiveSelectedPlan"
+      @unarchive="unarchiveSelectedPlan"
+      @share="startSharing"
+    />
+    <SharePlanSheet
+      :open="isShareSheetOpen"
+      :contacts="contacts"
+      @close="isShareSheetOpen = false"
+      @share="shareSelectedPlan"
+    />
+    <!-- The short message after a plan was cancelled, archived or shared. Without `to` it has no arrow and tapping it closes it -->
     <SharePlanToast
       :open="isToastOpen"
-      :plan-title="cancelledTitle"
-      title="Plan geannuleerd"
-      :message="`Het plan &quot;${cancelledTitle}&quot; is niet nodig en is geannuleerd.`"
+      :plan-title="toastPlanTitle"
+      :title="toastTitle"
+      :message="toastMessage"
+      :to="toastTo"
       @close="isToastOpen = false"
     />
   </div>
