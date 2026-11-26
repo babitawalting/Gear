@@ -1,6 +1,10 @@
 <!-- app/pages/plans-overview.vue
      The file name is the route: this page is at /plans-overview (Nuxt file-based routing). -->
 <script lang="ts">
+// definePageMeta gives the page extra settings for the layout (Nuxt reads it before the page is shown).
+// This page shows the navigation bar at the bottom (BottomNav in the default layout).
+definePageMeta({ bottomNav: true });
+
 export default defineComponent({
   // setup() is only used for Nuxt's useSeoMeta, which sets the page <title>
   setup() {
@@ -91,8 +95,9 @@ export default defineComponent({
     <!-- role="status" makes screen readers announce this when the list becomes empty -->
     <p v-else role="status" class="text-sm font-normal text-grey">Geen plannen gevonden</p>
 
-    <!-- Sticks to the bottom right of the column. It opens the category sheet to start a new plan -->
-    <div class="sticky bottom-6 mt-auto flex justify-end">
+    <!-- Sticks to the bottom right of the column, 24px above the navigation bar (--bottom-nav-space is set in the layout).
+         It opens the category sheet to start a new plan -->
+    <div class="sticky bottom-[calc(var(--bottom-nav-space)+24px)] mt-auto flex justify-end">
       <AddButton label="Nieuw plan" @click="isCategorySheetOpen = true" />
     </div>
 
