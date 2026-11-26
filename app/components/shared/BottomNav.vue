@@ -14,7 +14,7 @@ export default defineComponent({
         { to: "/home", label: "Home", icon: "house" },
         { to: "/vault", label: "Kluis", icon: "unlock" },
         { to: "/plans-overview", label: "Plannen", icon: "file-lines" },
-        // The overview of shared plans is built later as app/pages/shared.vue. It is a separate screen, not the plans overview.
+        // The overview of shared plans (app/pages/shared.vue). It is a separate screen, not the plans overview.
         { to: "/shared", label: "Gedeeld", icon: "people-arrows" },
       ],
     };

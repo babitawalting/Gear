@@ -14,7 +14,7 @@ export default defineComponent({
       return this.$route.meta.topBar !== false;
     },
     // The navigation bar is the other way around: it is hidden, unless the page sets definePageMeta({ bottomNav: true }).
-    // Only the home, profile, kluis and plans overview pages turn it on.
+    // Only the home, profile, kluis, plans overview and shared plans (Gedeeld) pages turn it on.
     showBottomNav(): boolean {
       return this.$route.meta.bottomNav === true;
     },

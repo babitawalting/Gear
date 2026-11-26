@@ -1,13 +1,14 @@
 <!-- app/components/plans-overview/PlansOverviewCard.vue
      One plan in the plan overview.
      The whole card is a link to the page of the plan. The menu button on the right still works on its own.
+     Without `to` the card is not a link (the example plan on the shared plans overview, which has no page of its own).
      Usage: <PlansOverviewCard title="Titel" category="personal" :progress="10" to="/plans/12" is-shared /> -->
 <script lang="ts">
 export default defineComponent({
   props: {
     title: { type: String, required: true },
-    // The address of the page of this plan, for example "/plans/12"
-    to: { type: String, required: true },
+    // The address of the page of this plan, for example "/plans/12". Empty means the card is not a link
+    to: { type: String, default: "" },
     // "career", "education" or "personal": decides which icon is shown
     category: { type: String, default: "personal" },
     // Percentage completed, from 0 to 100
@@ -45,9 +46,12 @@ export default defineComponent({
         <!-- NuxtLink is Nuxt's link to another page of the app. Its ::after stretches over the whole card,
              so tapping anywhere on the card opens the plan. A link around the whole card would put the menu button inside a link -->
         <NuxtLink
+          v-if="to"
           :to="to"
           class="after:absolute after:inset-0 after:rounded-xl focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-blue"
         >{{ title }}</NuxtLink>
+        <!-- No address: only the title, so tapping the card does nothing -->
+        <template v-else>{{ title }}</template>
       </h2>
       <!-- The shared progress bar, the same one as on the plan detail screen -->
       <ProgressBar :progress="progress" :label="`Voortgang ${title}`" />
