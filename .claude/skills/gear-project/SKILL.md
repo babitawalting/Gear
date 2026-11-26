@@ -68,6 +68,7 @@ Use the same words and the same style everywhere, so everyone finds things in th
 | `white` | `#FCFCFC` | Main background color, and text on blue backgrounds |
 | `ochre` | `#D39E00` | **Progress bar fill only**, while a plan is not finished (below 100%) |
 | `green` | `#1B9B01` | **Progress bar fill only**, when a plan is complete (100%) |
+| `red` | `#E60000` | **Notification dots only** (for example unread messages) |
 
 Define them once in `@theme` (see `templates/main.css`), then use `bg-blue`, `text-navy`, `bg-grey`, `border-sand`, `bg-white`. **Never** use other Tailwind colors (`bg-gray-100`, `text-red-500`, ...) or random hex values. If something needs another color (e.g. an error), ask first.
 
@@ -112,6 +113,7 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 | `chevron-right` |
 | `edit` |
 | `ellipsis` |
+| `envelope` |
 | `file-arrow-up` |
 | `file-lines` |
 | `floppy-disk` |
@@ -127,6 +129,7 @@ Only use the icons below (Font Awesome Free, files in `assets/icons/`). Do not a
 | `share` |
 | `stethoscope` |
 | `unlock` |
+| `user` |
 | `xmark` |
 
 ### Setup (once)
