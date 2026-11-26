@@ -28,6 +28,10 @@ export default defineComponent({
       // Step 4: the licence was received
       licenseReceived: false,
       notes: "",
+      // Set from the plan overview (three dots): shared, and the date the plan was archived. The page only keeps them,
+      // because it saves the whole progress and would otherwise wipe them
+      isShared: false,
+      archivedAt: "",
       // The documents the user added from the vault, per step. The step of the open vault drawer (0 = closed)
       evidenceByStep: { 1: [], 2: [], 3: [], 4: [] } as Record<string, string[]>,
       vaultStep: 0,
@@ -55,6 +59,8 @@ export default defineComponent({
         licenseReceived: this.licenseReceived,
         notes: this.notes,
         evidenceByStep: this.evidenceByStep,
+        isShared: this.isShared,
+        archivedAt: this.archivedAt,
       };
     },
     // Which of the four steps are done, in order. A step only counts when the steps before it are done too
