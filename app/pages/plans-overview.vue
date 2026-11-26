@@ -22,11 +22,10 @@ export default defineComponent({
       search: "",
       // True while the category sheet (the pop-up to start a new plan) is shown
       isCategorySheetOpen: false,
-      // Sample data for now, this will come from the database later
-      plans: [
-        { id: 1, title: "Rijbewijs BE", category: "personal", to: "/plans/1", progress: 0, isShared: false, isArchived: false, archivedAt: "" },
-        { id: 7, title: "Software developer", category: "career", to: "/plans/job-application/7", progress: 0, isShared: false, isArchived: false, archivedAt: "" },
-      ],
+      // All plans of the user. Loaded in mounted(), because the plans are saved in the browser (see app/utils/overviewPlans.ts)
+      plans: [] as OverviewPlan[],
+      // False until the plans are loaded, so "Geen plannen gevonden" does not flash by before that
+      hasLoadedPlans: false,
     };
   },
   computed: {
@@ -49,23 +48,9 @@ export default defineComponent({
     if (this.$route.query.view === "archive") {
       this.view = "archive";
     }
-    for (const plan of this.plans) {
-      if (plan.category === "career") {
-        // A job application plan ("Sollicitatie") has its own saved progress, see app/utils/jobApplicationProgress.ts
-        const progress = loadJobApplicationProgress(String(plan.id));
-        // The title can be changed on the plan page (the three dots), so the card reads it from the saved progress
-        plan.title = jobApplicationTitle(progress);
-        plan.progress = Math.round(percentageDone(jobApplicationDoneSteps(progress)));
-        plan.isShared = progress.isShared;
-        plan.isArchived = progress.archivedAt !== "";
-        plan.archivedAt = progress.archivedAt;
-      } else {
-        const progress = loadPlanProgress(String(plan.id));
-        // The title can be changed on the plan page (the three dots), so the card reads it from the saved progress
-        plan.title = drivingLicenceTitle(progress);
-        plan.progress = percentageDone(drivingLicenceDoneSteps(progress));
-      }
-    }
+    // loadOverviewPlans is auto-imported from app/utils/overviewPlans.ts. The shared plans overview (/shared) uses it too
+    this.plans = loadOverviewPlans();
+    this.hasLoadedPlans = true;
   },
   methods: {
     // Called when the user chose a category and pressed "Plan starten"
@@ -112,7 +97,7 @@ export default defineComponent({
       </li>
     </ul>
     <!-- role="status" makes screen readers announce this when the list becomes empty -->
-    <p v-else role="status" class="text-sm font-normal text-grey">Geen plannen gevonden</p>
+    <p v-else-if="hasLoadedPlans" role="status" class="text-sm font-normal text-grey">Geen plannen gevonden</p>
 
     <!-- Sticks to the bottom right of the column, 24px above the navigation bar (--bottom-nav-space is set in the layout).
          It opens the category sheet to start a new plan -->
