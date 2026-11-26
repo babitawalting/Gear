@@ -26,6 +26,9 @@ export default defineComponent({
       plans: [] as OverviewPlan[],
       // False until the plans are loaded, so "Geen plannen gevonden" does not flash by before that
       hasLoadedPlans: false,
+      // True while the "Plan geannuleerd" message is shown, and the name of the plan that was cancelled
+      isToastOpen: false,
+      cancelledTitle: "",
     };
   },
   computed: {
@@ -47,6 +50,14 @@ export default defineComponent({
     // $route.query holds the part of the address after the "?"
     if (this.$route.query.view === "archive") {
       this.view = "archive";
+    }
+    // /plans-overview?cancelled=HAVO beschrijving shows the "Plan geannuleerd" message (the plan page does this after "Niet nodig").
+    // The query is removed again right away, so the message does not come back when the page is reloaded
+    const cancelled = this.$route.query.cancelled;
+    if (typeof cancelled === "string" && cancelled !== "") {
+      this.cancelledTitle = cancelled;
+      this.isToastOpen = true;
+      this.$router.replace({ query: {} });
     }
     // loadOverviewPlans is auto-imported from app/utils/overviewPlans.ts. The shared plans overview (/shared) uses it too
     this.plans = loadOverviewPlans();
@@ -109,6 +120,14 @@ export default defineComponent({
       :open="isCategorySheetOpen"
       @close="isCategorySheetOpen = false"
       @start="handleStartPlan"
+    />
+    <!-- The message after a plan was cancelled. There is nothing to open, so it has no `to` (no arrow). Tapping it closes it -->
+    <SharePlanToast
+      :open="isToastOpen"
+      :plan-title="cancelledTitle"
+      title="Plan geannuleerd"
+      :message="`Het plan &quot;${cancelledTitle}&quot; is niet nodig en is geannuleerd.`"
+      @close="isToastOpen = false"
     />
   </div>
 </template>

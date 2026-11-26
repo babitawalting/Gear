@@ -25,13 +25,18 @@ export interface OverviewPlan {
 // The creation flows save a new plan under a fixed id, see the plan-details pages in app/pages
 const overviewPlanList = [
   { id: 1, category: "personal", to: "/plans/1" },
+  { id: 5, category: "education", to: "/plans/diploma-description/5" },
   { id: 7, category: "career", to: "/plans/job-application/7" },
 ];
 
 // Reads the saved progress of every plan (app/utils/jobApplicationProgress.ts and app/utils/planProgress.ts)
 // and turns it into what a card needs. Call it in mounted(): the browser storage does not exist on the server
 export function loadOverviewPlans(): OverviewPlan[] {
-  return overviewPlanList.map((plan) => {
+  // A cancelled diploma description plan (step 1: "Niet nodig") is no longer in the overview
+  const visiblePlans = overviewPlanList.filter(
+    (plan) => plan.category !== "education" || !loadDiplomaDescriptionProgress(String(plan.id)).isCancelled,
+  );
+  return visiblePlans.map((plan) => {
     if (plan.category === "career") {
       // A job application plan ("Sollicitatie") has its own saved progress
       const progress = loadJobApplicationProgress(String(plan.id));
@@ -40,6 +45,18 @@ export function loadOverviewPlans(): OverviewPlan[] {
         // The title can be changed on the plan page (the three dots), so the card reads it from the saved progress
         title: jobApplicationTitle(progress),
         progress: Math.round(percentageDone(jobApplicationDoneSteps(progress))),
+        isShared: progress.isShared,
+        isArchived: progress.archivedAt !== "",
+        archivedAt: progress.archivedAt,
+      };
+    }
+    if (plan.category === "education") {
+      // A diploma description plan ("Diplomabeschrijving aanvragen") has its own saved progress
+      const progress = loadDiplomaDescriptionProgress(String(plan.id));
+      return {
+        ...plan,
+        title: diplomaDescriptionTitle(progress),
+        progress: percentageDone(diplomaDescriptionDoneSteps(progress)),
         isShared: progress.isShared,
         isArchived: progress.archivedAt !== "",
         archivedAt: progress.archivedAt,
