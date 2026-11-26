@@ -6,6 +6,8 @@
 
 // All the things the plan page remembers
 export interface PlanProgress {
+  // The title of the plan, for example "Rijbewijs BE". Empty means the default title is used (see drivingLicenceTitle)
+  title: string;
   // Step 1: the user has Rijbewijs B in the vault
   hasLicenseB: boolean;
   // Step 2: the exam is done
@@ -21,7 +23,7 @@ export interface PlanProgress {
 
 // A plan where nothing is done yet
 export function emptyPlanProgress(): PlanProgress {
-  return { hasLicenseB: false, examDone: false, hasAppointment: false, appointmentDate: "", licenseReceived: false, notes: "" };
+  return { title: "", hasLicenseB: false, examDone: false, hasAppointment: false, appointmentDate: "", licenseReceived: false, notes: "" };
 }
 
 // The key under which the progress of one plan is saved
@@ -71,6 +73,12 @@ export function percentageDone(flags: boolean[]): number {
 }
 
 // ---- Only for the "get a driving licence" plan ----
+
+// The title to show: the saved one, or "Rijbewijs BE" when the plan has none yet (sample data for now).
+// The plan page and the card on the plan overview both use this, so they always show the same title
+export function drivingLicenceTitle(progress: PlanProgress): string {
+  return progress.title !== "" ? progress.title : "Rijbewijs BE";
+}
 
 // Which of its four steps are done, in order (with the rule that every step needs the ones before it)
 export function drivingLicenceDoneSteps(progress: PlanProgress): boolean[] {

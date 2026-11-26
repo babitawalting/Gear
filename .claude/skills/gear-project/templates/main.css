@@ -8,6 +8,9 @@
   --color-grey: #697782;
   --color-sand: #e3ded9;
   --color-white: #fcfcfc;
+  /* Only for the fill of a progress bar: ochre while the plan is not finished, green when it is 100% */
+  --color-ochre: #d39e00;
+  --color-green: #1b9b01;
 
   --font-sans: "Public Sans", sans-serif;
 }

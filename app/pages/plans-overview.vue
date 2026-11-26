@@ -24,7 +24,8 @@ export default defineComponent({
       isCategorySheetOpen: false,
       // Sample data for now, this will come from the database later
       plans: [
-        { id: 1, title: "Rijbewijs BE", category: "personal", progress: 0, isShared: false, isArchived: false, archivedAt: "" },
+        { id: 1, title: "Rijbewijs BE", category: "personal", to: "/plans/1", progress: 0, isShared: false, isArchived: false, archivedAt: "" },
+        { id: 7, title: "Software developer", category: "career", to: "/plans/job-application/7", progress: 0, isShared: false, isArchived: false, archivedAt: "" },
       ],
     };
   },
@@ -44,7 +45,21 @@ export default defineComponent({
   // so here we read it and show the same percentage on the card
   mounted() {
     for (const plan of this.plans) {
-      plan.progress = percentageDone(drivingLicenceDoneSteps(loadPlanProgress(String(plan.id))));
+      if (plan.category === "career") {
+        // A job application plan ("Sollicitatie") has its own saved progress, see app/utils/jobApplicationProgress.ts
+        const progress = loadJobApplicationProgress(String(plan.id));
+        // The title can be changed on the plan page (the three dots), so the card reads it from the saved progress
+        plan.title = jobApplicationTitle(progress);
+        plan.progress = Math.round(percentageDone(jobApplicationDoneSteps(progress)));
+        plan.isShared = progress.isShared;
+        plan.isArchived = progress.archivedAt !== "";
+        plan.archivedAt = progress.archivedAt;
+      } else {
+        const progress = loadPlanProgress(String(plan.id));
+        // The title can be changed on the plan page (the three dots), so the card reads it from the saved progress
+        plan.title = drivingLicenceTitle(progress);
+        plan.progress = percentageDone(drivingLicenceDoneSteps(progress));
+      }
     }
   },
   methods: {
@@ -56,9 +71,8 @@ export default defineComponent({
         navigateTo("/personal-plan-flow/choose-plan");
       } else if (category === "education") {
         navigateTo("/education-plan-flow/choose-plan");
-      } else {
-        // The flow for the career category does not exist yet
-        console.log("Nieuw plan starten met categorie:", category);
+      } else if (category === "career") {
+        navigateTo("/career-plan-flow/choose-plan");
       }
     },
   },
@@ -66,8 +80,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col gap-4 py-4">
-    <!-- The top bar, the filters and the bottom tab bar are made by other team members and go here later -->
+  <div class="flex flex-1 flex-col gap-4 py-4">
+    <!-- The filters are made by other team members and go here later. The top bar and navigation bar come from the layout -->
     <PageHeader title="Plannen" subtitle="Een overzicht van uw plannen" />
     <ArchiveSwitch v-model="view" :options="viewOptions" label="Weergave plannen" />
     <SearchBar v-model="search" placeholder="Zoek in mijn plannen" />
@@ -85,7 +99,7 @@ export default defineComponent({
         <PlansOverviewCard
           v-else
           :title="plan.title"
-          :to="`/plans/${plan.id}`"
+          :to="plan.to"
           :category="plan.category"
           :progress="plan.progress"
           :is-shared="plan.isShared"

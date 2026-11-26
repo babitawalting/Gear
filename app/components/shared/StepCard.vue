@@ -1,7 +1,9 @@
 <!-- app/components/shared/StepCard.vue
      One step of a plan: a number, a title, a description and an arrow. When it is open, the content of the step shows below.
      A locked step (grey) can be opened, but nothing in it can be done yet, so the page makes its content read-only.
-     Usage: <StepCard :number="1" title="Wat heb ik al?" description="Rijbewijs B" :is-open="openStep === 1" @toggle="openStep = 1">
+     Under the content of an open step there is always a button to add evidence from the vault ("Bewijs toevoegen uit kluis").
+     The card only tells the page it was tapped (event `add-evidence`): the page decides what happens.
+     Usage: <StepCard :number="1" title="Wat heb ik al?" description="Rijbewijs B" :is-open="openStep === 1" @toggle="openStep = 1" @add-evidence="addEvidence(1)">
               ...the content of the step...
             </StepCard> -->
 <script lang="ts">
@@ -15,9 +17,12 @@ export default defineComponent({
     isLocked: { type: Boolean, default: false },
     // True when the content of the step is shown. The page decides which step is open
     isOpen: { type: Boolean, default: false },
+    // The text on the vault button, in Dutch
+    evidenceLabel: { type: String, default: "Bewijs toevoegen uit kluis" },
   },
-  // Tells the page that the header was tapped (the page then opens or closes this step)
-  emits: ["toggle"],
+  // "toggle": the header was tapped (the page then opens or closes this step)
+  // "add-evidence": the vault button was tapped
+  emits: ["toggle", "add-evidence"],
 });
 </script>
 
@@ -36,7 +41,8 @@ export default defineComponent({
       >{{ number }}</span>
       <span class="flex min-w-0 flex-1 flex-col">
         <span class="text-sm leading-5 font-semibold" :class="isLocked ? 'text-grey' : 'text-navy'">{{ title }}</span>
-        <span class="text-xs leading-4 font-normal text-grey">{{ description }}</span>
+        <!-- truncate: a long description (for example a list of documents) stays on one line and ends with "..." -->
+        <span class="truncate text-xs leading-4 font-normal text-grey">{{ description }}</span>
       </span>
       <!-- One arrow pointing right. When the step is open it is turned a quarter (rotate-90) so it points down -->
       <IconDisplay name="chevron-right" class="size-4 shrink-0 text-grey" :class="isOpen ? 'rotate-90' : ''" />
@@ -45,6 +51,19 @@ export default defineComponent({
     <!-- The content of the step goes here, only when it is open -->
     <div v-if="isOpen" class="pr-4.5 pb-4 pl-7">
       <slot />
+
+      <!-- Secondary state (not the main action of the step), with a plus in front.
+           In a locked step it is the Disabled state: grey and it can't be used yet -->
+      <button
+        type="button"
+        :disabled="isLocked"
+        class="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+        :class="isLocked ? 'bg-grey text-white' : 'border border-sand bg-white text-blue'"
+        @click="$emit('add-evidence')"
+      >
+        <IconDisplay name="plus" class="size-4" />
+        {{ evidenceLabel }}
+      </button>
     </div>
   </section>
 </template>
