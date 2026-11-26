@@ -26,6 +26,8 @@ export default defineComponent({
       filters: vaultCategories,
       // The ids of the chosen documents
       selectedIds: [] as string[],
+      // All documents in the vault, the sample ones and the ones the user added. Loaded again every time the drawer opens
+      documents: [] as VaultDocument[],
       // For swiping the drawer down. isPressing: a finger (or mouse button) is down on the drawer.
       // isDragging: it moved far enough down, so the drawer moves with it
       isPressing: false,
@@ -43,7 +45,7 @@ export default defineComponent({
     // The ones that are already in the step are left out
     filteredDocuments(): VaultDocument[] {
       const searchText = this.search.trim().toLowerCase();
-      return vaultDocuments
+      return this.documents
         .filter((document) => !this.hiddenIds.includes(document.id))
         .filter((document) => this.category === "" || document.category === this.category)
         .filter((document) => document.title.toLowerCase().includes(searchText))
@@ -76,6 +78,7 @@ export default defineComponent({
         this.search = "";
         this.category = "";
         this.selectedIds = [];
+        this.documents = loadVaultDocuments();
         dialog.showModal();
         this.measureList();
       } else if (!isOpen && dialog.open) {

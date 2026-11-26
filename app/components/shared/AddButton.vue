@@ -13,10 +13,11 @@ export default defineComponent({
 </script>
 
 <template>
+  <!-- shadow-lg shadow-navy/25: a soft navy shadow, so the button seems to float above the page -->
   <button
     type="button"
     :aria-label="label"
-    class="flex size-14 items-center justify-center rounded-full bg-blue text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+    class="flex size-14 items-center justify-center rounded-full bg-blue text-white shadow-lg shadow-navy/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
   >
     <IconDisplay name="plus" class="size-5" />
   </button>
