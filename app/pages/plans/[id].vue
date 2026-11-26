@@ -163,7 +163,9 @@ export default defineComponent({
             <p v-if="!hasLicenseB" class="mb-1 text-xs leading-4 font-normal text-grey">
               Er ontbreekt nog een document in uw kluis. Voeg het toe om verder te gaan.
             </p>
-            <DocumentRow title="Rijbewijs B" :is-missing="!hasLicenseB" @add="hasLicenseB = true" />
+            <!-- "+ Toevoegen" adds the document, "Verwijderen" (the pencil) takes it away again. The progress and the steps after this one
+                 follow by themselves, because they are worked out from hasLicenseB (see drivingLicenceDoneSteps in app/utils/planProgress.ts) -->
+            <DocumentRow title="Rijbewijs B" :is-missing="!hasLicenseB" @add="hasLicenseB = true" @remove="hasLicenseB = false" />
           </StepCard>
         </div>
       </div>

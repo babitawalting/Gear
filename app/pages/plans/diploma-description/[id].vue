@@ -210,6 +210,11 @@ export default defineComponent({
       for (const step of Object.keys(this.evidenceByStep)) {
         this.removeEvidence(Number(step), id);
       }
+      // Step 2 needs every document. When one is gone, step 2 is not concluded anymore: the progress goes down
+      // and the steps after it are locked again (completedSteps 1 means only step 1 is concluded)
+      if (this.completedSteps > 1 && this.missingCount > 0) {
+        this.completedSteps = 1;
+      }
     },
     // The line above step n (1 to 4) is blue when step n-1 is concluded. The first step has no line above
     lineAbove(step: number): string {

@@ -191,6 +191,17 @@ export default defineComponent({
     // Called by the pencil ("Verwijderen") of a piece of evidence: takes the document out of that step
     removeEvidence(step: number, id: string) {
       this.evidenceByStep[step] = (this.evidenceByStep[step] ?? []).filter((evidenceId) => evidenceId !== id);
+      this.reopenStepsWithoutWhatTheyNeed();
+    },
+    // After something was removed: a concluded step that does not have what it needs anymore is not concluded anymore,
+    // and neither are the steps after it. So the progress goes down and the later steps are locked again
+    reopenStepsWithoutWhatTheyNeed() {
+      for (let step = 1; step <= this.completedSteps; step++) {
+        if (!this.canConclude(step)) {
+          this.completedSteps = step - 1;
+          return;
+        }
+      }
     },
     // For now "+ Toevoegen" only marks the requirement as added. Later it opens the upload screen of the vault
     addRequirement(id: string) {
@@ -203,6 +214,7 @@ export default defineComponent({
       for (const step of Object.keys(this.evidenceByStep)) {
         this.removeEvidence(Number(step), id);
       }
+      this.reopenStepsWithoutWhatTheyNeed();
     },
     // The line above step n (1 to 3) is blue when step n-1 is concluded. The first step has no line above
     lineAbove(step: number): string {
