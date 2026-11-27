@@ -21,6 +21,14 @@
    Use it like md:, but for the height: "mt-16 short:mt-8" is 64px, and 32px on a low screen */
 @custom-variant short (@media (max-height: 700px));
 
+/* Always keep room for the scrollbar, also on pages that are too short to scroll.
+   On a computer the scrollbar takes about 15px of the width. Without this, the centered column moves 7.5px
+   to the left on long pages (with a scrollbar) and back on short pages (without one), so the screen "jumps"
+   when the user goes from page to page. Phones have a scrollbar that floats over the page, so nothing changes there */
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   font-family: var(--font-sans);
   font-weight: 400;

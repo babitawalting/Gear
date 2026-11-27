@@ -35,9 +35,10 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col pt-5 pb-7">
+  <div class="flex flex-1 flex-col pt-4 pb-7">
     <!-- flex-1 (on the div above): the page fills the height of the screen (between the top bar and the navigation bar),
-         so the two empty spaces below can grow and shrink with the screen height -->
+         so the two empty spaces below can grow and shrink with the screen height.
+         pt-4: the same 16px above the title as on every other page, so the title does not move when the user switches pages -->
     <HomeGreeting :name="userFirstName" />
 
     <!-- Flexible empty space between the greeting and the cards. It is at least 16px (basis-4) and grows
