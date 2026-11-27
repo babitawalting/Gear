@@ -24,18 +24,52 @@ export default defineComponent({
     <!-- Background shapes from Figma. -inset-x-6 stretches them over the 24px side margins of the layout,
          -z-10 puts them behind the content. aria-hidden: they are decoration only -->
     <div class="pointer-events-none absolute inset-y-0 -inset-x-6 -z-10 overflow-hidden" aria-hidden="true">
-      <!-- left-1/2 + -translate-x-1/2 keep the 402px wide drawing centered, so on narrower phones
-           the shapes stay around the gears instead of shifting to the right -->
+      <!-- The Figma drawing is 402 x 874. Screens can be taller than that (a laptop or a big phone), so it is cut into
+           two pictures instead of one: otherwise the shapes would stop in a straight line at 874px.
+           left-1/2 + -translate-x-1/2 keep both pictures centered, so on narrower phones
+           the shapes stay around the gears instead of shifting to the right.
+
+           1. Bottom right shapes (y 600 to 874 of the Figma frame).
+              top-[max(600px,calc(100%-274px))]: the picture starts at 600px, where it is in Figma.
+              On a screen taller than 874px, 100% - 274px is bigger than 600px, so the picture moves down and
+              sticks to the bottom of the screen. The shapes go on below the screen, so there is never a hard edge -->
+      <svg
+        class="absolute top-[max(600px,calc(100%-274px))] left-1/2 -translate-x-1/2"
+        width="402"
+        height="274"
+        viewBox="0 600 402 274"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g class="bubble bubble-3">
+          <path
+            filter="url(#start-background-blur)"
+            d="M474 777C474 862.052 405.281 931 320.512 931C235.742 931 144 903.552 144 818.5C144 733.448 235.742 623 320.512 623C405.281 623 474 691.948 474 777Z"
+            fill="#E8F3F9"
+          />
+        </g>
+        <g class="bubble bubble-4">
+          <path
+            filter="url(#start-background-blur)"
+            d="M452 770C452 840.692 393.143 898 320.539 898C247.935 898 174 876.003 174 805.31C174 734.618 247.935 642 320.539 642C393.143 642 452 699.308 452 770Z"
+            fill="#C7E0F5"
+          />
+        </g>
+      </svg>
+
+      <!-- 2. The shapes around the gears and on the left (y 0 to 700 of the Figma frame). They stay at the top,
+              in the same place as in Figma, because the gears and the text are placed from the top too -->
       <svg
         class="absolute top-0 left-1/2 -translate-x-1/2"
         width="402"
-        height="874"
-        viewBox="0 0 402 874"
+        height="700"
+        viewBox="0 0 402 700"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <!-- A small blur (2.5px) gives the shapes their soft edges, as in Figma -->
+          <!-- A small blur (2.5px) gives the shapes their soft edges, as in Figma.
+               The bottom right picture above uses this blur too: an id works for the whole page -->
           <filter id="start-background-blur" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur stdDeviation="2.5" />
           </filter>
@@ -54,21 +88,6 @@ export default defineComponent({
           <path
             filter="url(#start-background-blur)"
             d="M360 264C360 363.411 292.463 444 209.151 444C125.839 444 41 413.066 41 313.655C41 214.244 125.839 84 209.151 84C292.463 84 360 164.589 360 264Z"
-            fill="#C7E0F5"
-          />
-        </g>
-        <!-- Bottom right -->
-        <g class="bubble bubble-3">
-          <path
-            filter="url(#start-background-blur)"
-            d="M474 777C474 862.052 405.281 931 320.512 931C235.742 931 144 903.552 144 818.5C144 733.448 235.742 623 320.512 623C405.281 623 474 691.948 474 777Z"
-            fill="#E8F3F9"
-          />
-        </g>
-        <g class="bubble bubble-4">
-          <path
-            filter="url(#start-background-blur)"
-            d="M452 770C452 840.692 393.143 898 320.539 898C247.935 898 174 876.003 174 805.31C174 734.618 247.935 642 320.539 642C393.143 642 452 699.308 452 770Z"
             fill="#C7E0F5"
           />
         </g>
