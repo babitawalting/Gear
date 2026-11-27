@@ -66,7 +66,9 @@ export default defineComponent({
         <PlanCategorySheetRow v-model="category" name="category" value="personal" label="Persoonlijk" icon="id-card" />
       </div>
 
-      <div class="mt-8 flex gap-6">
+      <!-- flex-wrap: when both buttons don't fit next to each other (small phones), the second one goes under the first.
+           Both then fill the whole width, because they have flex-1 -->
+      <div class="mt-8 flex flex-wrap gap-6">
         <CancelButton label="Annuleren" @click="$emit('close')" />
         <PrimaryButton label="Plan starten" :disabled="category === ''" @click="handleStart" />
       </div>

@@ -77,7 +77,9 @@ export default defineComponent({
       </div>
 
       <!-- "Document toevoegen" is Disabled (grey) until a category is chosen -->
-      <div class="mt-8 flex gap-4">
+      <!-- flex-wrap: when both buttons don't fit next to each other (small phones), the second one goes under the first.
+           Both then fill the whole width, because they have flex-1 -->
+      <div class="mt-8 flex flex-wrap gap-4">
         <CancelButton label="Annuleren" @click="$emit('close')" />
         <PrimaryButton label="Document toevoegen" :disabled="category === ''" @click="handleChoose" />
       </div>

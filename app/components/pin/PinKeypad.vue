@@ -19,13 +19,14 @@ export default defineComponent({
 
 <template>
   <!-- An even grid: 3 columns of 68px keys with 18px between them, as in the Figma design.
+       On a low screen (short:, see app/assets/css/main.css) the keys are 64px with 12px between them, so the keypad fits.
        The digits are semibold on purpose (an exception to "buttons are regular"): the Figma design shows them that way -->
-  <div class="grid grid-cols-[repeat(3,68px)] gap-4.5">
+  <div class="grid grid-cols-[repeat(3,68px)] gap-4.5 short:grid-cols-[repeat(3,64px)] short:gap-3">
     <button
       v-for="digit in digits"
       :key="digit"
       type="button"
-      class="flex size-17 items-center justify-center rounded-full border border-sand bg-white text-[28px] leading-none font-semibold text-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+      class="flex size-17 items-center short:size-16 justify-center rounded-full border border-sand bg-white text-[28px] leading-none font-semibold text-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
       @click="$emit('press', digit)"
     >
       {{ digit }}
@@ -36,7 +37,7 @@ export default defineComponent({
 
     <button
       type="button"
-      class="flex size-17 items-center justify-center rounded-full border border-sand bg-white text-[28px] leading-none font-semibold text-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+      class="flex size-17 items-center short:size-16 justify-center rounded-full border border-sand bg-white text-[28px] leading-none font-semibold text-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
       @click="$emit('press', '0')"
     >
       0
@@ -46,7 +47,7 @@ export default defineComponent({
     <button
       type="button"
       aria-label="Laatste cijfer verwijderen"
-      class="flex size-17 items-center justify-center rounded-full border border-sand bg-white text-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+      class="flex size-17 items-center short:size-16 justify-center rounded-full border border-sand bg-white text-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
       @click="$emit('delete')"
     >
       <!-- Backspace icon from the Figma design. It is not in the shared icon list, so it lives here as an inline SVG.
