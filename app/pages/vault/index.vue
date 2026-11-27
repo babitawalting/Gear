@@ -16,13 +16,14 @@ export default defineComponent({
   data() {
     return {
       search: "",
-      // The chosen filter: "sort" or a category (for example "work"). Empty means no filter
+      // The chosen category (for example "career"). Empty means all categories
       filter: "",
-      // "Sorteren" first, then the categories of the vault (from app/utils/vaultDocuments.ts)
-      filters: [
-        { value: "sort", label: "Sorteren", icon: "filter" },
-        ...vaultCategories,
-      ],
+      // The categories of the vault (from app/utils/vaultDocuments.ts)
+      filters: vaultCategories,
+      // The chosen order in the "Sorteren" menu. Normally the newest document is at the top
+      sort: "newest",
+      // The choices of the "Sorteren" menu (from app/utils/sortOptions.ts): on date and alphabetical
+      sortOptions,
       // All documents. Loaded in mounted(), because the documents the user added are saved in the browser
       documents: [] as VaultDocument[],
       // True while the category sheet ("Toevoegen") is shown
@@ -30,20 +31,14 @@ export default defineComponent({
     };
   },
   computed: {
-    // The documents that match the search and the chosen category.
-    // Normally the newest document is at the top. With "Sorteren" chosen they are sorted from A to Z
+    // The documents that match the search and the chosen category, in the order chosen in "Sorteren"
     filteredDocuments(): VaultDocument[] {
       const searchText = this.search.trim().toLowerCase();
-      const isCategory = this.filter !== "" && this.filter !== "sort";
       const documents = this.documents
-        .filter((document) => !isCategory || document.category === this.filter)
+        .filter((document) => this.filter === "" || document.category === this.filter)
         .filter((document) => document.title.toLowerCase().includes(searchText));
-      if (this.filter === "sort") {
-        // localeCompare compares two texts the Dutch way, so the list is in alphabetical order
-        return documents.sort((a, b) => a.title.localeCompare(b.title, "nl"));
-      }
-      // "2026-09-17" texts can be compared like words: a later date comes later in the alphabet
-      return documents.sort((a, b) => b.date.localeCompare(a.date));
+      // sortItems (app/utils/sortOptions.ts) needs to know where the title and the date of a document are
+      return sortItems(documents, this.sort, (document) => document.title, (document) => document.date);
     },
   },
   // mounted() runs once, when the page is on the screen. The browser storage does not exist on the server,
@@ -67,7 +62,7 @@ export default defineComponent({
   <div class="flex flex-1 flex-col gap-4 py-4">
     <PageHeader title="Mijn kluis" subtitle="Beheer al uw belangrijke documenten" />
     <SearchBar v-model="search" placeholder="Zoek in mijn kluis..." />
-    <FilterBar v-model="filter" :filters="filters" />
+    <FilterBar v-model="filter" v-model:sort="sort" :filters="filters" :sort-options="sortOptions" />
 
     <ul v-if="filteredDocuments.length > 0" class="flex flex-col gap-4">
       <li v-for="document in filteredDocuments" :key="document.id">

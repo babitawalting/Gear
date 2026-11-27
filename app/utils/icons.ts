@@ -34,7 +34,7 @@ export const icons: Record<string, string> = {
   "unlock": "M256 160C256 124.7 284.7 96 320 96C351.7 96 378 119 383.1 149.3C386 166.7 402.5 178.5 420 175.6C437.5 172.7 449.2 156.2 446.3 138.7C436.1 78.1 383.5 32 320 32C249.3 32 192 89.3 192 160L192 224C156.7 224 128 252.7 128 288L128 512C128 547.3 156.7 576 192 576L448 576C483.3 576 512 547.3 512 512L512 288C512 252.7 483.3 224 448 224L256 224L256 160z",
   // A cross (Font Awesome Free, xmark-solid-full.svg), for closing or cancelling
   "xmark": "M470.6 214.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 274.7 214.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L274.7 320 169.4 425.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L320 365.3 425.4 470.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L365.3 320 470.6 214.6z",
-  // A briefcase (Font Awesome Free, briefcase-solid-full.svg), for the "Portfolio" category of the vault
+  // A briefcase (Font Awesome Free, briefcase-solid-full.svg). Not used at the moment: the vault category "Portfolio" became "Educatie"
   // A person (Font Awesome Free, user-solid-full.svg), for the profile information
   "user": "M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z",
   // A closed envelope (Font Awesome Free, envelope-solid-full.svg), for contact

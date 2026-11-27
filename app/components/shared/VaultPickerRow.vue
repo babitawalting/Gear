@@ -1,7 +1,7 @@
 <!-- app/components/shared/VaultPickerRow.vue
      One document in the vault drawer: the category icon, the name and the date, like a row of the vault in the Figma design.
      Tapping the row chooses the document (it turns blue). Tapping it again un-chooses it.
-     Usage: <VaultPickerRow title="CV" category="work" date="2026-09-17" :is-selected="isChosen" @toggle="toggleDocument" /> -->
+     Usage: <VaultPickerRow title="CV" category="career" date="2026-09-17" :is-selected="isChosen" @toggle="toggleDocument" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

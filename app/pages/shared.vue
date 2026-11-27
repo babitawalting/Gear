@@ -29,11 +29,14 @@ export default defineComponent({
   data() {
     return {
       search: "",
-      // The chosen filter: "sort" or a category (for example "career"). Empty means no filter
+      // The chosen category (for example "career"). Empty means all categories
       filter: "",
-      // "Sorteren" first (the funnel icon, the same as in the vault), then the three plan categories
+      // The chosen order in the "Sorteren" menu. Normally A to Z
+      sort: "a-z",
+      // Plans don't have a date yet, so this menu only sorts on name (from app/utils/sortOptions.ts)
+      sortOptions: alphabeticalSortOptions,
+      // The three plan categories
       filters: [
-        { value: "sort", label: "Sorteren", icon: "filter" },
         { value: "career", label: "Carrière", icon: "industry" },
         { value: "education", label: "Educatie", icon: "school" },
         { value: "personal", label: "Persoonlijk", icon: "id-card" },
@@ -60,20 +63,14 @@ export default defineComponent({
       // Every plan only once: a card whose key is already in the list is left out
       return cards.filter((card, index) => cards.findIndex((other) => other.key === card.key) === index);
     },
-    // The shared plans that match the search and the chosen category.
-    // Normally they keep their own order. With "Sorteren" chosen they are sorted from A to Z (the same as in the vault)
+    // The shared plans that match the search and the chosen category, in the order chosen in "Sorteren"
     filteredPlans(): SharedPlanCard[] {
       const searchText = this.search.trim().toLowerCase();
-      const isCategory = this.filter !== "" && this.filter !== "sort";
       const plans = this.sharedPlans
-        .filter((plan) => !isCategory || plan.category === this.filter)
+        .filter((plan) => this.filter === "" || plan.category === this.filter)
         .filter((plan) => plan.title.toLowerCase().includes(searchText));
-      if (this.filter === "sort") {
-        // localeCompare compares two texts the Dutch way, so the list is in alphabetical order.
-        // filter() above made a new list, so sorting it does not change sharedPlans itself
-        return plans.sort((a, b) => a.title.localeCompare(b.title, "nl"));
-      }
-      return plans;
+      // sortItems (app/utils/sortOptions.ts) needs to know where the title of a plan is
+      return sortItems(plans, this.sort, (plan) => plan.title);
     },
   },
   // mounted() runs once, when the page is on the screen. Only there the browser storage with the plans can be read.
@@ -91,7 +88,7 @@ export default defineComponent({
          The top bar and navigation bar come from the layout -->
     <PageHeader title="Gedeeld" subtitle="Een overzicht van uw gedeelde plannen" />
     <SearchBar v-model="search" placeholder="Zoek in mijn gedeelde plannen" />
-    <FilterBar v-model="filter" :filters="filters" />
+    <FilterBar v-model="filter" v-model:sort="sort" :filters="filters" :sort-options="sortOptions" />
 
     <ul v-if="filteredPlans.length > 0" class="flex flex-col gap-4">
       <li v-for="plan in filteredPlans" :key="plan.key">

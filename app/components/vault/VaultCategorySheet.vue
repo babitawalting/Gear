@@ -11,7 +11,7 @@ export default defineComponent({
     open: { type: Boolean, default: false },
   },
   // "close": the user cancelled ("Annuleren", Escape or a tap next to the sheet)
-  // "choose": the user chose a category and pressed "Document toevoegen", the value is the category, for example "work"
+  // "choose": the user chose a category and pressed "Document toevoegen", the value is the category, for example "career"
   emits: ["close", "choose"],
   data() {
     return {
