@@ -17,6 +17,10 @@
   --font-sans: "Public Sans", sans-serif;
 }
 
+/* short: styles for phones with a low screen (for example the iPhone SE, 667px high).
+   Use it like md:, but for the height: "mt-16 short:mt-8" is 64px, and 32px on a low screen */
+@custom-variant short (@media (max-height: 700px));
+
 body {
   font-family: var(--font-sans);
   font-weight: 400;

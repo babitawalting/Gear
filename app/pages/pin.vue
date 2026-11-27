@@ -82,9 +82,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="relative isolate flex min-h-screen flex-col items-center pt-16.5 pb-8">
+  <div class="relative isolate flex min-h-screen flex-col items-center pt-16.5 pb-8 short:pt-8 short:pb-6">
     <!-- relative + isolate on this div: PinBackground is positioned inside it and stays behind the content.
-         The spacing (pt-16.5, mt-16, ...) follows the positions in the Figma design -->
+         The spacing (pt-16.5, mt-16, ...) follows the positions in the Figma design.
+         The short: classes (see app/assets/css/main.css) make the spaces smaller on a low screen,
+         so the whole keypad, including 0 and the delete key, fits without scrolling -->
     <PinBackground />
 
     <!-- Shared logo component, see app/components/shared/GearLogo.vue -->
@@ -92,13 +94,13 @@ export default defineComponent({
 
     <!-- The design has a centered title without subtext. PageHeader is left aligned and needs a subtitle,
          so this page writes its own <h1>, with the same font size, weight and color as the PageHeader title -->
-    <h1 class="mt-16 text-center text-[32px] leading-9 font-semibold text-navy">Vul uw pincode in</h1>
+    <h1 class="mt-16 text-center short:mt-8 text-[32px] leading-9 font-semibold text-navy">Vul uw pincode in</h1>
 
     <!-- The dots get the number of digits typed. When pincode changes, Vue updates the dots automatically.
          has-error turns them red and makes them shake after a wrong PIN -->
-    <PinDots class="mt-11.5" :filled-count="pincode.length" :total="pincodeLength" :has-error="isWrongPin" />
+    <PinDots class="mt-11.5 short:mt-6" :filled-count="pincode.length" :total="pincodeLength" :has-error="isWrongPin" />
 
     <!-- The keypad sends events up: @press calls addDigit with the digit, @delete calls removeDigit -->
-    <PinKeypad class="mt-13" @press="addDigit" @delete="removeDigit" />
+    <PinKeypad class="mt-13 short:mt-8" @press="addDigit" @delete="removeDigit" />
   </div>
 </template>

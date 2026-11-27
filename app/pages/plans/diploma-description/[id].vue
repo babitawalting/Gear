@@ -381,11 +381,13 @@ export default defineComponent({
       :class="isScrolledToBottom ? 'opacity-0' : 'opacity-100'"
     />
 
-    <!-- "Plan archiveren" is the Secondary state (not the main action), "Plan delen" is the Primary one -->
-    <div class="flex gap-4">
+    <!-- "Plan archiveren" is the Secondary state (not the main action), "Plan delen" is the Primary one.
+         whitespace-nowrap keeps each text on one line (like SecondaryButton).
+         flex-wrap: when both buttons don't fit next to each other (small phones), "Plan delen" goes under "Plan archiveren" -->
+    <div class="flex flex-wrap gap-4">
       <button
         type="button"
-        class="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-sm font-normal text-blue focus-visible:outline-2 focus-visible:outline-blue"
+        class="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-sand bg-white px-4 py-2 text-sm font-normal whitespace-nowrap text-blue focus-visible:outline-2 focus-visible:outline-blue"
         @click="archivePlan"
       >
         <IconDisplay name="archive" class="size-5" />
