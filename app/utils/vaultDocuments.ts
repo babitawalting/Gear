@@ -19,25 +19,36 @@ export interface VaultDocument {
   fileName?: string;
 }
 
-// The categories of the vault, with the icon of each (the same as in the "Toevoegen" sheet of the vault design)
+// The categories of the vault, with the icon of each (the same as in the "Toevoegen" sheet of the vault design).
+// "Carrière" and "Educatie" use the same value and icon as the plan categories, so the whole app uses one word for each
 export const vaultCategories = [
   { value: "certificates", label: "Certificaten", icon: "award" },
-  { value: "work", label: "Arbeid", icon: "file-lines" },
-  { value: "portfolio", label: "Portfolio", icon: "briefcase" },
+  { value: "career", label: "Carrière", icon: "industry" },
+  { value: "education", label: "Educatie", icon: "school" },
   { value: "medical", label: "Medisch", icon: "stethoscope" },
   { value: "other", label: "Overig", icon: "folder" },
 ];
 
 // The sample documents the vault starts with. The user can rename and delete them, just like their own documents
 export const vaultDocuments: VaultDocument[] = [
-  { id: "cv", title: "CV", category: "work", date: "2026-09-17" },
+  { id: "cv", title: "CV", category: "career", date: "2026-09-17" },
   { id: "hbo-diploma", title: "HBO Diploma - ICT", category: "certificates", date: "2026-09-15" },
-  { id: "portfolio-assignment", title: "Portfolio-opdracht", category: "portfolio", date: "2026-07-12" },
+  { id: "portfolio-assignment", title: "Portfolio-opdracht", category: "education", date: "2026-07-12" },
   { id: "dyslexia-statement", title: "Dyslexieverklaring", category: "medical", date: "2025-04-01" },
   { id: "driving-licence-a", title: "A-Rijbewijs", category: "other", date: "2026-08-20" },
   { id: "havo-diploma", title: "HAVO diploma", category: "certificates", date: "2022-06-06" },
-  { id: "internship-reference", title: "Stage referentie", category: "work", date: "2026-06-30" },
+  { id: "internship-reference", title: "Stage referentie", category: "career", date: "2026-06-30" },
 ];
+
+// Old category values and the value they have now. "Arbeid" (work) became "Carrière" (career)
+// and "Portfolio" became "Educatie" (education). Documents saved before that change still have the old value
+const renamedCategories: Record<string, string> = { work: "career", portfolio: "education" };
+
+// Gives a saved document the new category value when it still has an old one (see renamedCategories)
+function withCurrentCategory(document: VaultDocument): VaultDocument {
+  const newCategory = renamedCategories[document.category];
+  return newCategory ? { ...document, category: newCategory } : document;
+}
 
 // The key under which the whole vault is saved in the browser (localStorage)
 const storageKey = "gear-vault-documents";
@@ -48,7 +59,9 @@ export function loadVaultDocuments(): VaultDocument[] {
   if (typeof window === "undefined") return [...vaultDocuments];
   try {
     const saved = window.localStorage.getItem(storageKey);
-    return saved ? JSON.parse(saved) : [...vaultDocuments];
+    if (!saved) return [...vaultDocuments];
+    const documents: VaultDocument[] = JSON.parse(saved);
+    return documents.map(withCurrentCategory);
   } catch {
     // Storage can be blocked, or the saved text can be broken. Then we start with the sample documents
     return [...vaultDocuments];

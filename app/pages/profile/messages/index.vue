@@ -1,7 +1,7 @@
 <!-- app/pages/profile/messages/index.vue
      The file name is the route: this page is at /profile/messages (Nuxt file-based routing).
      The messages overview from the Figma design "Profiel berichtenoverzicht V3".
-     The messages are static example data from app/utils/profileMessages.ts. Searching and sorting don't work yet. -->
+     The messages are static example data from app/utils/profileMessages.ts. Sorting works, searching doesn't yet. -->
 <script lang="ts">
 // definePageMeta gives the page extra settings for the layout (Nuxt reads it before the page is shown).
 // bottomNav: show the navigation bar.
@@ -19,13 +19,19 @@ export default defineComponent({
     return {
       // What the user typed in the search field. It does not filter the list yet
       search: "",
-      // The chosen sort option in the FilterBar. It does not change the order yet
-      sort: "",
-      // The funnel icon, as in the Figma design and the same as "Sorteren" in the vault
-      sortOptions: [{ value: "sort", label: "Sorteren", icon: "filter" }],
+      // The chosen order in the "Sorteren" menu. Normally the newest message is at the top
+      sort: "newest",
+      // The choices of the "Sorteren" menu (from app/utils/sortOptions.ts): on date and alphabetical
+      sortOptions,
       // profileMessages is auto-imported from app/utils/profileMessages.ts
       messages: profileMessages,
     };
+  },
+  computed: {
+    // The messages in the order chosen in "Sorteren". Alphabetical sorts on the subject of the message
+    sortedMessages(): ProfileMessage[] {
+      return sortItems(this.messages, this.sort, (message) => message.subject, (message) => message.dateIso);
+    },
   },
 });
 </script>
@@ -36,11 +42,11 @@ export default defineComponent({
 
     <div class="flex flex-col gap-2.5">
       <SearchBar v-model="search" placeholder="Zoek in mijn berichten" />
-      <FilterBar v-model="sort" :filters="sortOptions" />
+      <FilterBar v-model:sort="sort" :sort-options="sortOptions" />
     </div>
 
     <ul class="-mt-2 flex flex-col gap-3">
-      <li v-for="message in messages" :key="message.id">
+      <li v-for="message in sortedMessages" :key="message.id">
         <ProfileMessageCard
           :to="`/profile/messages/${message.id}`"
           :sender-name="message.senderName"

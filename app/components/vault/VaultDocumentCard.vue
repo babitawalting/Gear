@@ -1,7 +1,7 @@
 <!-- app/components/vault/VaultDocumentCard.vue
      One document in the vault ("Mijn kluis"): the category icon, the name and the date it was added.
      The whole card is a link to the page of the document, where the user can look at it and change it.
-     Usage: <VaultDocumentCard title="CV" category="work" date="2026-09-17" to="/vault/cv" /> -->
+     Usage: <VaultDocumentCard title="CV" category="career" date="2026-09-17" to="/vault/cv" /> -->
 <script lang="ts">
 export default defineComponent({
   props: {

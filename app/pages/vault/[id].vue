@@ -32,7 +32,7 @@ export default defineComponent({
     documentId(): string {
       return String(this.$route.params.id);
     },
-    // The line under the title: the category and the date the document was added, for example "Arbeid · 17 september 2026"
+    // The line under the title: the category and the date the document was added, for example "Carrière · 17 september 2026"
     subtitle(): string {
       if (!this.document) return "";
       return `${vaultCategoryLabel(this.document.category)} · ${formatVaultDate(this.document.date)}`;
